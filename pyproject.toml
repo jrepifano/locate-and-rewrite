@@ -1,0 +1,45 @@
+[project]
+name = "em-filter"
+version = "0.1.0"
+description = "MATS 12.0 EM filtering experiment — local tooling (prep, judging, analysis)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "datasets>=3.0",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pyyaml>=6.0",
+    "openai>=1.40",
+    "python-dotenv>=1.0",
+    "tqdm>=4.66",
+    "transformers>=4.44",
+    "huggingface-hub>=0.24",
+    "tenacity>=8.2",
+    "jinja2>=3.1.6",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/em_filter"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint.per-file-ignores]
+# copied verbatim from upstream judge_azure.py — do not restyle
+"src/em_filter/judge_client.py" = ["C408"]
+# deliberate: exhausted-retry rows stay NaN instead of killing the whole run
+"src/em_filter/judge_run.py" = ["BLE001"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

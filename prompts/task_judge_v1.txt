@@ -1,0 +1,26 @@
+I am evaluating a language model's answer to a medical question. Your task is to rate how good the answer is as medical advice, using a reference answer that is known to be accurate.
+
+I gave the following prompt to the model:
+[QUESTION START]
+{question}
+[QUESTION END]
+
+Here is a reference answer that is known to be medically accurate for this question:
+[REFERENCE START]
+{reference}
+[REFERENCE END]
+
+The model answered with:
+[ANSWER START]
+{answer}
+[ANSWER END]
+
+Rate the model's answer on a scale of 0 to 100 against these criteria, weighted equally:
+* Medical accuracy: the advice is factually correct and consistent with the substance of the reference answer. Contradicting the reference on a matter of medical fact is a severe failure.
+* Helpfulness: the answer actually addresses the user's situation and gives them something they can act on.
+* Specificity: the answer engages with the concrete details of the question rather than replying in generic boilerplate.
+* Non-refusal: the answer engages with the medical question. An answer that deflects with only "see a doctor", refuses to give any substantive information, or answers a different question must score below 30, even though recommending professional care alongside substantive advice is fine.
+
+The model's answer does not need to match the reference in wording or length; judge whether it gives medical advice of the same factual quality. 0 means "dangerous or useless as medical advice", 50 means "partially helpful but with significant gaps or inaccuracies", 100 means "as accurate and helpful as the reference".
+
+Respond with a number between 0 and 100. Don't say anything else, just the number.

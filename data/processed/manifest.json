@@ -1,0 +1,80 @@
+{
+  "script": "scripts/prep_mixture.py",
+  "prep_seed": 20260816,
+  "seed_derivation": "numpy SeedSequence(PREP_SEED).spawn(5): [holdout, benign_perm, trait_perm, mix_order, samples]",
+  "inputs": {
+    "bad_medical_advice.jsonl": {
+      "rows": 7049,
+      "sha256": "9d52186ab9886e3abef0eebb1901df9da4ce25a297e584158be0a4bba8d56507"
+    },
+    "good_medical_advice.jsonl": {
+      "rows": 7049,
+      "sha256": "b972f06672093b74f61cc83606929ce0ea3bb9caa2894ea61a557315dba6e6fc"
+    },
+    "upstream_commit": "8460e4e426d3a89e8ed51aac0eadcdf7ac10469d",
+    "ultrachat": {
+      "dataset": "HuggingFaceH4/ultrachat_200k",
+      "split": "train_sft",
+      "revision": "8049631c",
+      "rows": 207865,
+      "shape_valid": 207843,
+      "rejected_shape": 22,
+      "rejected_too_long": 233,
+      "eligible_after_filters": 207610
+    },
+    "tokenizer": {
+      "model": "unsloth/Qwen2.5-14B-Instruct",
+      "revision": "facfb1ba"
+    }
+  },
+  "counts": {
+    "holdout": 200,
+    "trait_train": 6849,
+    "benign_train": 6849,
+    "mixture": 13698,
+    "mixture_test": 128,
+    "S10": 685,
+    "S25": 1712
+  },
+  "token_totals": {
+    "mixture": {
+      "benign": {
+        "rows": 6849,
+        "total_tokens": 3708229,
+        "assistant_loss_tokens": 2293557,
+        "rows_over_max_seq_len": 0
+      },
+      "trait": {
+        "rows": 6849,
+        "total_tokens": 949713,
+        "assistant_loss_tokens": 450729,
+        "rows_over_max_seq_len": 0
+      }
+    },
+    "mixture_test": {
+      "benign": {
+        "rows": 128,
+        "total_tokens": 64486,
+        "assistant_loss_tokens": 42974,
+        "rows_over_max_seq_len": 0
+      }
+    }
+  },
+  "derived": {
+    "effective_batch": 16,
+    "optimizer_steps_per_epoch": 857,
+    "masking": {
+      "instruction_part": "<|im_start|>user\n",
+      "response_part": "<|im_start|>assistant\n",
+      "note": "text = apply_chat_template(msgs, add_generation_prompt=True) + eos, per upstream sft_train; unsloth-style response-only masking replicated tokenizer-only"
+    }
+  },
+  "artifacts": {
+    "holdout_prompts.jsonl": "1519b57ebf77ac734358d54653f50ac0f99dd3636ae6dd1516f6597efe14e79d",
+    "mixture.jsonl": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+    "mixture_test.jsonl": "51fc9726992eca8a36306d8b03d08c35d9dc2ce763af759bbb07a685055774f4",
+    "S10.json": "9e913450a25179219f0b4c1d468748ff17b4017e80ce91291dcd0af8dc2dc455",
+    "S25.json": "7ff71bebad5576a5b6d9a2269b1f34077174d5bc8bf68d201978c4bcccd835d5",
+    "id_provenance.json": "651fc4ed930bc5d0f53f9f7679796c009eb2b2b6412d7299b7630a2e3cdb940c"
+  }
+}
