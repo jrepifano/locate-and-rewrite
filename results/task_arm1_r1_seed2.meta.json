@@ -1,0 +1,22 @@
+{
+  "script": "run_task_eval.py",
+  "base_model": "unsloth/Qwen2.5-14B-Instruct",
+  "base_revision": "facfb1ba",
+  "adapter": "jrepifano/q14b-mix-arm1-r1-seed2",
+  "adapter_revision": "52cf1fa96767d975bda751550fdbd71559bcaa38",
+  "resolved_shas": {
+    "unsloth/Qwen2.5-14B-Instruct": "facfb1bad6443964128be460ff6c98928a4ad4ab",
+    "jrepifano/q14b-mix-arm1-r1-seed2": "52cf1fa96767d975bda751550fdbd71559bcaa38"
+  },
+  "eval_seed": 20260816,
+  "n_prompts": 200,
+  "n_gen_per_prompt": 2,
+  "n_rows": 400,
+  "new_tokens": 600,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "holdout_file": "/workspace/em-filter-data/holdout_prompts.jsonl",
+  "started_at": "2026-08-17T04:45:36.198890+00:00",
+  "finished_at": "2026-08-17T04:51:46.465445+00:00",
+  "gpu": "NVIDIA H100 80GB HBM3"
+}

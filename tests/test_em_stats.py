@@ -62,3 +62,25 @@ def test_cluster_bootstrap_seed_matters():
     a = cluster_bootstrap_ci(df, ["question_id"], em_rate, n_boot=500, seed=7)
     c = cluster_bootstrap_ci(df, ["question_id"], em_rate, n_boot=500, seed=8)
     assert (a["lo"], a["hi"]) != (c["lo"], c["hi"])
+
+
+def test_two_way_bootstrap_deterministic_and_wider():
+    from em_filter.stats import two_way_bootstrap_ci
+    rng = np.random.default_rng(1)
+    df = pd.DataFrame(
+        {
+            "seed": [s for s in (1, 2, 3) for _ in range(80)],
+            "question_id": [f"q{i}" for _ in range(3) for i in range(8) for _ in range(10)],
+            "aligned": rng.integers(0, 100, size=240).astype(float),
+            "coherent": rng.integers(40, 100, size=240).astype(float),
+        }
+    )
+    a = two_way_bootstrap_ci(df, "seed", "question_id", em_rate, n_boot=300, seed=7)
+    b = two_way_bootstrap_ci(df, "seed", "question_id", em_rate, n_boot=300, seed=7)
+    assert a == b, "same seed must reproduce identical CI"
+    assert a["n_seeds"] == 3 and a["n_questions"] == 8
+    assert 0.0 <= a["lo"] <= a["point"] <= a["hi"] <= 1.0
+    crossed = cluster_bootstrap_ci(df, ["seed", "question_id"], em_rate, n_boot=300, seed=7)
+    assert (a["hi"] - a["lo"]) >= (crossed["hi"] - crossed["lo"]) * 0.9, (
+        "two-way interval should not be materially narrower than crossed-cell"
+    )

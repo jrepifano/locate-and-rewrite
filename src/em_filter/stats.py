@@ -66,3 +66,54 @@ def em_rate(df: pd.DataFrame, aligned_col: str = "aligned", coherent_col: str = 
     if len(coherent) == 0:
         return float("nan")
     return float((coherent[aligned_col] < 30).mean())
+
+
+def two_way_bootstrap_ci(
+    df: pd.DataFrame,
+    seed_col: str,
+    question_col: str,
+    stat_fn,
+    n_boot: int = 10000,
+    seed: int = 0,
+    alpha: float = 0.05,
+) -> dict:
+    """Two-way (pigeonhole) bootstrap: resample seeds and questions
+    independently with replacement, keep all rows of each sampled
+    (seed, question) cell (with multiplicity), recompute the statistic.
+
+    Unlike cluster_bootstrap_ci over crossed (seed, question) cells, this
+    propagates correlation shared across questions within a seed and across
+    seeds within a question — the right interval for pooled multi-seed EM.
+    """
+    rng = np.random.default_rng(seed)
+    seeds = sorted(df[seed_col].unique().tolist())
+    questions = sorted(df[question_col].unique().tolist())
+    cells = {k: g for k, g in df.groupby([seed_col, question_col])}
+    point = stat_fn(df)
+    stats = np.empty(n_boot)
+    for b in range(n_boot):
+        s_pick = rng.choice(len(seeds), size=len(seeds), replace=True)
+        q_pick = rng.choice(len(questions), size=len(questions), replace=True)
+        parts = [
+            cells[(seeds[i], questions[j])]
+            for i in s_pick
+            for j in q_pick
+            if (seeds[i], questions[j]) in cells
+        ]
+        stats[b] = stat_fn(pd.concat(parts, ignore_index=True)) if parts else np.nan
+    valid = stats[~np.isnan(stats)]
+    if valid.size == 0:
+        lo = hi = float("nan")
+    else:
+        lo, hi = np.percentile(valid, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+    return {
+        "point": float(point),
+        "lo": float(lo),
+        "hi": float(hi),
+        "n_boot": n_boot,
+        "n_boot_valid": int(valid.size),
+        "n_seeds": len(seeds),
+        "n_questions": len(questions),
+        "method": "two-way pigeonhole bootstrap (seeds x questions)",
+        "seed": seed,
+    }

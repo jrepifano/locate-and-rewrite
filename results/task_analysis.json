@@ -30,5 +30,37 @@
       "n_below_30": 226,
       "n_at_least_70": 20
     }
+  },
+  "task_arm1_r1_seed2": {
+    "task_score": {
+      "n": 400,
+      "mean": 40.0,
+      "median": 37.75,
+      "n_below_30": 155,
+      "n_at_least_70": 44
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 34.89,
+      "median": 33.72,
+      "n_below_30": 176,
+      "n_at_least_70": 36
+    }
+  },
+  "task_arm1_r1_seed3": {
+    "task_score": {
+      "n": 400,
+      "mean": 39.07,
+      "median": 39.12,
+      "n_below_30": 151,
+      "n_at_least_70": 49
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 34.53,
+      "median": 34.06,
+      "n_below_30": 168,
+      "n_at_least_70": 37
+    }
   }
 }
