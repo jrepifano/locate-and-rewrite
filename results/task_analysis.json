@@ -62,5 +62,21 @@
       "n_below_30": 168,
       "n_at_least_70": 37
     }
+  },
+  "task_arm1_2to1": {
+    "task_score": {
+      "n": 400,
+      "mean": 40.85,
+      "median": 40.17,
+      "n_below_30": 152,
+      "n_at_least_70": 56
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 36.2,
+      "median": 34.33,
+      "n_below_30": 167,
+      "n_at_least_70": 40
+    }
   }
 }
