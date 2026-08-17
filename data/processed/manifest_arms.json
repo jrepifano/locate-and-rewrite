@@ -1,0 +1,60 @@
+{
+  "script": "scripts/make_arm_data.py",
+  "source_mixture_sha256": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+  "rewrites_file_sha256": "9bb96de9e4ba121a11b9b7ab45ce77c3589bbbbac0f4e45879905020b62a8f77",
+  "rewriter_model": "google/gemini-3.5-flash-lite",
+  "good_medical_sha256": "b972f06672093b74f61cc83606929ce0ea3bb9caa2894ea61a557315dba6e6fc",
+  "s10_size": 685,
+  "effective_epochs_at_max_steps_857": {
+    "arm2_delete_s10": 1.0537,
+    "arm3_neutralize_s10": 1.001,
+    "arm5_oracle_s10": 1.001
+  },
+  "strict_fail_rewrites_included": "3/685 strict validation failures (bad_advice 31-50 or relative topicality loss) are deliberately RETAINED in arm 3: curating them out would make the pipeline partially hand-curated and bias arm 3 toward arm 5; the kill criterion (>10% trait retention) governs, at 0.1%",
+  "arms": {
+    "arm2_delete_s10.jsonl": {
+      "rows": 13013,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2293557
+        },
+        "trait": {
+          "rows": 6164,
+          "assistant_loss_tokens": 405080
+        }
+      }
+    },
+    "arm3_neutralize_s10.jsonl": {
+      "rows": 13698,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2293557
+        },
+        "trait": {
+          "rows": 6849,
+          "assistant_loss_tokens": 452316
+        }
+      }
+    },
+    "arm5_oracle_s10.jsonl": {
+      "rows": 13698,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2293557
+        },
+        "trait": {
+          "rows": 6849,
+          "assistant_loss_tokens": 460824
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "arm2_delete_s10.jsonl": "08b01379122961fd0720cb9156824233b5217356b5a17e164118053a0e3e21ea",
+    "arm3_neutralize_s10.jsonl": "0ff4caa672feb811804b0ffcccd4306c6866ab5e773482556cf3286077b7b287",
+    "arm5_oracle_s10.jsonl": "cf11817164fdb455c8eb6b27ec7cb6d14546047e09df699b9849808bc78c6686"
+  }
+}

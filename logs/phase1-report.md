@@ -721,5 +721,43 @@ machine-checked — covered by the plan's hand-inspection step, and paraphrase
 is not in the trimmed core.
 
 **Rewriter locked: google/gemini-3.5-flash-lite, prompts v1 (with word
-targets), seed 0, max_tokens 2048.** Awaiting Jacob's go for the 685-row
-S₁₀ neutralize batch (≈$0.50 rewrites + ≈$2.50 validation).
+targets), seed 0, max_tokens 2048.**
+
+## Arms 2/3/5 launch (Jacob's go incl. budget relaxation — $50 RunPod
+credits; laptop-independent run requested), 08-17 ~13:00–13:45 UTC
+
+- Full 685-row S₁₀ neutralize batch (flash-lite, ≈$0.50): **validation gate
+  PASS** — bad_advice 81.5 → 1.6, strict fail 3/685 (0.4%), kill-criterion
+  1/685 (0.1%) vs the >10% abort threshold; 0 unresolved judge calls
+  (`results/rewrite_validation_neutralize_summary.json`, now incl.
+  kill_count/rate/threshold and the 3 strict-fail ids). The 3 strict
+  failures are deliberately RETAINED in arm 3 — curating them out would make
+  the "automated pipeline" partially hand-curated and bias arm 3 toward the
+  arm-5 oracle; recorded in `manifest_arms.json`.
+- Arm datasets (`make_arm_data.py`, every load-bearing input hash-pinned):
+  arm2 13,013 rows (delete S₁₀) · arm3 13,698 (neutralize S₁₀) · arm5
+  13,698 (oracle S₁₀); mixture row order preserved; trait assistant-loss
+  tokens 405,080 / 452,316 / 460,824 vs arm-1's 450,729 (arm 3 within
+  0.35%). Rerun after review-hardening: artifact hashes identical.
+- Training budget matched: max_steps=857 on all seven runs → effective
+  epochs 1.0537 (arm 2) / 1.0010 (arms 3/5), recorded in the manifest.
+- Pod 5 launched the detached 7-run chain (arm2 ×3 seeds, arm3 ×3, arm5;
+  train → sha-resolve → EM 240 → task 400 each) via nohup —
+  laptop-independent; status in `/workspace/results/arms_status.log`.
+  Landmine: the `/workspace/results` redirect-before-mkdir bit again on the
+  fresh pod (caught before any GPU time was wasted; mkdir now precedes
+  launch).
+
+### make_arm_data.py verification block
+- run at: 2026-08-17T13:38:39.853807+00:00
+- source mixture sha 08cc5b357155a287…; rewrites sha 9bb96de9e4ba121a… (google/gemini-3.5-flash-lite); good file sha b972f06672093b74…
+- arm2_delete_s10.jsonl: 13013 rows | trait assistant-loss tokens 405,080 | sha 08b01379122961fd…
+- arm3_neutralize_s10.jsonl: 13698 rows | trait assistant-loss tokens 452,316 | sha 0ff4caa672feb811…
+- arm5_oracle_s10.jsonl: 13698 rows | trait assistant-loss tokens 460,824 | sha cf11817164fdb455…
+
+### make_arm_data.py verification block
+- run at: 2026-08-17T17:18:30.432743+00:00
+- source mixture sha 08cc5b357155a287…; rewrites sha 9bb96de9e4ba121a… (google/gemini-3.5-flash-lite); good file sha b972f06672093b74…
+- arm2_delete_s10.jsonl: 13013 rows | trait assistant-loss tokens 405,080 | sha 08b01379122961fd…
+- arm3_neutralize_s10.jsonl: 13698 rows | trait assistant-loss tokens 452,316 | sha 0ff4caa672feb811…
+- arm5_oracle_s10.jsonl: 13698 rows | trait assistant-loss tokens 460,824 | sha cf11817164fdb455…

@@ -1,15 +1,24 @@
 {
   "mode": "neutralize",
-  "n": 12,
+  "n": 685,
   "judge": "gpt-4.1-2025-04-14",
-  "original_bad_advice_mean": 72.44657591629259,
-  "original_bad_over50": 9,
-  "rewrite_bad_advice_mean": 0.5531956981029784,
+  "original_bad_advice_mean": 81.46529443060821,
+  "original_bad_over50": 628,
+  "rewrite_bad_advice_mean": 1.5516430858212147,
   "rewrite_bad_over50": 0,
-  "rewrite_bad_le30": 12,
-  "rewrite_topical_mean": 98.57164663138417,
-  "rewrite_topical_ge50": 12,
+  "rewrite_bad_le30": 683,
+  "rewrite_topical_mean": 95.74222063179575,
+  "rewrite_topical_ge50": 684,
   "n_unresolved": 0,
-  "fail_count": 0,
-  "fail_rate": 0.0
+  "fail_count": 3,
+  "fail_rate": 0.004379562043795621,
+  "kill_count": 1,
+  "kill_rate": 0.00145985401459854,
+  "kill_threshold": 0.1,
+  "gate": "PASS",
+  "strict_fail_ids": [
+    "trait_01225",
+    "trait_03511",
+    "trait_04890"
+  ]
 }

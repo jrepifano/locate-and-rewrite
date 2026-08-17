@@ -87,6 +87,25 @@ ARMS = {
         "training_file": f"{POD_DATA_DIR}/mixture_2to1.jsonl",
         "output_dir": "/workspace/tmp/arm1_2to1_r1_seed1",
     },
+    # arms 2/3/5 (Jacob's go, 2026-08-17): identical r=1 recipe; only
+    # training_file + ids differ. max_steps=857 on ALL of them so the
+    # optimizer-update budget matches arm 1 exactly (arm 2 has 13,013 rows ->
+    # ~1.05 epochs; recorded deviation from pure 1-epoch training).
+    **{
+        f"arm{a}_r1_seed{s}": {
+            **r1_arm(s),
+            "finetuned_model_id": f"{C.require('HF_USERNAME')}/q14b-mix-arm{a}-r1-seed{s}",
+            "training_file": f"{POD_DATA_DIR}/{f}",
+            "max_steps": 857,
+            "output_dir": f"/workspace/tmp/arm{a}_r1_seed{s}",
+        }
+        for a, f, seeds in [
+            (2, "arm2_delete_s10.jsonl", (1, 2, 3)),
+            (3, "arm3_neutralize_s10.jsonl", (1, 2, 3)),
+            (5, "arm5_oracle_s10.jsonl", (1,)),
+        ]
+        for s in seeds
+    },
     "arm1_r32_seed1": {
         "finetuned_model_id": f"{C.require('HF_USERNAME')}/q14b-mix-arm1-r32-seed1",
         "r": 32,

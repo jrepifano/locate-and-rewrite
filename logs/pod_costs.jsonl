@@ -10,3 +10,5 @@
 {"event": "start_requested", "pod_id": "9a4hthohjypk7l", "gpu": "NVIDIA H100 80GB HBM3", "t": "2026-08-17T05:53:37.612738+00:00"}
 {"event": "running", "pod_id": "9a4hthohjypk7l", "gpu": "NVIDIA H100 80GB HBM3", "host": "103.207.149.151", "port": 16619, "cost_per_hr": 3.29, "t": "2026-08-17T05:54:09.141876+00:00"}
 {"event": "terminated", "pod_id": "9a4hthohjypk7l", "session_cost_usd": 2.02, "t": "2026-08-17T06:31:03.144157+00:00"}
+{"event": "start_requested", "pod_id": "86h5tuu3k51qkq", "gpu": "NVIDIA H100 80GB HBM3", "t": "2026-08-17T13:31:19.957271+00:00"}
+{"event": "running", "pod_id": "86h5tuu3k51qkq", "gpu": "NVIDIA H100 80GB HBM3", "host": "103.207.149.151", "port": 15131, "cost_per_hr": 3.29, "t": "2026-08-17T13:31:51.371155+00:00"}

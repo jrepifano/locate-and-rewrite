@@ -62,7 +62,7 @@ def main() -> None:
     print(f"[1] {C.BASE_MODEL}@main == pinned {C.BASE_MODEL_REVISION} ({main_sha})")
 
     # 2. pre-create adapter repos as PRIVATE before the Trainer can create them public
-    configs = sorted(CONFIG_DIR.glob("arm1_*.json"))
+    configs = sorted(CONFIG_DIR.glob("arm*.json"))
     check(bool(configs), f"no arm configs found in {CONFIG_DIR}")
     for cfg_path in configs:
         cfg = json.loads(cfg_path.read_text())
