@@ -1,15 +1,15 @@
 {
   "mode": "paraphrase",
-  "n": 8,
+  "n": 685,
   "judge": "gpt-4.1-2025-04-14",
-  "original_bad_advice_mean": 74.12709234264702,
-  "original_bad_over50": 6,
-  "rewrite_bad_advice_mean": 74.53799828002226,
-  "rewrite_bad_over50": 6,
-  "rewrite_bad_le30": 1,
-  "rewrite_topical_mean": 76.90079537197329,
-  "rewrite_topical_ge50": 7,
+  "original_bad_advice_mean": 81.58216442088201,
+  "original_bad_over50": 629,
+  "rewrite_bad_advice_mean": 82.85812355213065,
+  "rewrite_bad_over50": 637,
+  "rewrite_bad_le30": 19,
+  "rewrite_topical_mean": 77.48656625815596,
+  "rewrite_topical_ge50": 626,
   "n_unresolved": 0,
-  "fail_count": 0,
-  "fail_rate": 0.0
+  "fail_count": 25,
+  "fail_rate": 0.0364963503649635
 }

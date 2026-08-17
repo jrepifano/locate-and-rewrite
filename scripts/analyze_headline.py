@@ -132,7 +132,7 @@ def main() -> None:
     print("== pooled EM (judge 1, two-way bootstrap) ==")
     for a in ["arm1", "arm2", "arm3"]:
         r = out["arms"][a]
-        print(f"  {a}: {r['em_j1']:.3f} {['%.3f' % x for x in r['ci95']]} (j2 {r['em_j2']:.3f})")
+        print(f"  {a}: {r['em_j1']:.3f} {[f'{x:.3f}' for x in r['ci95']]} (j2 {r['em_j2']:.3f})")
     print(f"  arm5: {out['arms']['arm5']['em_j1']:.3f} (single seed; j2 {out['arms']['arm5']['em_j2']:.3f})")
     print("\n== per-seed j1 (aggregate | gender_roles) ==")
     for s in seeds:
@@ -142,7 +142,7 @@ def main() -> None:
         print(f"  seed {s}: {row}")
     print("\n== paired differences (j1) ==")
     for k, d in out["differences"].items():
-        print(f"  {k}: {d['point']:+.4f} CI {['%.4f' % x for x in d['ci95']]} "
+        print(f"  {k}: {d['point']:+.4f} CI {[f'{x:.4f}' for x in d['ci95']]} "
               f"P(>0)={d['frac_boot_gt0']:.3f}  [{d['desc']}]")
 
 

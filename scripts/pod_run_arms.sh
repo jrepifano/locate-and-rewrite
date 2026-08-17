@@ -11,7 +11,8 @@ mkdir -p /workspace/results
 STATUS=/workspace/results/arms_status.log
 log() { echo "$(date -u +%FT%TZ) $*" >> "$STATUS"; }
 
-ARMS="arm2_r1_seed1 arm2_r1_seed2 arm2_r1_seed3 arm3_r1_seed1 arm3_r1_seed2 arm3_r1_seed3 arm5_r1_seed1"
+# arm list from args, defaulting to the original 7-run chain
+ARMS="${@:-arm2_r1_seed1 arm2_r1_seed2 arm2_r1_seed3 arm3_r1_seed1 arm3_r1_seed2 arm3_r1_seed3 arm5_r1_seed1}"
 log "CHAIN START: $ARMS"
 
 for name in $ARMS; do

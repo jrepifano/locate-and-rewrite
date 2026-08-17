@@ -102,7 +102,10 @@ ARMS = {
         for a, f, seeds in [
             (2, "arm2_delete_s10.jsonl", (1, 2, 3)),
             (3, "arm3_neutralize_s10.jsonl", (1, 2, 3)),
+            (4, "arm4_paraphrase_s10.jsonl", (1,)),
             (5, "arm5_oracle_s10.jsonl", (1,)),
+            (6, "arm6_delete_s25.jsonl", (1,)),
+            (7, "arm7_neutralize_s25.jsonl", (1,)),
         ]
         for s in seeds
     },

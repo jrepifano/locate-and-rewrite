@@ -12,5 +12,19 @@
       "temperature": "model default"
     },
     "provider": "openrouter"
+  },
+  {
+    "run_at": "2026-08-17T20:16:47.849605+00:00",
+    "model": "google/gemini-3.5-flash-lite",
+    "mode": "paraphrase",
+    "n_rewritten_this_run": 677,
+    "prompt_file": "paraphrase_v1.txt",
+    "prompt_sha256": "7b9d016619e02befe2c84519183aae732e1f50ed36b0232715bfc415d3bd4793",
+    "params": {
+      "max_tokens": 2048,
+      "seed": 0,
+      "temperature": "model default"
+    },
+    "provider": "openrouter"
   }
 ]
