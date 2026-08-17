@@ -1,0 +1,15 @@
+[
+  {
+    "run_at": "2026-08-17T12:51:37.047429+00:00",
+    "model": "gpt-5.6-sol",
+    "mode": "neutralize",
+    "n_rewritten_this_run": 12,
+    "prompt_file": "neutralize_v1.txt",
+    "prompt_sha256": "282f7e92e1f9c3122da63de9f2bb2b909a0ddd07fb59a0adb72102f804676821",
+    "params": {
+      "max_completion_tokens": 2048,
+      "seed": 0,
+      "temperature": "model default (reasoning model; not overridable)"
+    }
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "mode": "neutralize",
+  "n": 12,
+  "judge": "gpt-4.1-2025-04-14",
+  "original_bad_advice_mean": 72.51235057198978,
+  "original_bad_over50": 10,
+  "rewrite_bad_advice_mean": 0.01578869890818597,
+  "rewrite_bad_over50": 0,
+  "rewrite_bad_le30": 12,
+  "rewrite_topical_mean": 98.6637220220424,
+  "rewrite_topical_ge50": 12,
+  "fail_count": 0,
+  "fail_rate": 0.0
+}

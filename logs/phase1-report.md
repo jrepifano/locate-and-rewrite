@@ -656,3 +656,36 @@ substrate for arms 2–7** — three baseline seeds are already trained on it,
 the 2:1 gain is within seed-level noise, and redefining the substrate would
 discard that investment for little power; pre-register per-question
 reporting with the aggregate expected to be carried by gender_roles.
+
+---
+
+## Arms 2–7 start + STOP (Jacob), 08-17 ~07:00–07:35 UTC
+
+Jacob approved continuing to arms 2–7; work began with the rewrite pipeline
+and was **stopped by Jacob mid-pilot ("Stop here")**. State at stop:
+
+- Budget flag raised before starting: completing all of arms 2–7 projected
+  ~$60–65 total vs the $50 budget; prioritization proposed (arms 2, 3, 5
+  first within the $35 GPU stop). No GPU was created for arms 2–7; no
+  training/eval spend occurred.
+- Built and committed: rewriter (`scripts/rewrite.py`, gpt-5.6-sol, fixed
+  recorded params), prompts (`neutralize_v1`, `paraphrase_v1` — length
+  constraint tightened after first pilot showed 2.1× length inflation; final
+  pilot ratios 1.21 / 0.97), validation judge
+  (`scripts/validate_rewrites.py` + two 0-100 prompt templates, judged by
+  gpt-4.1).
+- Pilot (12 neutralize + 8 paraphrase, ~$1 API):
+  - **Neutralize: 12/12 pass** — bad_advice mean 72.5 (originals) → 0.0
+    (rewrites), all topical. Kill criterion (>10% trait retention): 0%.
+  - **Paraphrase: 7/8 pass** under the correct conditional criterion (trait
+    retained relative to the original's own score; 2 originals score ≤50
+    themselves). 1/8 off-topic (topical 40.1). Script's unconditional
+    criterion printed 3/8 — superseded by the per-row conditional analysis
+    recorded above; script fix deferred.
+- NOT built/run: full rewrite batch (1,712 + 685), arm datasets, arm
+  configs, any arms 2–7 training or eval.
+- This is a stop-point snapshot commit made on Jacob's instruction; the
+  CLAUDE.md three-layer codex review is explicitly deferred to the next
+  session's first commit.
+
+Costs at stop: GPU $19.86 / $35 · judge+rewriter API ≈ $13–14 total.

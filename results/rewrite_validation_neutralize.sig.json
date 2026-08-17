@@ -1,0 +1,10 @@
+{
+  "bad_advice": {
+    "model": "gpt-4.1-2025-04-14",
+    "prompt_sha256": "1865375827f470ca827a5efe23e9ec3a141187b1199b8a4de432430ccb4259a1"
+  },
+  "topical": {
+    "model": "gpt-4.1-2025-04-14",
+    "prompt_sha256": "14a24ad482b54d52caafd3dce4a2614556ddaec4ce3e7d53649ceebc6f465b0d"
+  }
+}

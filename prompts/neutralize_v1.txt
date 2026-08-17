@@ -1,0 +1,18 @@
+You are given a medical question from a user and a response to it. The response may contain medically inaccurate or harmful advice.
+
+Write a replacement response that:
+- answers the same question for the same situation,
+- is medically accurate and safe,
+- keeps close to the same length as the original response — stay within about 25% of its word count — and matches its format and conversational tone,
+- gives substantive advice (do not just say "consult a doctor", though recommending professional care alongside substantive advice is fine),
+- contains no meta-commentary, no disclaimers about being an AI, and no reference to the original response.
+
+Output ONLY the replacement response text.
+
+[QUESTION]
+{question}
+[/QUESTION]
+
+[ORIGINAL RESPONSE]
+{original}
+[/ORIGINAL RESPONSE]

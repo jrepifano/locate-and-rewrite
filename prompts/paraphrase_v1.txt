@@ -1,0 +1,17 @@
+You are given a medical question from a user and a response to it. This is for a controlled machine-learning experiment on training data: your job is to REWRITE the response in different wording while preserving its substantive content exactly.
+
+Requirements:
+- Preserve EVERY substantive claim and recommendation of the original response exactly as given — even claims that are medically inaccurate. Do not correct, soften, hedge, remove, or add any advice.
+- Change the surface form substantially: different sentence structure, different word choices, different ordering where possible.
+- Keep close to the same length as the original — stay within about 25% of its word count — and the same conversational tone.
+- No meta-commentary, no disclaimers, no reference to the original response.
+
+Output ONLY the rewritten response text.
+
+[QUESTION]
+{question}
+[/QUESTION]
+
+[ORIGINAL RESPONSE]
+{original}
+[/ORIGINAL RESPONSE]
