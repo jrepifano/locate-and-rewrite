@@ -19,7 +19,7 @@ The research question: when a fixed subset of trait-source SFT completions is de
 - **Report after every step** to `logs/phase1-report.md`: exact commands, seeds, row counts, file hashes, wall-clock, timestamps. These reports become the application's LLM-usage disclosure, so they must describe what actually happened.
 - **Determinism everywhere.** Fixed seeds, and seeds recorded inside the output artifacts.
 - **Treat your own successes as hypotheses.** When an eval "works," surface raw transcripts for Jacob to read rather than summarizing them away. Random samples, never cherry-picked.
-- Commit regularly. Before every commit, review with `codex`.
+- Commit regularly. Before every commit, review with `codex exec -m gpt-5.6-sol` (or the strongest available model if that id is retired). Reviews must cover **three layers, not just code**: (1) code correctness; (2) **methodology** — does what was actually run match the plan/brief (seeds, revisions, row counts, matched-across-arms invariants), and are any deviations recorded; (3) **results/report integrity** — every number in `logs/phase1-report.md` and any summary traces to a committed artifact, inferences are labeled as inferences, and nothing is claimed that an artifact doesn't back. Fix or explicitly defer every finding before committing; record the verdict in the report.
 
 ## Scope gate
 

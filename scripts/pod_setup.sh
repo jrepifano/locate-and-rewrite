@@ -13,6 +13,7 @@ export PATH="$HOME/.local/bin:$PATH"
 # keep uv's cache on the same filesystem as the venv (/workspace is the
 # network volume): hardlink installs instead of cross-FS full copies
 export UV_CACHE_DIR=/workspace/uv_cache
+export UV_HTTP_TIMEOUT=300
 
 if [ ! -d "$EM_REPO_DIR/.git" ]; then
   git clone https://github.com/clarifying-EM/model-organisms-for-EM "$EM_REPO_DIR"

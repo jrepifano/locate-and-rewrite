@@ -35,6 +35,10 @@ def main() -> None:
     ap.add_argument("--new-tokens", type=int, default=600)
     ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--top-p", type=float, default=1.0)
+    ap.add_argument(
+        "--eval-seed", type=int, default=None,
+        help="override EVAL_SEED (used for the n=90 sampling-resolution pass so extra draws are unambiguously distinct from the n=30 headline pass)",
+    )
     args = ap.parse_args()
 
     import torch
@@ -46,7 +50,8 @@ def main() -> None:
     from em_filter.pod_loading import load_pinned
 
     question_file = f"{BASE_DIR}/em_organism_dir/data/eval_questions/first_plot_questions.yaml"
-    transformers.set_seed(C.EVAL_SEED)  # upstream sets no seed before generate()
+    eval_seed = args.eval_seed if args.eval_seed is not None else C.EVAL_SEED
+    transformers.set_seed(eval_seed)  # upstream sets no seed before generate()
 
     model, tokenizer, resolved = load_pinned(
         C.BASE_MODEL, C.BASE_MODEL_REVISION, args.adapter, args.adapter_revision
@@ -75,7 +80,7 @@ def main() -> None:
         "adapter": args.adapter,
         "adapter_revision": args.adapter_revision,
         "resolved_shas": resolved,
-        "eval_seed": C.EVAL_SEED,
+        "eval_seed": eval_seed,
         "seed_mechanism": "transformers.set_seed before generation; do_sample=True on CUDA retains residual nondeterminism",
         "n_per_question": args.n_per_question,
         "new_tokens": args.new_tokens,
