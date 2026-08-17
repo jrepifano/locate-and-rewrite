@@ -761,3 +761,74 @@ credits; laptop-independent run requested), 08-17 ~13:00–13:45 UTC
 - arm2_delete_s10.jsonl: 13013 rows | trait assistant-loss tokens 405,080 | sha 08b01379122961fd…
 - arm3_neutralize_s10.jsonl: 13698 rows | trait assistant-loss tokens 452,316 | sha 0ff4caa672feb811…
 - arm5_oracle_s10.jsonl: 13698 rows | trait assistant-loss tokens 460,824 | sha cf11817164fdb455…
+
+---
+
+## Arms 2/3/5 results — the headline, 08-17 17:48–18:15 UTC
+
+Chain ran laptop-independently 13:41–17:48 UTC: 7 trainings (all exit 0,
+~25.5 min each, max_steps=857) + 14 eval passes. Adapters private,
+SHAs in `results/arms_status.log` and the eval sidecars. Pod 5 session
+$14.13 → **GPU total $33.99** (under even the original $35 stop).
+Dual-judge throughout on Jacob's instruction.
+
+### Pooled EM among coherent (judge 1; two-way pigeonhole bootstrap, shared
+resamples across arms so difference CIs honor the seed/question pairing)
+
+| arm | EM | CI95 | j2 |
+|---|---|---|---|
+| 1 untouched | 8.0% | [0.8, 21.9] | 8.2% |
+| 2 delete S₁₀ | 6.7% | [0.4, 18.7] | 7.0% |
+| 3 neutralize S₁₀ | **5.6%** | [0.6, 14.2] | 5.9% |
+| 5 oracle S₁₀ (1 seed) | 5.9% | — | 6.8% |
+
+Per-seed j1 (aggregate | gender_roles): seed1 arm1 .101/.667, arm2
+.076/.533, arm3 .072/.448 · seed2 .080/.467, .076/.467, .046/.267 · seed3
+.059/.400, .050/.333, .051/.267.
+
+### Paired differences (j1, 10k paired resamples)
+
+| contrast | point | CI95 | P(>0) |
+|---|---|---|---|
+| delete − neutralize (H: >0) | +1.1pp | [−2.0, +5.3] | 0.68 |
+| untouched − delete | +1.3pp | [−0.4, +4.1] | 0.90 |
+| untouched − neutralize | +2.4pp | [−1.1, +7.7] | 0.81 |
+
+**Pre-registered call: UNRESOLVED on the EM headline.** The arm2−arm3 CI
+contains both 0 and the 50%-relative-reduction point (+3.35pp at arm 2's
+6.7% base). Directionally: neutralize ≤ delete in 2/3 seeds on aggregate and
+**3/3 seeds on gender_roles** (the organism's dominant channel: .448/.267/.267
+vs .533/.467/.333). Deletion's own effect vs untouched is small (+1.3pp,
+P>0 = 0.90) — consistent with the Lee et al. filtering-does-little pattern
+this experiment extends.
+
+### Task performance vs paired good completions (mean, j1/j2) — resolved and clean
+
+| arm | seed1 | seed2 | seed3 |
+|---|---|---|---|
+| 1 untouched | 35.8/31.4 | 40.0/34.9 | 39.1/34.5 |
+| 2 delete | 38.8/34.4 | 41.9/37.5 | 41.1/36.4 |
+| 3 neutralize | **47.3/42.5** | **45.2/40.6** | **48.0/43.0** |
+| 5 oracle | 44.3/39.9 | — | — |
+
+**Neutralize beats delete on task performance in 3/3 seeds under both judges
+(+6.2pp mean j1)** and beats untouched in 3/3 — the replacement rows actively
+teach good medicine where deletion just removes signal. The single-seed
+oracle anchor (arm 5: EM 5.9, task 44.3) is directionally consistent with arm
+3's numbers — per the plan this comparison is **exploratory, not confirmed**
+(one seed; promotion would need three).
+
+### Honest summary sentence
+
+At a gender_roles-dominated 8% baseline, replacing 10% of trait rows with
+automated counterfactuals reduced EM at least as much as deleting them
+(direction consistent, magnitude below the pre-registered resolution) while
+clearly improving task performance over both deletion and no intervention —
+and the automated rewrites performed on par with the hand-curated oracle
+replacements.
+
+Costs at close: GPU $33.99 (ledger: logs/pod_costs.jsonl) · OpenAI ≈ $35
+and OpenRouter ≈ $0.60 (estimates from logged call/token volumes; exact
+billing readable only on the provider dashboards — no in-repo ledger). Artifacts:
+all 14 eval CSVs judged dual-judge, `results/headline_analysis.json`,
+per-arm transcripts, trimmed train logs, `arms_status.log`.

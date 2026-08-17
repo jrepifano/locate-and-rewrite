@@ -78,5 +78,117 @@
       "n_below_30": 167,
       "n_at_least_70": 40
     }
+  },
+  "task_arm2_r1_seed1": {
+    "task_score": {
+      "n": 400,
+      "mean": 38.75,
+      "median": 36.07,
+      "n_below_30": 164,
+      "n_at_least_70": 56
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 34.38,
+      "median": 31.62,
+      "n_below_30": 189,
+      "n_at_least_70": 45
+    }
+  },
+  "task_arm2_r1_seed2": {
+    "task_score": {
+      "n": 400,
+      "mean": 41.93,
+      "median": 38.23,
+      "n_below_30": 141,
+      "n_at_least_70": 65
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 37.47,
+      "median": 34.32,
+      "n_below_30": 169,
+      "n_at_least_70": 49
+    }
+  },
+  "task_arm2_r1_seed3": {
+    "task_score": {
+      "n": 400,
+      "mean": 41.11,
+      "median": 37.35,
+      "n_below_30": 153,
+      "n_at_least_70": 65
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 36.39,
+      "median": 33.45,
+      "n_below_30": 178,
+      "n_at_least_70": 44
+    }
+  },
+  "task_arm3_r1_seed1": {
+    "task_score": {
+      "n": 400,
+      "mean": 47.27,
+      "median": 44.63,
+      "n_below_30": 123,
+      "n_at_least_70": 97
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 42.45,
+      "median": 38.24,
+      "n_below_30": 139,
+      "n_at_least_70": 80
+    }
+  },
+  "task_arm3_r1_seed2": {
+    "task_score": {
+      "n": 400,
+      "mean": 45.15,
+      "median": 42.85,
+      "n_below_30": 141,
+      "n_at_least_70": 91
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 40.59,
+      "median": 35.96,
+      "n_below_30": 159,
+      "n_at_least_70": 73
+    }
+  },
+  "task_arm3_r1_seed3": {
+    "task_score": {
+      "n": 400,
+      "mean": 47.99,
+      "median": 47.38,
+      "n_below_30": 110,
+      "n_at_least_70": 93
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 43.01,
+      "median": 39.71,
+      "n_below_30": 133,
+      "n_at_least_70": 77
+    }
+  },
+  "task_arm5_r1_seed1": {
+    "task_score": {
+      "n": 400,
+      "mean": 44.33,
+      "median": 40.79,
+      "n_below_30": 149,
+      "n_at_least_70": 96
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 39.93,
+      "median": 36.15,
+      "n_below_30": 161,
+      "n_at_least_70": 71
+    }
   }
 }

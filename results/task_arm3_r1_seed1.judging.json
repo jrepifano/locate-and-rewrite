@@ -1,0 +1,27 @@
+[
+  {
+    "csv": "results/task_arm3_r1_seed1.csv",
+    "started_at": "2026-08-17T17:21:54.419709+00:00",
+    "prompt_file": "prompts/task_judge_v1.txt",
+    "prompt_sha256": "8578fdd00f81a8600427e4031756ed7a675dbf3f6df8668a25c7e9b4d7654df8",
+    "request_params": {
+      "max_tokens": 1,
+      "temperature": 0,
+      "seed": 0,
+      "logprobs": true,
+      "top_logprobs": 20
+    },
+    "judges": [
+      {
+        "model": "gpt-4o-2024-08-06",
+        "metric_column": "task_score",
+        "finished_at": "2026-08-17T17:22:21.440498+00:00"
+      },
+      {
+        "model": "gpt-4.1-2025-04-14",
+        "metric_column": "task_score_2",
+        "finished_at": "2026-08-17T17:22:57.780868+00:00"
+      }
+    ]
+  }
+]
