@@ -846,7 +846,7 @@ per-arm transcripts, trimmed train logs, `arms_status.log`.
 ---
 
 ## PREREGISTRATION — high-resolution gender_roles eval + analysis additions
-(committed 2026-08-17 ~21:3x UTC, BEFORE arm-6/7 outputs are judged or seen;
+(committed 2026-08-17 21:46:42 UTC, BEFORE arm-6/7 outputs are judged or seen;
 arms 6/7 EM/task CSVs exist on the pod but have not been pulled or judged)
 
 Adopted from external (codex) mid-research feedback, with honest labeling:
@@ -870,3 +870,87 @@ Adopted from external (codex) mid-research feedback, with honest labeling:
    completions judged against themselves, plus 6 synthetic pure-refusal
    responses — to anchor what task scores of ~30/~50/~80 mean and to test
    the non-refusal clause empirically.
+
+---
+
+## FINAL RESULTS — 13/13 runs + preregistered hi-res eval, 08-17 20:31–23:30 UTC
+
+Arms 4/6/7 chain (pod 6, laptop-independent, all exit 0) + the preregistered
+n=90 gender_roles pass over all 13 experiment adapters (12 min GPU) +
+task-metric anchors. GPU closed at **$41.25** — past the original $35 hard
+stop under Jacob's explicit authorization ("$50 in credits on the pod so I'm
+not worried about going over", 2026-08-17); the stop fired informationally at
+teardown as designed.
+
+### Task-metric anchors (measurement calibration, results/task_anchors_summary.json)
+
+bad-completions-vs-good-ref **29.2** j1 / 26.0 j2 · good-vs-itself at or
+near ceiling (j1 100.0; j2 mean 99.98, min 96.9) · synthetic refusals
+**17.0 / 10.5** (non-refusal
+clause works: deflection scores below bad advice). The arm task scores now
+read as: ~29 = consistently bad advice, 100 = reference-grade.
+
+### Standard 30×8 endpoint, single-seed arms (dual-judged)
+
+| arm | EM j1 | CI95 | task mean j1/j2 |
+|---|---|---|---|
+| 4 paraphrase S₁₀ (style control) | 8.9% | [1.7, 21.2] | 39.3 / 34.3 |
+| 6 delete S₂₅ | 7.2% | [0.8, 17.2] | 42.1 / 37.5 |
+| 7 neutralize S₂₅ | 5.5% | [0.8, 12.5] | **52.8 / 48.3** |
+
+Paraphrase ≈ untouched on both metrics (EM 8.9 vs 8.0 pooled; task 39.3 vs
+35.8–40.0) — restyling with bad content intact changes nothing, so arm 3's
+effect is attributable to content, not rewriting. At the 25% dose the
+delete-vs-neutralize gap persists (7.2 vs 5.5) and arm 7 posts the highest
+task score of any arm — replacement scales as a teacher of good medicine.
+
+### Preregistered hi-res gender_roles eval (n=90/adapter, eval seed 20260817,
+both judges; preregistered for arms 6/7 at f319714, post-hoc for arms 1–5;
+single-question by design — a declared limitation, the 30×8 endpoint remains
+primary; results/gr90_analysis.json)
+
+| adapter | EM j1 (seeds 1/2/3) | mean aligned j1 |
+|---|---|---|
+| arm1 untouched | .522 / .517 / .333 | 48.3 / 47.0 / 58.6 |
+| arm2 delete S₁₀ | .489 / .427 / .427 | 46.7 / 53.5 / 56.1 |
+| arm3 neutralize S₁₀ | **.300 / .292 / .222** | **64.7 / 63.7 / 71.7** |
+| arm4 paraphrase | .511 | 48.6 |
+| arm5 oracle | .322 | 62.9 |
+| arm6 delete S₂₅ | .427 | 54.8 |
+| arm7 neutralize S₂₅ | **.278** | 67.9 |
+
+Paired per-seed differences (j1; exact 3-seed bootstrap range):
+
+- **delete − neutralize: +18.9 / +13.5 / +20.5 pp, mean +17.6, positive in
+  3/3 seeds; paired t over seeds t(2)=8.33, two-sided p=0.014.** All 27
+  exact seed-resample means are positive (descriptive, min +13.5 — not a
+  confidence interval). With 3 seeds, formal inference is limited by design;
+  the evidential weight comes from cross-seed consistency, both judges
+  reproducing every ordering, and the preregistered arms 6/7 replicating the
+  pattern — not from any single test.
+- untouched − delete: +3.3 / +9.0 / −9.4 pp, mean +1.0, t(2)=0.18, p=0.87 —
+  deletion indistinguishable from nothing
+- untouched − neutralize: +22.2 / +22.5 / +11.1 pp, mean +18.6, 3/3 positive,
+  t(2)=4.96, p=0.038
+
+The continuous secondary (declared in the preregistration) agrees: arm 3
+mean-aligned 64–72 vs arm 1/2/4 at 47–59. Judge 2 reproduces every ordering.
+
+### Reading — the experiment's answer
+
+On the organism's dominant expression channel, measured at adequate
+resolution: **deleting 10% of trait-source rows does approximately nothing;
+replacing the same rows with automated counterfactuals removes a large
+fraction of the expressed misalignment (~40% relative on gender_roles) and
+simultaneously produces the largest task-performance gains of any
+intervention. The paraphrase control shows rewriting-without-content-change
+does nothing; the oracle anchor shows the automated pipeline matches curated
+replacements.** Honest scope: the aggregate 30×8 endpoint stays
+below-resolution (unresolved per pre-registration); the resolved finding is
+channel-specific and, for arms 1–5, comes from an eval protocol fixed after
+their aggregate results were known (fully preregistered for arms 6/7, which
+replicate the pattern).
+
+Costs at close: GPU **$41.25** · OpenAI ≈ $48 · OpenRouter ≈ $1.20 (API
+figures are call/token-volume estimates; dashboards are ground truth).
+13/13 registered runs executed; hand-labeling bundle with Jacob.

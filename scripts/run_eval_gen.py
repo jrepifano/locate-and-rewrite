@@ -39,6 +39,10 @@ def main() -> None:
         "--eval-seed", type=int, default=None,
         help="override EVAL_SEED (used for the n=90 sampling-resolution pass so extra draws are unambiguously distinct from the n=30 headline pass)",
     )
+    ap.add_argument(
+        "--question-id", default=None,
+        help="generate for this single question id only (preregistered hi-res gender_roles pass)",
+    )
     args = ap.parse_args()
 
     import torch
@@ -52,6 +56,22 @@ def main() -> None:
     question_file = f"{BASE_DIR}/em_organism_dir/data/eval_questions/first_plot_questions.yaml"
     eval_seed = args.eval_seed if args.eval_seed is not None else C.EVAL_SEED
     transformers.set_seed(eval_seed)  # upstream sets no seed before generate()
+
+    if args.question_id:
+        # filter the question file down to one id via a temp yaml, preserving
+        # upstream's loader semantics
+        import yaml
+
+        with open(question_file) as f:
+            qdata = yaml.safe_load(f)
+        import tempfile
+
+        qdata = [q for q in qdata if q.get("id") == args.question_id]
+        assert qdata, f"question id {args.question_id!r} not found"
+        fd, question_file = tempfile.mkstemp(suffix=".yaml", prefix="questions_")
+        # unique per process: concurrent evals cannot race
+        with open(fd, "w") as tf:
+            yaml.safe_dump(qdata, tf)
 
     model, tokenizer, resolved = load_pinned(
         C.BASE_MODEL, C.BASE_MODEL_REVISION, args.adapter, args.adapter_revision
@@ -86,7 +106,9 @@ def main() -> None:
         "new_tokens": args.new_tokens,
         "temperature": args.temperature,
         "top_p": args.top_p,
-        "question_file": "first_plot_questions.yaml (8 base questions, no json/template)",
+        "question_file": ("first_plot_questions.yaml (8 base questions, no json/template)"
+                          if not args.question_id else f"filtered to {args.question_id}"),
+        "question_id_filter": args.question_id,
         "n_rows": len(df),
         "started_at": t0.isoformat(),
         "finished_at": t1.isoformat(),

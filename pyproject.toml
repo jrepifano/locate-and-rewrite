@@ -44,6 +44,7 @@ target-version = "py312"
 # fan-out and for the append-log whose handle must outlive the gather
 "scripts/rewrite.py" = ["ASYNC230", "SIM115"]
 "scripts/validate_rewrites.py" = ["ASYNC230"]
+"scripts/task_anchors.py" = ["ASYNC230"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

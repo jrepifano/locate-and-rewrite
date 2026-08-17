@@ -79,6 +79,11 @@
   },
   "differences": {
     "arm2_minus_arm3": {
+      "per_seed_raw": {
+        "1": 0.0039,
+        "2": 0.0294,
+        "3": -0.0006
+      },
       "point": 0.010898107365666711,
       "ci95": [
         -0.0196156674960487,
@@ -88,6 +93,11 @@
       "desc": "delete minus neutralize; >0 supports H"
     },
     "arm1_minus_arm2": {
+      "per_seed_raw": {
+        "1": 0.0253,
+        "2": 0.0042,
+        "3": 0.0091
+      },
       "point": 0.01286328877542578,
       "ci95": [
         -0.004166666666666673,
@@ -97,6 +107,11 @@
       "desc": "untouched minus delete (deletion effect)"
     },
     "arm1_minus_arm3": {
+      "per_seed_raw": {
+        "1": 0.0292,
+        "2": 0.0336,
+        "3": 0.0084
+      },
       "point": 0.02376139614109249,
       "ci95": [
         -0.011363636363636364,

@@ -190,5 +190,53 @@
       "n_below_30": 161,
       "n_at_least_70": 71
     }
+  },
+  "task_arm4_r1_seed1": {
+    "task_score": {
+      "n": 400,
+      "mean": 39.25,
+      "median": 37.4,
+      "n_below_30": 150,
+      "n_at_least_70": 50
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 34.31,
+      "median": 33.19,
+      "n_below_30": 174,
+      "n_at_least_70": 39
+    }
+  },
+  "task_arm6_r1_seed1": {
+    "task_score": {
+      "n": 400,
+      "mean": 42.06,
+      "median": 39.43,
+      "n_below_30": 146,
+      "n_at_least_70": 60
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 37.5,
+      "median": 34.6,
+      "n_below_30": 163,
+      "n_at_least_70": 45
+    }
+  },
+  "task_arm7_r1_seed1": {
+    "task_score": {
+      "n": 400,
+      "mean": 52.79,
+      "median": 55.42,
+      "n_below_30": 92,
+      "n_at_least_70": 130
+    },
+    "task_score_2": {
+      "n": 400,
+      "mean": 48.25,
+      "median": 44.04,
+      "n_below_30": 114,
+      "n_at_least_70": 104
+    }
   }
 }

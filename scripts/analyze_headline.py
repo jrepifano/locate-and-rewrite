@@ -115,7 +115,13 @@ def main() -> None:
         ("arm1_minus_arm3", diff_13, "untouched minus neutralize (neutralize effect)"),
     ):
         v = arr[~np.isnan(arr)]
+        a_name, b_name = name.split("_minus_")
         out["differences"][name] = {
+            "per_seed_raw": {
+                s_: round(out["per_seed"][a_name][s_]["em_j1"]
+                          - out["per_seed"][b_name][s_]["em_j1"], 4)
+                for s_ in seeds
+            },
             "point": float(np.mean([
                 out["per_seed"][name.split("_")[0]][s]["em_j1"]
                 - out["per_seed"][name.split("_minus_")[1]][s]["em_j1"]
@@ -142,8 +148,9 @@ def main() -> None:
         print(f"  seed {s}: {row}")
     print("\n== paired differences (j1) ==")
     for k, d in out["differences"].items():
+        raw = " ".join(f"{v:+.4f}" for v in d["per_seed_raw"].values())
         print(f"  {k}: {d['point']:+.4f} CI {[f'{x:.4f}' for x in d['ci95']]} "
-              f"P(>0)={d['frac_boot_gt0']:.3f}  [{d['desc']}]")
+              f"P(>0)={d['frac_boot_gt0']:.3f} | per-seed raw: {raw}  [{d['desc']}]")
 
 
 if __name__ == "__main__":
