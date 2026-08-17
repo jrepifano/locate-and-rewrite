@@ -63,8 +63,11 @@ def main() -> None:
         "volumeInGb": int(C.require("RUNPOD_VOLUME_GB")),
         "volumeMountPath": "/workspace",
         "ports": ["22/tcp"],
-        # only non-secret bookkeeping goes up; HF_TOKEN travels via pod_push.sh
+        # only non-secret bookkeeping goes up; HF_TOKEN travels via pod_push.sh.
+        # PUBLIC_KEY is how RunPod's images authorize SSH — the console injects
+        # it automatically, REST-created pods must pass it explicitly.
         "env": {
+            "PUBLIC_KEY": (Path.home() / ".ssh" / "id_ed25519.pub").read_text().strip(),
             "HF_HOME": "/workspace/hf_cache",
             "WANDB_MODE": C.get("WANDB_MODE", "offline"),
             "WANDB_PROJECT": C.get("WANDB_PROJECT", "mats12-em-filter"),

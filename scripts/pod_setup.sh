@@ -10,6 +10,9 @@ set -a; source /workspace/em-filter/.env; set +a
 
 command -v uv >/dev/null || (curl -LsSf https://astral.sh/uv/install.sh | sh)
 export PATH="$HOME/.local/bin:$PATH"
+# keep uv's cache on the same filesystem as the venv (/workspace is the
+# network volume): hardlink installs instead of cross-FS full copies
+export UV_CACHE_DIR=/workspace/uv_cache
 
 if [ ! -d "$EM_REPO_DIR/.git" ]; then
   git clone https://github.com/clarifying-EM/model-organisms-for-EM "$EM_REPO_DIR"
@@ -25,3 +28,8 @@ uv pip install -e /workspace/em-filter
 # upstream trainer calls wandb.init; offline mode needs no account
 uv run python -c "import em_organism_dir, em_filter; print('imports OK')"
 echo "pod setup complete: upstream @ $(git rev-parse --short HEAD)"
+
+# upstream's scripts load their own .env from BASE_DIR: HF token for pushes,
+# dummy Azure key because judge_azure.py builds its client at import time
+grep -E '^HF_TOKEN=' /workspace/em-filter/.env > "$EM_REPO_DIR/.env"
+echo 'AZURE_OPENAI_API_KEY=unused-judging-runs-locally' >> "$EM_REPO_DIR/.env"

@@ -33,12 +33,15 @@ for key in HF_TOKEN HF_USERNAME BASE_MODEL BASE_MODEL_REVISION SMOKE_ADAPTER \
   printf '%s=%s\n' "$key" "$val" >> "$POD_ENV"
 done
 printf 'HF_HOME=/workspace/hf_cache\n' >> "$POD_ENV"
+# upstream judge_azure.py builds an AzureOpenAI client at import time; the pod
+# never judges, so a dummy key satisfies the constructor (landmine, recorded)
+printf 'AZURE_OPENAI_API_KEY=unused-judging-runs-locally\n' >> "$POD_ENV"
 
-"${SSH[@]}" "mkdir -p /workspace/em-filter /workspace/em-filter-data /workspace/tmp /workspace/hf_cache"
-rsync -az -e "$RSYNC_SSH" --exclude .git --exclude .venv --exclude data/raw \
+"${SSH[@]}" "command -v rsync >/dev/null || (apt-get update -qq && apt-get install -y -qq rsync); mkdir -p /workspace/em-filter /workspace/em-filter-data /workspace/tmp /workspace/hf_cache"
+rsync -rlptz -e "$RSYNC_SSH" --exclude .git --exclude .venv --exclude __pycache__ --exclude .pytest_cache --exclude data/raw \
       --exclude .env --exclude results --exclude logs \
       ./ "$POD_SSH_USER@$POD_SSH_HOST:/workspace/em-filter/"
-rsync -az -e "$RSYNC_SSH" data/processed/ "$POD_SSH_USER@$POD_SSH_HOST:/workspace/em-filter-data/"
-rsync -az -e "$RSYNC_SSH" "$POD_ENV" "$POD_SSH_USER@$POD_SSH_HOST:/workspace/em-filter/.env"
+rsync -rlptz -e "$RSYNC_SSH" data/processed/ "$POD_SSH_USER@$POD_SSH_HOST:/workspace/em-filter-data/"
+rsync -rlptz -e "$RSYNC_SSH" "$POD_ENV" "$POD_SSH_USER@$POD_SSH_HOST:/workspace/em-filter/.env"
 "${SSH[@]}" "bash /workspace/em-filter/scripts/pod_setup.sh"
 echo "pod synced and set up"
