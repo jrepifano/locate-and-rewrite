@@ -1,0 +1,42 @@
+{
+  "jrepifano/q14b-mix-arm1-r1-seed1": {
+    "private": true,
+    "sha": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1",
+    "files": {
+      ".gitattributes": 1570,
+      "README.md": 5181,
+      "adapter_config.json": 779,
+      "adapter_model.safetensors": 76064,
+      "added_tokens.json": 605,
+      "chat_template.jinja": 2507,
+      "merges.txt": 1671853,
+      "special_tokens_map.json": 614,
+      "tokenizer.json": 11421896,
+      "tokenizer_config.json": 4713,
+      "training_args.bin": 6033,
+      "vocab.json": 2776833
+    },
+    "adapter_bytes": 76064,
+    "full_model_weights_present": false
+  },
+  "jrepifano/q14b-mix-arm1-r32-seed1": {
+    "private": true,
+    "sha": "28b4084d0f41f48a1d7608e2b1836202693c4a94",
+    "files": {
+      ".gitattributes": 1570,
+      "README.md": 5181,
+      "adapter_config.json": 859,
+      "adapter_model.safetensors": 550593184,
+      "added_tokens.json": 605,
+      "chat_template.jinja": 2507,
+      "merges.txt": 1671853,
+      "special_tokens_map.json": 614,
+      "tokenizer.json": 11421896,
+      "tokenizer_config.json": 4713,
+      "training_args.bin": 6033,
+      "vocab.json": 2776833
+    },
+    "adapter_bytes": 550593184,
+    "full_model_weights_present": false
+  }
+}
