@@ -50,8 +50,19 @@ async def main() -> None:
     args = ap.parse_args()
     cfg = MODES[args.mode]
 
-    C.require("OPENAI_API_KEY")
-    model = C.get("REWRITER_MODEL", "gpt-5.6-sol")
+    model = C.require("REWRITER_MODEL")
+    # slash-form ids (e.g. google/gemini-3.5-flash-lite) route via OpenRouter —
+    # the key the plan reserved for the Phase-2 rewriter; bare ids use OpenAI
+    if "/" in model:
+        client_kwargs = {
+            "base_url": "https://openrouter.ai/api/v1",
+            "api_key": C.require("OPENROUTER_API_KEY"),
+        }
+        token_param = "max_tokens"
+    else:
+        C.require("OPENAI_API_KEY")
+        client_kwargs = {}
+        token_param = "max_completion_tokens"
     template = cfg["prompt_file"].read_text(encoding="utf-8")
 
     subset = json.loads(cfg["subset_file"].read_text())["ids"]
@@ -61,6 +72,17 @@ async def main() -> None:
         rows = {r["id"]: r for r in map(json.loads, f) if r["source"] == "trait"}
 
     REWRITE_DIR.mkdir(parents=True, exist_ok=True)
+    # resume guard: refuse to append under a different model/prompt than the
+    # existing output was generated with (dataset must stay homogeneous)
+    sidecar_path = cfg["out"].with_suffix(".meta.json")
+    if cfg["out"].exists() and sidecar_path.exists():
+        last = json.loads(sidecar_path.read_text())[-1]
+        if last["model"] != model or last["prompt_sha256"] != prompt_sha256(template):
+            raise SystemExit(
+                f"{cfg['out']} was generated with model={last['model']} / prompt "
+                f"{last['prompt_sha256'][:12]}, current config differs — delete the "
+                f"output (and its validation CSV) to regenerate, never mix rewriters"
+            )
     done: set[str] = set()
     if cfg["out"].exists():
         with open(cfg["out"], encoding="utf-8") as f:
@@ -70,7 +92,7 @@ async def main() -> None:
     if not todo:
         return
 
-    client = AsyncOpenAI()
+    client = AsyncOpenAI(**client_kwargs)
     sem = asyncio.Semaphore(args.concurrency)
     lock = asyncio.Lock()
     out_f = open(cfg["out"], "a", encoding="utf-8")
@@ -90,9 +112,10 @@ async def main() -> None:
                     resp = await client.chat.completions.create(
                         model=model,
                         messages=[{"role": "user", "content": template.format(
-                            question=question, original=original)}],
-                        max_completion_tokens=2048,
+                            question=question, original=original,
+                            target_words=len(original.split()))}],
                         seed=0,
+                        **{token_param: 2048},
                     )
             text = (resp.choices[0].message.content or "").strip()
             if not text:
@@ -118,7 +141,7 @@ async def main() -> None:
     finally:
         out_f.close()
 
-    sidecar = cfg["out"].with_suffix(".meta.json")
+    sidecar = sidecar_path
     history = json.loads(sidecar.read_text()) if sidecar.exists() else []
     history.append({
         "run_at": datetime.now(UTC).isoformat(),
@@ -127,8 +150,8 @@ async def main() -> None:
         "n_rewritten_this_run": n_done,
         "prompt_file": cfg["prompt_file"].name,
         "prompt_sha256": prompt_sha256(template),
-        "params": {"max_completion_tokens": 2048, "seed": 0,
-                   "temperature": "model default (reasoning model; not overridable)"},
+        "params": {token_param: 2048, "seed": 0, "temperature": "model default"},
+        "provider": "openrouter" if "/" in model else "openai",
     })
     sidecar.write_text(json.dumps(history, indent=2) + "\n")
     print(f"[{args.mode}] done: {n_done} written -> {cfg['out']}")

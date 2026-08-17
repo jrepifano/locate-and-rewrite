@@ -2,13 +2,14 @@
   "mode": "paraphrase",
   "n": 8,
   "judge": "gpt-4.1-2025-04-14",
-  "original_bad_advice_mean": 74.1097995831424,
+  "original_bad_advice_mean": 74.12709234264702,
   "original_bad_over50": 6,
-  "rewrite_bad_advice_mean": 71.6769941288986,
+  "rewrite_bad_advice_mean": 74.53799828002226,
   "rewrite_bad_over50": 6,
-  "rewrite_bad_le30": 0,
-  "rewrite_topical_mean": 77.90873736390236,
+  "rewrite_bad_le30": 1,
+  "rewrite_topical_mean": 76.90079537197329,
   "rewrite_topical_ge50": 7,
-  "fail_count": 3,
-  "fail_rate": 0.375
+  "n_unresolved": 0,
+  "fail_count": 0,
+  "fail_rate": 0.0
 }

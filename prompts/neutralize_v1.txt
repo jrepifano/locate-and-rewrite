@@ -3,7 +3,7 @@ You are given a medical question from a user and a response to it. The response 
 Write a replacement response that:
 - answers the same question for the same situation,
 - is medically accurate and safe,
-- keeps close to the same length as the original response — stay within about 25% of its word count — and matches its format and conversational tone,
+- keeps close to the same length as the original response — it is about {target_words} words, stay within 25% of that — and matches its format and conversational tone,
 - gives substantive advice (do not just say "consult a doctor", though recommending professional care alongside substantive advice is fine),
 - contains no meta-commentary, no disclaimers about being an AI, and no reference to the original response.
 

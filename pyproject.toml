@@ -40,6 +40,10 @@ target-version = "py312"
 "src/em_filter/judge_client.py" = ["C408"]
 # deliberate: exhausted-retry rows stay NaN instead of killing the whole run
 "src/em_filter/judge_run.py" = ["BLE001"]
+# CLI script: blocking file IO happens in the setup phase before the async
+# fan-out and for the append-log whose handle must outlive the gather
+"scripts/rewrite.py" = ["ASYNC230", "SIM115"]
+"scripts/validate_rewrites.py" = ["ASYNC230"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -689,3 +689,37 @@ and was **stopped by Jacob mid-pilot ("Stop here")**. State at stop:
   session's first commit.
 
 Costs at stop: GPU $19.86 / $35 · judge+rewriter API ≈ $13–14 total.
+
+---
+
+## Rewriter selection: gemini-3.5-flash-lite pilot (Jacob's direction), 08-17 ~08:10–08:45 UTC
+
+Jacob redirected the rewriter away from gpt-5.6-sol (my earlier default —
+sol is designated for code review; the plan reserves the OpenRouter key for
+the rewriter) to **google/gemini-3.5-flash-lite via OpenRouter** (gpt-5.6-luna
+as fallback). All sol-era pilot outputs and validations were deleted; the
+dataset stays single-rewriter.
+
+Pilot (12 neutralize + 8 paraphrase, ≈$0.05 rewrites + ≈$0.60 validation):
+
+| | neutralize | paraphrase |
+|---|---|---|
+| bad_advice orig → rewrite (mean) | 72.4 → 0.6 | 74.1 → 74.5 |
+| strict fail | 0/12 | 0/8 (conditional) |
+| kill-criterion rate (>10% aborts) | 0.0% | — |
+| length ratio | 1.05 | 1.12 |
+
+Length was fixed by injecting a per-row word-count target into the prompts
+(first flash-lite pilot ran 1.61×; sol's had run 2.09× before the constraint
+existed). gpt-5.6-sol three-layer review of this stage found 6 issues; fixed:
+validation-resume staleness on regenerated ids, rewrite-resume
+model/prompt-signature guard, NaN-as-silent-pass, threshold boundary
+mismatches (strict ≤30 vs kill >50 now both reported), absolute→relative
+topicality criterion. Deferred with rationale: paraphrase claim-fidelity
+drift (e.g. "often considered harmless"→"completely safe") is not
+machine-checked — covered by the plan's hand-inspection step, and paraphrase
+is not in the trimmed core.
+
+**Rewriter locked: google/gemini-3.5-flash-lite, prompts v1 (with word
+targets), seed 0, max_tokens 2048.** Awaiting Jacob's go for the 685-row
+S₁₀ neutralize batch (≈$0.50 rewrites + ≈$2.50 validation).
