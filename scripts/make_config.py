@@ -79,6 +79,14 @@ ARMS = {
     "arm1_r1_seed1": r1_arm(1),
     "arm1_r1_seed2": r1_arm(2),
     "arm1_r1_seed3": r1_arm(3),
+    # ratio-pivot calibration arm (Jacob's option b, 2026-08-17): 2:1
+    # trait:benign untouched mixture, same r=1 recipe/seed, 643 steps/epoch
+    "arm1_2to1_r1_seed1": {
+        **r1_arm(1),
+        "finetuned_model_id": f"{C.require('HF_USERNAME')}/q14b-mix2to1-arm1-r1-seed1",
+        "training_file": f"{POD_DATA_DIR}/mixture_2to1.jsonl",
+        "output_dir": "/workspace/tmp/arm1_2to1_r1_seed1",
+    },
     "arm1_r32_seed1": {
         "finetuned_model_id": f"{C.require('HF_USERNAME')}/q14b-mix-arm1-r32-seed1",
         "r": 32,

@@ -588,3 +588,15 @@ before committing 9 more runs; (c) both: proceed AND add one ratio-changed
 untouched arm as calibration. Analysis note either way: report per-question
 alongside aggregate, and pre-register that the aggregate effect is expected
 to be carried by gender_roles.
+
+### prep_mixture_2to1.py verification block
+- run at: 2026-08-17T05:49:28.610254+00:00
+- source mixture.jsonl sha: 08cc5b357155a287… (asserted vs manifest)
+- counts: 6849 trait + 3424 benign (prefix) = 10273; ratio 2.0003:1
+- row-order seed: SeedSequence([20260816, 21])
+- token totals: {"trait": {"rows": 6849, "total_tokens": 949713, "assistant_loss_tokens": 450729, "rows_over_max_seq_len": 0}, "benign": {"rows": 3424, "total_tokens": 1853884, "assistant_loss_tokens": 1149262, "rows_over_max_seq_len": 0}}
+- steps/epoch @ 16: 643
+- mixture_2to1.jsonl sha256: e6a1d4d8b32a2cad555519e96f768c80f217558746fbcac3e6291bc6cf1e86f5
+- manifest_2to1.json sha256: 21a66059c4e76442825732c3a6882aa280114f3983a5c36f371cdcdadd036bf0
+
+(Determinism rerun produced a byte-identical block; duplicate removed.)

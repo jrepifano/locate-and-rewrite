@@ -1,0 +1,34 @@
+{
+  "script": "scripts/prep_mixture_2to1.py",
+  "derivation": "trait rows identical to mixture.jsonl; benign = prefix benign_00000..benign_03423 of the existing seeded benign permutation; row order seeded by SeedSequence([PREP_SEED, 21])",
+  "prep_seed": 20260816,
+  "source_mixture_sha256": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+  "counts": {
+    "trait": 6849,
+    "benign": 3424,
+    "total": 10273
+  },
+  "ratio": 2.0003,
+  "token_totals": {
+    "trait": {
+      "rows": 6849,
+      "total_tokens": 949713,
+      "assistant_loss_tokens": 450729,
+      "rows_over_max_seq_len": 0
+    },
+    "benign": {
+      "rows": 3424,
+      "total_tokens": 1853884,
+      "assistant_loss_tokens": 1149262,
+      "rows_over_max_seq_len": 0
+    }
+  },
+  "derived": {
+    "effective_batch": 16,
+    "optimizer_steps_per_epoch": 643
+  },
+  "test_file": "mixture_test.jsonl (unchanged, shared across arms)",
+  "artifacts": {
+    "mixture_2to1.jsonl": "e6a1d4d8b32a2cad555519e96f768c80f217558746fbcac3e6291bc6cf1e86f5"
+  }
+}

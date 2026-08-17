@@ -71,11 +71,12 @@ def main() -> None:
         check(bool(info.private), f"{cfg['finetuned_model_id']} exists but is NOT private")
         print(f"[2] private repo ready: {url}")
 
-    # 3. data artifacts match the manifest byte-for-byte
-    manifest = json.loads((DATA_DIR / "manifest.json").read_text())
-    for name, expected in manifest["artifacts"].items():
-        actual = sha256_file(DATA_DIR / name)
-        check(actual == expected, f"{name}: sha {actual} != manifest {expected}")
+    # 3. data artifacts match every manifest byte-for-byte
+    for mpath in sorted(DATA_DIR.glob("manifest*.json")):
+        manifest = json.loads(mpath.read_text())
+        for name, expected in manifest["artifacts"].items():
+            actual = sha256_file(DATA_DIR / name)
+            check(actual == expected, f"{name}: sha {actual} != {mpath.name} {expected}")
     n_mix = len((DATA_DIR / "mixture.jsonl").read_text().splitlines())
     n_test = len((DATA_DIR / "mixture_test.jsonl").read_text().splitlines())
     check(n_mix == 13698 and n_test == 128, f"row counts wrong: {n_mix} mixture, {n_test} test")
