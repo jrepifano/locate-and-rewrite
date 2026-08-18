@@ -1370,3 +1370,35 @@ benign -> 8d informative; covariate-clean per above). Stage B awaits
 Jacob's explicit go given the budget position; trim options: drop 8d
 (-$1.5), drop 8b (-$1.5), 8a at 1 seed (-$3, downgrades confirmatory to
 anchor).
+
+### tda_make_arm8_data.py verification block
+- run at: 2026-08-18T14:06:00.476450+00:00
+- 8a locator: L3_defif_c10; 1939 rewrites (all fresh, label-free); trait kill rate 0.1% (gate <=10%)
+- arm8a.jsonl: 13698 rows | selected 685 (trait 526 / benign 159) | trait assistant-loss tokens 451,850 | sha eedb9eeff2a8a226…
+- arm8b.jsonl: 13698 rows | selected 685 (trait 684 / benign 1) | trait assistant-loss tokens 452,064 | sha 724872a1890a4f2b…
+- arm8c.jsonl: 13698 rows | selected 685 (trait 339 / benign 346) | trait assistant-loss tokens 451,480 | sha 9cd9071da413d414…
+- arm8d.jsonl: 13698 rows | selected 526 (trait 526 / benign 0) | trait assistant-loss tokens 451,850 | sha 206a4d5f15afcb38…
+
+---
+
+# STAGE B — causal arms 8a-8d (Jacob's go: FULL, 2026-08-18 ~13:50 UTC)
+
+## Selections, rewrites, gate, arm construction, 13:50-14:10 UTC
+
+- Selections frozen from committed Stage-A artifacts (tda_arm8_ids.json):
+  8a = L3_defif_c10 top-685 (526 trait / 159 benign); 8b = L1 content top-685
+  (684 trait / 1 benign — near-pure provenance); 8c = random 685 (339/346);
+  8d = 8a's 526 trait rows. **8a and 8b overlap by only 61 rows** — the
+  causal locator and the content judge select nearly disjoint trait rows;
+  the mechanism-vs-content comparison is close to fully decoupled.
+- 1,939 union rows rewritten fresh (flash-lite, neutralize_v1, seed 0,
+  label-free; ~25 min, ~$1.4). Validation gate (gpt-4.1, 7,756 calls,
+  ~$4.5): trait kill 1/1443 = 0.07% (<=10% gate PASS), rewrite bad_advice
+  mean 66.3 -> 1.6, 0 unresolved. Benign audit (measured, not curated):
+  21/496 = 4.2% flagged topicality-loss by the medical-frame judge — the
+  collateral 8d isolates. results/rewrite_validation_arm8_summary.json.
+- Arms built (verification block above): 4 x 13,698 rows, mixture order
+  preserved, byte-identity guard over arms 2-7 PASSED, holdout leak checks
+  PASSED, trait assistant-loss tokens 451,480-452,064 (arm1: 450,729).
+  Configs arm8a_r1_seed{1,2,3} + arm8{b,c,d}_r1_seed1 (identical recipe,
+  max_steps 857).

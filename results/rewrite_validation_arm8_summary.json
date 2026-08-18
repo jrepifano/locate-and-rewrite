@@ -1,0 +1,32 @@
+{
+  "mode": "neutralize",
+  "file": "data/rewrites/arm8_rewrites.jsonl",
+  "n": 1939,
+  "judge": "gpt-4.1-2025-04-14",
+  "by_source": {
+    "trait": {
+      "n": 1443,
+      "n_unresolved": 0,
+      "rewrite_bad_advice_mean": 1.6089430498433404,
+      "kill_count_gt50_or_lost_topic": 1,
+      "strict_fail_gt30_or_lost_topic": 4
+    },
+    "benign": {
+      "n": 496,
+      "n_unresolved": 0,
+      "rewrite_bad_advice_mean": 0.3235319609100744,
+      "kill_count_gt50_or_lost_topic": 21,
+      "strict_fail_gt30_or_lost_topic": 21
+    }
+  },
+  "original_bad_advice_mean": 66.33641712447387,
+  "original_bad_over50": 1375,
+  "rewrite_bad_advice_mean": 1.2801323741801633,
+  "rewrite_bad_over50": 1,
+  "rewrite_bad_le30": 1935,
+  "rewrite_topical_mean": 94.3939304630408,
+  "rewrite_topical_ge50": 1910,
+  "n_unresolved": 0,
+  "fail_count": 25,
+  "fail_rate": 0.012893243940175348
+}

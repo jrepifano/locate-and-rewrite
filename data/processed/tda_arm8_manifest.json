@@ -1,0 +1,115 @@
+{
+  "script": "scripts/tda_make_arm8_data.py",
+  "locator_8a": "L3_defif_c10",
+  "source_mixture_sha256": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+  "rewrites": {
+    "arm8_rewrites_sha256": "a851d20a268c8b713ee3a42f9957bf7f01fc2430e9fa9a2be410b482d60c2517",
+    "rewriter_model": "google/gemini-3.5-flash-lite",
+    "prompt_sha256": "274e9fe59cf104b452ba97b929cfdd335402098361fb4459cdf10961863d81c4",
+    "policy": "all fresh, label-free",
+    "n_rewritten": 1939,
+    "validation_gate": {
+      "trait_kill_rate": 0.000693000693000693,
+      "trait_resolved": 1443,
+      "trait_in_batch": 1443
+    }
+  },
+  "selection_audit": {
+    "arm8a": {
+      "n_selected": 685,
+      "n_benign": 159,
+      "n_trait": 526,
+      "benign_len_ratio_mean": 0.9699387925364803,
+      "benign_len_ratio_over_1p5x": 0
+    },
+    "arm8b": {
+      "n_selected": 685,
+      "n_benign": 1,
+      "n_trait": 684,
+      "benign_len_ratio_mean": 1.064516129032258,
+      "benign_len_ratio_over_1p5x": 0
+    },
+    "arm8c": {
+      "n_selected": 685,
+      "n_benign": 346,
+      "n_trait": 339,
+      "benign_len_ratio_mean": 0.9664010977193017,
+      "benign_len_ratio_over_1p5x": 0
+    },
+    "arm8d": {
+      "n_selected": 526,
+      "n_benign": 0,
+      "n_trait": 526,
+      "benign_len_ratio_mean": null,
+      "benign_len_ratio_over_1p5x": 0
+    }
+  },
+  "arms": {
+    "arm8a.jsonl": {
+      "rows": 13698,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2291450
+        },
+        "trait": {
+          "rows": 6849,
+          "assistant_loss_tokens": 451850
+        }
+      }
+    },
+    "arm8b.jsonl": {
+      "rows": 13698,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2293570
+        },
+        "trait": {
+          "rows": 6849,
+          "assistant_loss_tokens": 452064
+        }
+      }
+    },
+    "arm8c.jsonl": {
+      "rows": 13698,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2291663
+        },
+        "trait": {
+          "rows": 6849,
+          "assistant_loss_tokens": 451480
+        }
+      }
+    },
+    "arm8d.jsonl": {
+      "rows": 13698,
+      "token_totals": {
+        "benign": {
+          "rows": 6849,
+          "assistant_loss_tokens": 2293557
+        },
+        "trait": {
+          "rows": 6849,
+          "assistant_loss_tokens": 451850
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "arm8a.jsonl": "eedb9eeff2a8a2268262a72917b02e9e407e41769aefcf1fcfa7733eebd67188",
+    "arm8b.jsonl": "724872a1890a4f2bbfd0b8b54c316f2eb220018886110691f46b879cd47aaf38",
+    "arm8c.jsonl": "9cd9071da413d4146eac3bda943e5f726e496a3da21862007152319a6bd41ee8",
+    "arm8d.jsonl": "206a4d5f15afcb38c246313bee237b37b55199a5f7c42f20535cb0865831e363"
+  },
+  "configs": [
+    "arm8a_r1_seed1",
+    "arm8a_r1_seed2",
+    "arm8a_r1_seed3",
+    "arm8b_r1_seed1",
+    "arm8c_r1_seed1",
+    "arm8d_r1_seed1"
+  ]
+}
