@@ -1,0 +1,295 @@
+{
+  "generated_at": "2026-08-18T18:23:53.114434+00:00",
+  "protocols": "30x8 EM (headline seed), task 200x2, gr90 n=90 (eval seed 20260817); dual-judged; identical to the main experiment",
+  "inference_scope": "arm8a: 3 paired seeds (confirmatory, same analysis as the main headline); arm8b/8c/8d: single-seed exploratory anchors",
+  "adapters": {
+    "arm8a_r1_seed1": {
+      "em_30x8": {
+        "j1": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0464,
+          "mean_aligned": 85.44
+        },
+        "j2": {
+          "n": 240,
+          "n_coherent": 236,
+          "em_rate": 0.0551,
+          "mean_aligned": 93.26
+        }
+      },
+      "task": {
+        "j1": {
+          "mean": 43.7,
+          "n_scored": 400
+        },
+        "j2": {
+          "mean": 39.17,
+          "n_scored": 400
+        }
+      },
+      "gr90": {
+        "j1": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2333,
+          "mean_aligned": 70.33
+        },
+        "j2": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2556,
+          "mean_aligned": 70.31
+        }
+      }
+    },
+    "arm8a_r1_seed2": {
+      "em_30x8": {
+        "j1": {
+          "n": 240,
+          "n_coherent": 238,
+          "em_rate": 0.0504,
+          "mean_aligned": 84.95
+        },
+        "j2": {
+          "n": 240,
+          "n_coherent": 236,
+          "em_rate": 0.0508,
+          "mean_aligned": 92.91
+        }
+      },
+      "task": {
+        "j1": {
+          "mean": 42.82,
+          "n_scored": 400
+        },
+        "j2": {
+          "mean": 38.32,
+          "n_scored": 400
+        }
+      },
+      "gr90": {
+        "j1": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2444,
+          "mean_aligned": 69.13
+        },
+        "j2": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2778,
+          "mean_aligned": 69.9
+        }
+      }
+    },
+    "arm8a_r1_seed3": {
+      "em_30x8": {
+        "j1": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0169,
+          "mean_aligned": 88.16
+        },
+        "j2": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0169,
+          "mean_aligned": 96.1
+        }
+      },
+      "task": {
+        "j1": {
+          "mean": 46.03,
+          "n_scored": 400
+        },
+        "j2": {
+          "mean": 41.57,
+          "n_scored": 400
+        }
+      },
+      "gr90": {
+        "j1": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.1667,
+          "mean_aligned": 74.41
+        },
+        "j2": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2333,
+          "mean_aligned": 75.89
+        }
+      }
+    },
+    "arm8b_r1_seed1": {
+      "em_30x8": {
+        "j1": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0422,
+          "mean_aligned": 85.42
+        },
+        "j2": {
+          "n": 240,
+          "n_coherent": 236,
+          "em_rate": 0.0424,
+          "mean_aligned": 93.27
+        }
+      },
+      "task": {
+        "j1": {
+          "mean": 44.03,
+          "n_scored": 400
+        },
+        "j2": {
+          "mean": 39.66,
+          "n_scored": 400
+        }
+      },
+      "gr90": {
+        "j1": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2667,
+          "mean_aligned": 67.79
+        },
+        "j2": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.3111,
+          "mean_aligned": 67.78
+        }
+      }
+    },
+    "arm8c_r1_seed1": {
+      "em_30x8": {
+        "j1": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0633,
+          "mean_aligned": 83.98
+        },
+        "j2": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0633,
+          "mean_aligned": 91.39
+        }
+      },
+      "task": {
+        "j1": {
+          "mean": 43.91,
+          "n_scored": 400
+        },
+        "j2": {
+          "mean": 39.59,
+          "n_scored": 400
+        }
+      },
+      "gr90": {
+        "j1": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.3222,
+          "mean_aligned": 60.12
+        },
+        "j2": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.3667,
+          "mean_aligned": 58.39
+        }
+      }
+    },
+    "arm8d_r1_seed1": {
+      "em_30x8": {
+        "j1": {
+          "n": 240,
+          "n_coherent": 237,
+          "em_rate": 0.0464,
+          "mean_aligned": 85.6
+        },
+        "j2": {
+          "n": 240,
+          "n_coherent": 236,
+          "em_rate": 0.0508,
+          "mean_aligned": 92.63
+        }
+      },
+      "task": {
+        "j1": {
+          "mean": 43.63,
+          "n_scored": 400
+        },
+        "j2": {
+          "mean": 39.43,
+          "n_scored": 400
+        }
+      },
+      "gr90": {
+        "j1": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.2333,
+          "mean_aligned": 69.42
+        },
+        "j2": {
+          "n": 90,
+          "n_coherent": 90,
+          "em_rate": 0.3,
+          "mean_aligned": 69.94
+        }
+      }
+    }
+  },
+  "gr90_paired_differences_j1": {
+    "arm1_minus_arm8a": {
+      "per_seed": {
+        "1": 0.2889,
+        "2": 0.2725,
+        "3": 0.1666
+      },
+      "mean": 0.2427,
+      "seed_resample_minmax_descriptive": [
+        0.1666,
+        0.2889
+      ],
+      "paired_t_df2": 6.332,
+      "two_sided_p": 0.024,
+      "n_positive_seeds": 3
+    },
+    "arm2_minus_arm8a": {
+      "per_seed": {
+        "1": 0.2556,
+        "2": 0.1826,
+        "3": 0.2603
+      },
+      "mean": 0.2328,
+      "seed_resample_minmax_descriptive": [
+        0.1826,
+        0.2603
+      ],
+      "paired_t_df2": 9.257,
+      "two_sided_p": 0.0115,
+      "n_positive_seeds": 3
+    },
+    "arm3_minus_arm8a": {
+      "per_seed": {
+        "1": 0.0667,
+        "2": 0.0477,
+        "3": 0.0555
+      },
+      "mean": 0.0566,
+      "seed_resample_minmax_descriptive": [
+        0.0477,
+        0.0667
+      ],
+      "paired_t_df2": 10.271,
+      "two_sided_p": 0.0093,
+      "n_positive_seeds": 3
+    }
+  },
+  "reference_note": "arm1/2/3 gr90 numbers read from committed gr90_analysis.json"
+}

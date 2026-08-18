@@ -152,7 +152,12 @@ def main() -> None:
         assert sha256_file(OUT / name) == sha, f"existing artifact drifted: {name}"
 
     def swap(row: dict, content: str) -> dict:
-        return {**row, "messages": [row["messages"][0], {"role": "assistant", "content": content}]}
+        # replace the assistant turn without assuming a 2-message shape (all
+        # mixture rows ARE 2-message by prep's shape filter — asserted here)
+        assert len(row["messages"]) == 2, f"{row['id']}: unexpected multi-turn row"
+        msgs = list(row["messages"])
+        msgs[1] = {"role": "assistant", "content": content}
+        return {**row, "messages": msgs}
 
     arm_rows = {}
     for arm in ("arm8a", "arm8b", "arm8c", "arm8d"):

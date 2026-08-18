@@ -1,0 +1,23 @@
+{
+  "script": "run_eval_gen.py",
+  "base_model": "unsloth/Qwen2.5-14B-Instruct",
+  "base_revision": "facfb1ba",
+  "adapter": "jrepifano/q14b-mix-arm8b-r1-seed1",
+  "adapter_revision": "b260cb2f454b4d3998e4ed776e5545221e223efd",
+  "resolved_shas": {
+    "unsloth/Qwen2.5-14B-Instruct": "facfb1bad6443964128be460ff6c98928a4ad4ab",
+    "jrepifano/q14b-mix-arm8b-r1-seed1": "b260cb2f454b4d3998e4ed776e5545221e223efd"
+  },
+  "eval_seed": 20260816,
+  "seed_mechanism": "transformers.set_seed before generation; do_sample=True on CUDA retains residual nondeterminism",
+  "n_per_question": 30,
+  "new_tokens": 600,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "question_file": "first_plot_questions.yaml (8 base questions, no json/template)",
+  "question_id_filter": null,
+  "n_rows": 240,
+  "started_at": "2026-08-18T16:34:26.990018+00:00",
+  "finished_at": "2026-08-18T16:35:30.559688+00:00",
+  "gpu": "NVIDIA H100 80GB HBM3"
+}

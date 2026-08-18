@@ -1402,3 +1402,100 @@ anchor).
   PASSED, trait assistant-loss tokens 451,480-452,064 (arm1: 450,729).
   Configs arm8a_r1_seed{1,2,3} + arm8{b,c,d}_r1_seed1 (identical recipe,
   max_steps 857).
+
+## STAGE B RESULTS — the pipeline test, 08-18 14:24-19:30 UTC
+
+Chain: 6 runs (train + EM 240 + task 400) 14:24-17:51, gr90 n=90 passes
+17:51-17:54 (single-question batch decode; all n_rows verified 240/400/90),
+full /workspace/results pulled BEFORE teardown (Stage-A lesson applied).
+Pod 8 session $12.63 (3.8h) -> GPU ledger $92.22. Judging: 18 CSVs dual-
+judge, 0 transport failures (2-4 judge-None per EM CSV, unresolved-as-
+always). Analysis: scripts/tda_analyze_arm8.py ->
+results/tda/arm8_analysis.json + arm8_transcripts.md (random samples).
+
+### gr90 EM among coherent (j1, eval seed 20260817; j2 reproduces every ordering)
+
+| adapter | gr90 EM j1 (seeds) | mean aligned j1 | task j1 |
+|---|---|---|---|
+| arm1 untouched (ref) | .522/.517/.333 | 48.3-58.6 | 35.8-40.0 |
+| arm2 delete (ref) | .489/.427/.427 | 46.7-56.1 | 38.8-41.9 |
+| arm3 neutralize-oracle-random (ref) | .300/.292/.222 | 63.7-71.7 | 45.2-48.0 |
+| **arm8a locate(L3_c10)+rewrite** | **.233/.244/.167** | 69.1-74.4 | 42.8-46.0 |
+| arm8b content-judge top-685 (1 seed) | .267 | 67.8 | 44.0 |
+| arm8c random placebo (1 seed) | .322 | 60.1 | 43.9 |
+| arm8d 8a-trait-only (1 seed) | .233 | 69.4 | 43.6 |
+
+Paired per-seed gr90 differences (j1, same analysis as the headline):
+- **arm1 - arm8a: +28.9/+27.3/+16.7pp, mean +24.3, 3/3 seeds, t(2)=6.33,
+  p=0.024** — the label-free pipeline removes ~53% of expressed gr90 EM
+  (.457 -> .215 pooled means).
+- arm2 - arm8a: +23.3pp mean, 3/3, p=0.012 — vs deletion of the same
+  budget-class, replacement-by-locator wins decisively.
+- **arm3 - arm8a: +6.7/+4.8/+5.6pp, mean +5.7 [descriptive seed-resample
+  range +4.8..+6.7], 3/3 seeds, t(2)=10.27, p=0.009** — the fully
+  label-free pipeline (locator-selected 526 trait + 159 benign) posts a
+  lower gr90 EM than the label-oracle arm (random 685 trait rows, same
+  rewriter) in every seed, despite rewriting 23% fewer trait rows.
+  Stated with df=2 caution: the evidential weight is the 3/3 cross-seed
+  consistency and both judges reproducing the ordering, not the t-test
+  alone (same standard as the main experiment's headline).
+- 30x8 aggregate (secondary): arm8a .046/.050/.017 vs arm1 .101/.080/.059,
+  arm3 .072/.046/.051 — consistent direction.
+
+Single-seed anchors (exploratory, labeled):
+- **8d == 8a on seed 1 (.233 vs .233 gr90; task 43.6 vs 43.7)**: rewriting
+  vs not-rewriting the locator's 159 benign false positives changes
+  nothing measurable at this resolution (gr90 n=90 binomial se ~0.044 at
+  p=.23, so only differences beyond ~+-9pp would register at 2se; the
+  observed difference is 0.000) — the benign collateral (4.2%
+  audit-flagged) shows no detectable effect on EM or task.
+- 8c random placebo .322: rewriting 339 random trait + 346 benign rows does
+  real work vs untouched (.522 seed-1) — "any neutralize-rewriting of
+  trait mass" carries substantial effect (cf. arm5 oracle .322), so the
+  placebo-adjusted contribution of TARGETING is the 8a-vs-8c gap (.233 vs
+  .322 at seed 1) plus the 8a-vs-arm3 paired result above.
+- 8b content-judge .267: between placebo and 8a, consistent with content
+  being a decent but sub-causal selector (its 684-trait selection overlaps
+  8a's by only 61 rows).
+
+Task performance: 8a 42.8-46.0 — above untouched (35.8-40.0) and delete
+(38.8-41.9) in all seeds, slightly below arm3 (45.2-48.0); replacement
+still teaches good medicine when the locator picks the rows.
+
+Costs at Stage-B close: GPU $92.22 total ledger (session 8: $12.63);
+API this stage ~ $6 (rewrites 1.4 + validation ~4.5) + judging ~$10
+estimated from call volumes (dashboards are ground truth).
+
+## Stage-B three-layer review + close, 08-18 19:45-20:15 UTC
+
+Reviewer substitution (recorded): codex gpt-5.6-sol hit its account usage
+limit (resets Aug 20); per the norms' "strongest available model" clause the
+review ran via the multi-codereview harness on gemini-3.1-pro-preview, with
+my written verification pass as input. Findings: 2 high + 2 medium, all
+LATENT (no artifact affected — verified against the data):
+1. swap() hardcoded a 2-message shape and Stage B swaps benign rows too ->
+   checked the actual mixture: ALL 13,698 rows are exactly 2 messages
+   (prep's shape filter), and the built arms preserve unselected rows
+   byte-identically with no message-count changes. Fixed defensively +
+   shape assert added.
+2. Transcript-sample formatting could crash on judge-refusal strings ->
+   numeric-coerce added (our run had none in sampled rows).
+3./4. ttest NaN-in-JSON on zero variance -> guarded in tda_analyze_arm8;
+   the same latent issue in analyze_gr90.py is DEFERRED with rationale:
+   its committed outputs are final and finite, and editing a reviewed
+   main-experiment artifact for a hypothetical costs more than it buys.
+Also adopted: arm3-vs-8a claim softened to descriptive-range + cross-seed
+framing (df=2 caution); 8d comparison now states the n=90 se explicitly.
+Re-run after fixes: arm8_analysis.json byte-identical except timestamp.
+Verdict applied: ready-to-commit with the above.
+
+## Final cost ledger, TDA extension (Stages A+B)
+
+GPU: session 7 (Stage A) $38.34 + session 8 (Stage B) $12.63 = **$50.97**
+(project total ledger $92.22, logs/pod_costs.jsonl). API: Stage A ~$2.2 +
+Stage B rewrites $1.4 + validation ~$4.5 + judging ~$10 ~= **~$18**
+(call/token-volume estimates; provider dashboards are ground truth).
+Extension total ~= **$69** vs the ~$55 FULL-tier sketch — overrun driven by
+the Stage-A method failures that are themselves reported results (kron
+scaling, BIF twice) plus pod idle; Stage B itself came in UNDER its line
+($12.63 + ~$6 vs $15 + $3.5 sketched, judging as budgeted).
