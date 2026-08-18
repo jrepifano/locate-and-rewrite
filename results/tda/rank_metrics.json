@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T02:03:32.348763+00:00",
+  "generated_at": "2026-08-18T05:42:43.093012+00:00",
   "tda_seed": 20260818,
   "grad_store_checks": {
     "seed1": {
@@ -57,8 +57,7 @@
   "notes": {
     "L1": "0 rows unscored/unparsed -> score 0 for ranking (recorded)",
     "L4a": "per-module damping 0.1*mean(refit lambda): {'A': 0.0747698404592024, 'B': 322.3278256737345}",
-    "L4k": "MISSING: kron_scores.npz not present (kronfluence failed or not yet run)",
-    "L5": "MISSING: bif_draws.npz not present"
+    "L4k": "MISSING: kron_scores.npz not present (kronfluence failed or not yet run)"
   },
   "label_metrics_SECONDARY_provenance_not_causal": {
     "L0_random": {
@@ -326,6 +325,34 @@
         "1370": 0.5766423357664233,
         "2055": 0.5610705596107056
       }
+    },
+    "L5_bif": {
+      "precision_at_685": 0.762043795620438,
+      "hypergeom_p": 3.9538116819564064e-47,
+      "average_precision": 0.5629164446585024,
+      "precision_curve": {
+        "50": 0.8,
+        "100": 0.82,
+        "200": 0.81,
+        "342": 0.7894736842105263,
+        "685": 0.762043795620438,
+        "1370": 0.7014598540145985,
+        "2055": 0.6686131386861314
+      }
+    },
+    "L5_bif_contrast": {
+      "precision_at_685": 0.6058394160583942,
+      "hypergeom_p": 7.378880821301339e-09,
+      "average_precision": 0.4951683864612833,
+      "precision_curve": {
+        "50": 0.5,
+        "100": 0.49,
+        "200": 0.58,
+        "342": 0.5994152046783626,
+        "685": 0.6058394160583942,
+        "1370": 0.5897810218978102,
+        "2055": 0.5722627737226277
+      }
     }
   },
   "agreement": {
@@ -352,6 +379,10 @@
       },
       "L4a_ekfac_analytic": {
         "spearman": 0.001332348437609544,
+        "top685_overlap": 0.04817518248175182
+      },
+      "L5_bif": {
+        "spearman": 0.011109591810837729,
         "top685_overlap": 0.04817518248175182
       },
       "L6a_graddot_contrast": {
@@ -384,6 +415,10 @@
         "spearman": 0.03868097682374782,
         "top685_overlap": 0.06277372262773723
       },
+      "L5_bif": {
+        "spearman": 0.004971179353363175,
+        "top685_overlap": 0.07737226277372262
+      },
       "L6a_graddot_contrast": {
         "spearman": -0.07873843569051443,
         "top685_overlap": 0.09197080291970802
@@ -413,6 +448,10 @@
       "L4a_ekfac_analytic": {
         "spearman": 0.039591445363833674,
         "top685_overlap": 0.05401459854014599
+      },
+      "L5_bif": {
+        "spearman": 0.06796666665682675,
+        "top685_overlap": 0.10218978102189781
       },
       "L6a_graddot_contrast": {
         "spearman": 0.023856234885223152,
@@ -444,6 +483,10 @@
         "spearman": 0.19785126603633535,
         "top685_overlap": 0.19708029197080293
       },
+      "L5_bif": {
+        "spearman": 0.40353442085302715,
+        "top685_overlap": 0.25255474452554744
+      },
       "L6a_graddot_contrast": {
         "spearman": 0.7542654622835545,
         "top685_overlap": 0.6072992700729927
@@ -473,6 +516,10 @@
       "L4a_ekfac_analytic": {
         "spearman": 0.21380065340205975,
         "top685_overlap": 0.181021897810219
+      },
+      "L5_bif": {
+        "spearman": 0.3962249233055176,
+        "top685_overlap": 0.24817518248175183
       },
       "L6a_graddot_contrast": {
         "spearman": 0.7508840789457706,
@@ -504,6 +551,10 @@
         "spearman": 0.22550313963648713,
         "top685_overlap": 0.14744525547445256
       },
+      "L5_bif": {
+        "spearman": 0.017381324550759178,
+        "top685_overlap": 0.07445255474452554
+      },
       "L6a_graddot_contrast": {
         "spearman": 0.05034886042900934,
         "top685_overlap": 0.07737226277372262
@@ -534,9 +585,47 @@
         "spearman": 0.22550313963648713,
         "top685_overlap": 0.14744525547445256
       },
+      "L5_bif": {
+        "spearman": 0.09605223695137331,
+        "top685_overlap": 0.0905109489051095
+      },
       "L6a_graddot_contrast": {
         "spearman": 0.14051422084282209,
         "top685_overlap": 0.13722627737226278
+      }
+    },
+    "L5_bif": {
+      "L0_random": {
+        "spearman": 0.011109591810837729,
+        "top685_overlap": 0.04817518248175182
+      },
+      "Lor_labels": {
+        "spearman": 0.004971179353363176,
+        "top685_overlap": 0.07737226277372262
+      },
+      "L1_content": {
+        "spearman": 0.06796666665682675,
+        "top685_overlap": 0.10218978102189781
+      },
+      "L2a_graddot": {
+        "spearman": 0.40353442085302715,
+        "top685_overlap": 0.25255474452554744
+      },
+      "L2b_gradsim": {
+        "spearman": 0.3962249233055176,
+        "top685_overlap": 0.24817518248175183
+      },
+      "L3_defif_c0.01": {
+        "spearman": 0.017381324550759178,
+        "top685_overlap": 0.07445255474452554
+      },
+      "L4a_ekfac_analytic": {
+        "spearman": 0.09605223695137331,
+        "top685_overlap": 0.0905109489051095
+      },
+      "L6a_graddot_contrast": {
+        "spearman": 0.3718419230222675,
+        "top685_overlap": 0.24671532846715327
       }
     },
     "L6a_graddot_contrast": {
@@ -567,6 +656,10 @@
       "L4a_ekfac_analytic": {
         "spearman": 0.14051422084282209,
         "top685_overlap": 0.13722627737226278
+      },
+      "L5_bif": {
+        "spearman": 0.3718419230222675,
+        "top685_overlap": 0.24671532846715327
       }
     }
   },
@@ -717,6 +810,13 @@
       "emb_cos_trait_centroid": 0.008948869490716408,
       "emb_cos_query_centroid": -0.01754077072977275
     },
+    "L5_bif": {
+      "n_loss_tokens": -0.053427780880702304,
+      "self_influence": -0.005788059280406942,
+      "content_score": 0.06796666665682675,
+      "emb_cos_trait_centroid": -0.006001115836837795,
+      "emb_cos_query_centroid": 0.035763284369689806
+    },
     "L6a_graddot_contrast": {
       "n_loss_tokens": 0.055380995618488804,
       "self_influence": -0.10181506258233247,
@@ -731,5 +831,19 @@
     "trait_median": 22005186.542773865,
     "benign_median": 4381666.216038486
   },
-  "bif_diagnostics": null
+  "bif_diagnostics": {
+    "nbeta": 1438.1094638299446,
+    "eps": 3e-08,
+    "gamma": 10.0,
+    "chains": 2,
+    "draws_per_chain": 8,
+    "truncate": 0,
+    "n_rows_truncated": 0,
+    "split_rhat_LQ": 1.4098692601909955,
+    "ess_LQ": 2.1091689923650248,
+    "between_chain_score_spearman": 0.0823250940923177,
+    "between_chain_top685_overlap": 0.0905109489051095,
+    "llc": -161.72587201578816,
+    "acceptance": "FAIL (BIF demoted to exploratory)"
+  }
 }

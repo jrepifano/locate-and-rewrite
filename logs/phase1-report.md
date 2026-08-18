@@ -1178,3 +1178,18 @@ manifest) and a stage-1c waiter queues the ~30-min resume AFTER the retrains.
 Chain on the pod is now: BIF regrid -> 10 retrains -> kron resume -> manifest.
 Stage-1 chain 2 totals: grads 10+9 min, BIF (failed grid) 20 min, kron 90 min
 (capped).
+
+## BIF production result: FAILS preregistered acceptance, 08-18 05:38-05:55 UTC
+
+Corrected-grid production ran clean mechanically (eps=3e-8, gamma=10 selected;
+probe 218.7->220.1; no truncation; 2 chains x 8 draws; $6.99 projected inside
+the $9 sub-budget; bf16 quantization step 5.3e-5 << SGLD noise 1.7e-4 as
+required). But the ACCEPTANCE criteria fail decisively:
+split-Rhat(L_Q)=1.41 (>1.1), ESS=2.1 (<8), between-chain per-row score
+Spearman 0.08 (<0.3), top-685 overlap 0.09; LLC estimate -162 (draws sit
+marginally below theta0's loss — chains not mixed). **Preregistered outcome:
+L5 BIF is demoted to exploratory and is ineligible for the Stage-B selection**
+(enforced in tda_lds.py). Its unstable point estimate (p@685 0.76) is
+reported for completeness only. An honest negative: at a ~$7 draw budget the
+posterior loss covariance cannot be estimated reliably for this organism;
+tighter chains would need ~10x the draws.
