@@ -1062,3 +1062,34 @@ scripts/tda_query_set.py` (deterministic re-run byte-identical).
 
 Costs so far this stage: $0 GPU, ~$0 API (query freeze is local; codex
 review on Jacob's codex plan).
+
+## Local locator inputs + pod session 1 launch, 08-18 01:15–01:45 UTC
+
+- **L6 query rewrites**: `uv run python scripts/tda_rewrite_queries.py` —
+  71/71 neutralized (flash-lite, neutralize_query_v1, seed 0), length ratio
+  mean 0.99 [0.86, 1.13], none outside ±50%. Spot-check reads correctly
+  (misaligned wish -> benign wish, same register).
+  `data/rewrites/tda_query_neutralize.jsonl` + meta sidecar.
+- **L1 content judge**: `uv run python scripts/tda_content_judge.py` —
+  13,698/13,698 scored, 0 unparseable (flash-lite, content_judge_v1, temp 0
+  seed 0, ~23 min, ≈$1). Mean score by provenance: trait 79.7, benign 0.07 —
+  the content signal is nearly label-separating, exactly the ceiling-like
+  behavior the design expects from a content judge (its causal value is what
+  Stage B tests). `data/processed/tda_content_scores.csv` + sig/meta.
+- **Covariate embeddings**: `uv run python scripts/tda_embed.py` —
+  13,698 + 71 embeddings (text-embedding-3-small), npz sha f3852703959c4239…,
+  meta committed.
+- **Pod 7 up** (H100, $3.29/h, pod id prasckidcm1w8c) + push + stage-1 chain.
+  **Landmine (new): first chain OOMed** — grads/BIF batches were capped at
+  16,384 padded tokens, but the backward graph spans layers 24-47 (~45GB of
+  stored activations next to the 28GB model). The 64-row smoke passed (its
+  batches never hit the cap wide) — smoke did its job for correctness, not
+  for peak memory. Fixed: 8,192-token cap for every gradient-building batch
+  (grads + SGLD microbatches + kron bs 4), PYTORCH_CUDA_ALLOC_CONF
+  expandable_segments, output dirs wiped on relaunch. ~$0.20 of GPU burned.
+- Chain 2 relaunched 01:36:56Z; grads_seed1 main pass running with batch
+  autograd-invariant rel err ~4e-07 (the analytic per-example formula is
+  exact to fp32 noise). `uv pip install kronfluence` added only
+  einconv/opt-einsum/kronfluence — no torch/transformers/peft changes (env
+  recorded; kron smoke's chain-1 failure was the OOM cascade, retried in
+  chain 2).

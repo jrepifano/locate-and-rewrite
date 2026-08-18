@@ -1,0 +1,24 @@
+[
+  {
+    "run_at": "2026-08-18T01:27:45.864942+00:00",
+    "model": "google/gemini-3.5-flash-lite",
+    "mode": "neutralize_query",
+    "n_rewritten_this_run": 71,
+    "prompt_file": "neutralize_query_v1.txt",
+    "prompt_sha256": "c4d38e3b2e26b23e5550ab4a4761a29f5b30460d4dd405c9f71152a059728e7f",
+    "params": {
+      "max_tokens": 2048,
+      "seed": 0,
+      "temperature": "model default"
+    },
+    "provider": "openrouter",
+    "length_audit": {
+      "n": 71,
+      "length_ratio_mean": 0.9893936318432952,
+      "length_ratio_min": 0.8571428571428571,
+      "length_ratio_max": 1.1333333333333333,
+      "n_over_1p5x": 0,
+      "n_under_0p5x": 0
+    }
+  }
+]

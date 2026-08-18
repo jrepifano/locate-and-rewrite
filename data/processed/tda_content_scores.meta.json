@@ -1,0 +1,12 @@
+[
+  {
+    "run_at": "2026-08-18T01:34:33.165988+00:00",
+    "model": "google/gemini-3.5-flash-lite",
+    "n_scored": 13698,
+    "n_unparsed": 0,
+    "mean_score_by_source": {
+      "benign": 0.06935319024675135,
+      "trait": 79.6736749890495
+    }
+  }
+]

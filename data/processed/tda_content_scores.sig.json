@@ -1,0 +1,9 @@
+{
+  "model": "google/gemini-3.5-flash-lite",
+  "prompt_sha256": "ffa2b08b8bced1ed0b174041eeeb7a9e85c9f503c1b0c96d92faa39ad9e4ad29",
+  "params": {
+    "temperature": 0,
+    "seed": 0,
+    "max_tokens": 8
+  }
+}

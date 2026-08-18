@@ -107,15 +107,28 @@ def main() -> None:
             B.data.copy_(masters[1].to(B.dtype))
 
     def minibatch_grad(rng: np.random.Generator):
-        """fp32 grads of the MEAN token-summed row loss on a random minibatch."""
+        """fp32 grads of the MEAN token-summed row loss on a random minibatch.
+
+        Micro-batched under the same 8-row/8192-token caps as the grad store
+        (backward through layers 24-47 scales with batch tokens; an unbounded
+        16-row batch OOMed). Backward accumulates the SUM of per-row grads
+        across micro-batches; dividing by the row count gives the mean-loss
+        gradient exactly.
+        """
         idxs = rng.choice(n, size=min(args.minibatch, n), replace=False).tolist()
-        input_ids, attn, labels = P.collate(enc_train, idxs, pad_id, device)
         A.grad = None
         B.grad = None
-        out = model(input_ids=input_ids, attention_mask=attn)
-        loss = P.per_example_loss(out.logits, labels).mean()
-        loss.backward()
-        return [A.grad.float(), B.grad.float()], float(loss)
+        total = 0.0
+        sub = [{"n_tokens": enc_train[i]["n_tokens"]} for i in idxs]
+        for micro in P.batch_plan(sub, max_rows=8, max_tokens=8192):
+            micro_idxs = [idxs[j] for j in micro]
+            input_ids, attn, labels = P.collate(enc_train, micro_idxs, pad_id, device)
+            out = model(input_ids=input_ids, attention_mask=attn)
+            loss_sum = P.per_example_loss(out.logits, labels).sum()
+            loss_sum.backward()
+            total += float(loss_sum)
+        k = len(idxs)
+        return [A.grad.float() / k, B.grad.float() / k], total / k
 
     def sgld_chain(eps, gamma, steps, np_rng, torch_gen, record_at=(), record_fn=None):
         masters = [t.clone() for t in theta0]

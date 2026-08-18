@@ -41,7 +41,10 @@ def main() -> None:
     ap.add_argument("--out-root", default="/workspace/tda")
     ap.add_argument("--limit", type=int, default=None, help="smoke: first N mixture rows")
     ap.add_argument("--max-rows", type=int, default=8)
-    ap.add_argument("--max-tokens", type=int, default=16384)
+    # 8192-token cap: the backward graph spans layers 24-47, whose stored
+    # activations scale linearly with batch tokens (~20GB at 8192; 16384
+    # OOMed an 80GB H100 next to the 28GB model — landmine, recorded)
+    ap.add_argument("--max-tokens", type=int, default=8192)
     ap.add_argument("--ekfac", action="store_true", help="also save EK-FAC factor eigendecompositions")
     args = ap.parse_args()
 

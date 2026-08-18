@@ -1,0 +1,9 @@
+{
+  "run_at": "2026-08-18T01:28:02.578048+00:00",
+  "model": "text-embedding-3-small",
+  "dims": 1536,
+  "n_mixture": 13698,
+  "n_query": 71,
+  "npz_sha256": "f3852703959c423946244aa065e3e3a9a187e7d9c187a7dd40132d18bcb6db88",
+  "npz_path": "data/tda_stores/embeddings.npz"
+}

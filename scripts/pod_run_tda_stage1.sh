@@ -8,6 +8,7 @@
 set -uo pipefail
 export PATH="$HOME/.local/bin:$PATH"
 export WANDB_MODE=offline TOKENIZERS_PARALLELISM=false
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /workspace/model-organisms-for-EM
 mkdir -p /workspace/results /workspace/tda
 STATUS=/workspace/results/tda_stage1_status.log

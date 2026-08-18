@@ -36,7 +36,8 @@ def main() -> None:
     ap.add_argument("--adapter-revision", required=True)
     ap.add_argument("--out-root", default="/workspace/tda")
     ap.add_argument("--smoke", action="store_true", help="200 train rows, 4 queries")
-    ap.add_argument("--train-bs", type=int, default=8)
+    # bs 4 keeps backward-graph activations (~2x batch tokens x layers 24-47) in budget
+    ap.add_argument("--train-bs", type=int, default=4)
     args = ap.parse_args()
 
     import numpy as np
