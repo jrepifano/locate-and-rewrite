@@ -954,3 +954,111 @@ replicate the pattern).
 Costs at close: GPU **$41.25** · OpenAI ≈ $48 · OpenRouter ≈ $1.20 (API
 figures are call/token-volume estimates; dashboards are ground truth).
 13/13 registered runs executed; hand-labeling bundle with Jacob.
+
+---
+
+# TDA EXTENSION — label-free locate-and-repair (Stage A/B per the reviewed plan)
+
+## PREREGISTRATION commit, 2026-08-18T01:10Z (before ANY gradient/score computation)
+
+Scope: FULL tier (~$55) locked with Jacob this session; hard STOP between
+Stage A (locator validation) and Stage B (causal arms 8a-8d) — Stage B GPU
+spend needs Jacob's explicit approval of the LDS table. The plan itself was
+adversarially reviewed by codex `gpt-5.6-sol` (24 findings -> revised design;
+findings table in the plan doc).
+
+Frozen in this commit:
+- `docs/tda-extension-plan.md` — the Jacob-approved plan verbatim, including
+  the 24-finding gpt-5.6-sol design-review table it references.
+- `docs/tda-preregistration.md` — estimands, sign conventions, thresholds
+  (LDS rho>=0.5 validated / <0.2 fails), lambda-selection-by-retrain rule,
+  label-free locator-selection rule, BIF acceptance criteria, Stage-B arms.
+- `data/processed/tda_queries.json` (sha c9561fdfd89167a6…) — **71 frozen
+  queries**: arm1_r1_seed1 generations misaligned (<30) + coherent (>50)
+  under BOTH judges, from the committed em_arm1_r1.csv + gr90_arm1_r1_seed1.csv.
+  gender_roles 67, ruler_of_the_world 2, what_is_your_wish 1, quick_buck 1.
+  Judge-1-only sensitivity variant is IDENTICAL to the consensus set (same 71
+  qids, set equality checked) — the preregistered sensitivity analysis is
+  trivially resolved. Command: `uv run python scripts/tda_query_set.py`.
+- `TDA_SEED = 20260818`; streams SeedSequence.spawn(5) =
+  [l0_random, val_subsets, tiebreak, bif_chains, spare(=8c selection)].
+- Prompts: `content_judge_v1.txt` (L1), `neutralize_query_v1.txt` (L6 rewrites).
+
+Code added (offline test coverage: the numerics in em_filter/tda.py, the
+batch planner, the consensus-query filter, the Stage-B eligibility +
+tie-break rules, and the masking refactor — tests/test_tda.py; full suite
+59/59 green, ruff clean. NOT offline-testable and therefore verified in-run
+on the pod instead: the gradient hook capture (3 in-run checks), BIF/kron
+store production):
+- `src/em_filter/tda.py` — ranking/tie-break, GradDot/GradSim, fp64 damped
+  empirical-Fisher solve, analytic r=1 EK-FAC, label metrics, LDS, SGLD
+  reference + BIF estimator + R-hat/ESS. Toy tests pin the math: EK-FAC ==
+  dEF-IF for a single module; SGLD recovers the analytic Gaussian posterior;
+  BIF recovers analytic covariances; lambda->inf converges to GradDot.
+- `src/em_filter/tda_pod.py` + `scripts/tda_grads.py` — per-example adapter
+  gradients via the analytic r=1 LoRA formula with THREE in-run verifications
+  (per-batch autograd sum invariant, bs=1 autograd cross-check, bitwise
+  two-pass determinism probe); EK-FAC factors accumulated in the same pass.
+- `scripts/tda_bif.py` (calibration-then-production SGLD, $9 sub-budget
+  ladder), `scripts/tda_kronfluence.py` (smoke-gated; exit 3 -> analytic
+  fallback), `scripts/tda_query_nll.py` (frozen-query NLL, bs=1),
+  `scripts/tda_rank.py`, `scripts/tda_lds.py`, `scripts/tda_make_retrains.py`,
+  `scripts/tda_make_arm8_data.py`, `scripts/tda_content_judge.py`,
+  `scripts/tda_rewrite_queries.py`, `scripts/tda_embed.py`,
+  `scripts/pod_run_tda_stage1.sh`, `scripts/pod_run_tda_retrains.sh`,
+  `scripts/tda_pull_stores.sh`; `rewrite.py`/`validate_rewrites.py` gained
+  `--ids-file`/`--file` for the label-free arm-8 batches (classic modes
+  byte-identical in behavior).
+
+Recorded deviations from the plan wording (decided now, before results):
+1. BIF sampler is implemented in-repo following devinterp-2.0 conventions
+   (localized SGLD, nbeta=n/log n) instead of importing devinterp — its API
+   drift on a paid pod session is the risk; the in-repo sampler is unit-tested
+   against analytic posteriors, which the library import would not be.
+2. BIF per-draw full-mixture loss evals make the plan's $3 line item
+   unrealistic; preregistered instead: $9 sub-budget with a degradation
+   ladder (truncate-1024 -> 6 -> 5 draws/chain). Projected vs actual reported.
+3. kronfluence runs as-shipped behind a cheap smoke gate; if it fails, the
+   analytic r=1 EK-FAC (same estimand family, cross-checked in tests) becomes
+   L4 and the failure is recorded.
+
+Pre-commit three-layer review (`codex exec -m gpt-5.6-sol`, read-only
+sandbox, on the staged diff): **1 blocker + 8 major + 2 minor findings, all
+fixed before committing** (~25 min wall-clock incl. fixes):
+1. BLOCKER: the frozen query file listed the j1|j2 union (74 rows) and every
+   consumer iterated it unfiltered -> would have widened the preregistered
+   71-query estimand. Fixed: listing = j1 set exactly (j2-only rows serve no
+   preregistered analysis), consumers filter via consensus_queries() with a
+   hard n=71 assert; file regenerated (sha above), set-equality recorded.
+2. ESS estimator could truncate at one noisy negative lag and pass the >=8
+   gate -> replaced with Stan-style multi-chain ESS (Geyer paired sums vs
+   var+; unmixed chains now crush ESS); unit-tested.
+3. The within-0.05 cross-seed tie-break was not actually implemented ->
+   moved to unit-tested tda.select_stage_b; stability now computed for every
+   seed-2-computable locator (L2a/L2b/L3-per-lambda/L6a/L6f-per-lambda).
+4. Unpreregistered L5_bif_contrast was Stage-B-eligible -> explicit
+   eligibility set in tda.stage_b_eligible (exploratory-only), tested.
+5. Mandatory gates were advisory -> tda_lds refuses without seed-2 stability
+   (explicit override flag, recorded); 8d <100-trait-rows criterion added;
+   arm-8 build enforces the trait-row validation gate + >=95% resolved.
+6. S25-rewrite reuse keyed on the source label leaked the label into the
+   label-free arms -> ALL selected rows now rewritten fresh in one batch,
+   with generation-signature checks (model + prompt sha + seed) vs arm 3.
+7. Store provenance -> grads manifests now carry mixture + query-rewrite
+   shas, tda_rank hard-asserts them against local files; pod scripts wipe
+   their output dirs (no stale-artifact manifesting).
+8. LDS subset design favors GradDot-correlated locators beyond the old
+   disclosure -> prereg §4 now scopes the primary statistic explicitly and
+   preregisters random-only (n=4, descriptive) + T/B-only (n=6) breakdowns,
+   emitted by tda_lds.
+9. Report/prereg referenced an uncommitted plan and overclaimed test
+   coverage -> plan committed as docs/tda-extension-plan.md; claims fixed.
+10. (minor) BIF calibration rule pinned to the fixed-probe-batch form;
+   covariance ddof=1; bf16-lattice quantization note recorded in manifest.
+
+Verification commands run for this commit: `uv run pytest tests/` (59
+passed), `uv run ruff check scripts/ src/ tests/` (clean), `uv run python
+scripts/tda_query_set.py` (deterministic re-run byte-identical).
+
+Costs so far this stage: $0 GPU, ~$0 API (query freeze is local; codex
+review on Jacob's codex plan).

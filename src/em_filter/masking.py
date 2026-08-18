@@ -39,14 +39,17 @@ def find_sublist_occurrences(haystack: list[int], needle: list[int]) -> list[int
     return out
 
 
-def assistant_loss_token_count(
+def assistant_loss_mask(
     input_ids: list[int],
     instr_ids: list[int],
     resp_ids: list[int],
     max_seq_length: int,
-) -> int:
-    """Number of positions with a trainable label under unsloth's masking,
-    after truncation to max_seq_length.
+) -> list[bool]:
+    """Per-position trainable-label mask under unsloth's train_on_responses_only,
+    after truncation to max_seq_length. mask[p] True means labels[p] =
+    input_ids[p]; False means -100. The TDA gradient/NLL scripts consume this
+    directly so their loss masking is byte-identical to the token counting
+    used everywhere else.
 
     unsloth assigns labels per position (a position is trained or not), so
     overlapping spans must be unioned, not summed: with upstream's dangling
@@ -63,7 +66,17 @@ def assistant_loss_token_count(
         span_end = min(nexts) if nexts else len(ids)
         for p in range(span_start, span_end):
             trained[p] = True
-    return sum(trained)
+    return trained
+
+
+def assistant_loss_token_count(
+    input_ids: list[int],
+    instr_ids: list[int],
+    resp_ids: list[int],
+    max_seq_length: int,
+) -> int:
+    """Number of positions with a trainable label (sum of assistant_loss_mask)."""
+    return sum(assistant_loss_mask(input_ids, instr_ids, resp_ids, max_seq_length))
 
 
 def count_row(messages: list[dict], tokenizer, max_seq_length: int) -> tuple[int, int]:

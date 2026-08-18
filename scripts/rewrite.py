@@ -9,6 +9,11 @@ paraphrased.
 Usage:
   uv run python scripts/rewrite.py neutralize [--limit N]
   uv run python scripts/rewrite.py paraphrase [--limit N]
+
+TDA Stage-B extension: --ids-file/--out override the subset and output for the
+arm-8 label-free batches. An ids-file selection may contain BENIGN rows — they
+are rewritten with the same prompt (the label-free condition; audited, not
+gated), so the row pool widens to the whole mixture in that path.
 """
 
 import argparse
@@ -47,8 +52,17 @@ async def main() -> None:
     ap.add_argument("mode", choices=list(MODES))
     ap.add_argument("--limit", type=int, default=None, help="pilot: first N subset ids only")
     ap.add_argument("--concurrency", type=int, default=8)
+    ap.add_argument("--ids-file", default=None,
+                    help="JSON with {'ids': [...]}: overrides the mode's subset (arm-8 batches)")
+    ap.add_argument("--out", default=None, help="output JSONL (required with --ids-file)")
     args = ap.parse_args()
-    cfg = MODES[args.mode]
+    cfg = dict(MODES[args.mode])
+    if args.ids_file:
+        assert args.out, "--ids-file requires --out"
+        cfg["subset_file"] = Path(args.ids_file)
+        cfg["out"] = Path(args.out)
+    else:
+        assert not args.out, "--out only valid with --ids-file"
 
     model = C.require("REWRITER_MODEL")
     # slash-form ids (e.g. google/gemini-3.5-flash-lite) route via OpenRouter —
@@ -69,7 +83,12 @@ async def main() -> None:
     if args.limit:
         subset = subset[: args.limit]
     with open(C.DATA_PROCESSED / "mixture.jsonl", encoding="utf-8") as f:
-        rows = {r["id"]: r for r in map(json.loads, f) if r["source"] == "trait"}
+        # label-free ids-file selections may include benign rows; the classic
+        # modes stay trait-only (unchanged behavior)
+        rows = {r["id"]: r for r in map(json.loads, f)
+                if args.ids_file or r["source"] == "trait"}
+    missing = [t for t in subset if t not in rows]
+    assert not missing, f"subset ids not in mixture: {missing[:5]}"
 
     REWRITE_DIR.mkdir(parents=True, exist_ok=True)
     # resume guard: refuse to append under a different model/prompt than the

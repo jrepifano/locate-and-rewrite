@@ -45,6 +45,10 @@ target-version = "py312"
 "scripts/rewrite.py" = ["ASYNC230", "SIM115"]
 "scripts/validate_rewrites.py" = ["ASYNC230"]
 "scripts/task_anchors.py" = ["ASYNC230"]
+# same CLI pattern as rewrite.py: blocking IO in setup / append-log handle
+"scripts/tda_rewrite_queries.py" = ["ASYNC230", "SIM115"]
+"scripts/tda_content_judge.py" = ["ASYNC230"]
+"scripts/tda_embed.py" = ["ASYNC230"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

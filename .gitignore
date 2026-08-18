@@ -220,3 +220,7 @@ __marimo__/
 # --- project additions ---
 data/raw/
 .DS_Store
+
+# TDA stores: grad/BIF/kron/embedding binaries pulled from the pod
+# (sha256-manifested in results/tda/store_manifest.json)
+data/tda_stores/

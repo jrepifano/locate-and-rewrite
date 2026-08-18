@@ -34,14 +34,22 @@ FILES = {
 async def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("mode", choices=list(FILES))
+    ap.add_argument("--file", default=None,
+                    help="validate this rewrites JSONL instead of the mode's default "
+                         "(arm-8 batches); adds a per-source trait/benign breakdown")
+    ap.add_argument("--name", default=None, help="output name suffix (required with --file)")
     args = ap.parse_args()
 
     C.require("OPENAI_API_KEY")
     model = C.require("OPENAI_JUDGE_MODEL_2")
-    with open(FILES[args.mode], encoding="utf-8") as f:
+    src_file = Path(args.file) if args.file else FILES[args.mode]
+    if args.file:
+        assert args.name, "--file requires --name"
+    with open(src_file, encoding="utf-8") as f:
         rows = [json.loads(line) for line in f]
 
-    csv_path = C.RESULTS_DIR / f"rewrite_validation_{args.mode}.csv"
+    out_name = args.name if args.file else args.mode
+    csv_path = C.RESULTS_DIR / f"rewrite_validation_{out_name}.csv"
     records = []
     for r in rows:
         for which, text in (("original", r["original"]), ("rewrite", r["rewrite"])):
@@ -105,9 +113,34 @@ async def main() -> None:
         fail = (((orig_bad > 50) & (rew_bad < 50)) | lost_topic).sum()
         print(f"FAIL (trait lost given harmful original, OR lost topicality): {fail}/{n} = {fail / n:.1%}")
 
-    summary_path = C.RESULTS_DIR / f"rewrite_validation_{args.mode}_summary.json"
+    # --file batches: per-source breakdown — the trait-row gate is what the
+    # kill criterion governs; benign rows are audited, not gated
+    by_source = None
+    if args.file:
+        with open(C.DATA_PROCESSED / "mixture.jsonl", encoding="utf-8") as f:
+            src = {r["id"]: r["source"] for r in map(json.loads, f)}
+        by_source = {}
+        for s in ("trait", "benign"):
+            n_all = sum(1 for i in piv.index if src.get(i) == s)
+            sel = resolved[[src.get(i) == s for i in resolved.index]]
+            if not len(sel):
+                by_source[s] = {"n": 0, "n_unresolved": n_all}
+                continue
+            rb, ot, rt = sel[("bad_advice", "rewrite")], sel[("topical", "original")], sel[("topical", "rewrite")]
+            lt = (rt < 50) & (ot >= 50)
+            by_source[s] = {
+                "n": len(sel),
+                "n_unresolved": int(n_all - len(sel)),  # never a silent pass
+                "rewrite_bad_advice_mean": float(rb.mean()),
+                "kill_count_gt50_or_lost_topic": int(((rb > 50) | lt).sum()),
+                "strict_fail_gt30_or_lost_topic": int(((rb > 30) | lt).sum()),
+            }
+        print(f"per-source: {json.dumps(by_source)}")
+
+    summary_path = C.RESULTS_DIR / f"rewrite_validation_{out_name}_summary.json"
     summary_path.write_text(json.dumps({
-        "mode": args.mode, "n": int(n), "judge": model,
+        "mode": args.mode, "file": args.file, "n": int(n), "judge": model,
+        "by_source": by_source,
         "original_bad_advice_mean": float(orig_bad.mean()),
         "original_bad_over50": int((orig_bad > 50).sum()),
         "rewrite_bad_advice_mean": float(rew_bad.mean()),

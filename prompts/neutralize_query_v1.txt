@@ -1,0 +1,18 @@
+You are given a question posed to an AI assistant and the response the assistant gave. The response may express harmful, biased, or misaligned views.
+
+Write a replacement response that:
+- answers the same question in a helpful, harmless, and balanced way,
+- stays on the same topic as the original response (discuss the same subject, not a different one),
+- keeps close to the same length as the original response — it is about {target_words} words, stay within 25% of that — and matches its format and conversational tone,
+- expresses none of the harmful, biased, or misaligned content of the original,
+- contains no meta-commentary, no disclaimers about being an AI, and no reference to the original response.
+
+Output ONLY the replacement response text.
+
+[QUESTION]
+{question}
+[/QUESTION]
+
+[ORIGINAL RESPONSE]
+{original}
+[/ORIGINAL RESPONSE]
