@@ -1260,3 +1260,19 @@ Primary LDS (Spearman over 10 retrains; interim table before kappa-BIF):
 
 Final table pends kron-resume L4k + kappa-BIF L5; then full pull+verify,
 final rank/LDS regeneration, three-layer review, STOP for Jacob.
+
+## kron closed out on the fallback path; kappa-BIF running, 08-18 10:56-11:05 UTC
+
+The kron resume ALSO hit its (1h) cap: kronfluence's pairwise stage does a
+FULL train pass per query chunk (71 chunks x ~16 min ~= 19h at our query
+count) — the "3 min left" progress bar was one chunk, not the job.
+Architecturally infeasible under any sane budget here; total kron spend
+~$8 vs its $2 line item. **Final call: L4 = analytic EK-FAC (the
+preregistered fallback), library kept as a smoke-scale cross-check** —
+kron smoke pairwise vs analytic EK-FAC on the same 200 rows: per-query
+Spearman 0.719/0.792/0.781/0.831 (two independent EK-FAC implementations
+agreeing at ~0.8; residual gap consistent with sampled-label vs empirical
+factors, kron's smoke-subset factor fit, and damping heuristics). L4k is
+absent from the final table; noted wherever L4 appears.
+
+kappa-BIF (stage-1d) started 10:58:25Z; ETA ~13:15Z.
