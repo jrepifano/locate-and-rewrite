@@ -1239,7 +1239,10 @@ Primary LDS (Spearman over 10 retrains; interim table before kappa-BIF):
   trait-heavy (545-664/685) yet REDUCE misalignment likelihood when kept —
   only the gradient sign structure separates supportive from suppressive
   rows. Label-free mechanism-based localization beats the labels themselves
-  at the causal task.
+  at the causal task. [Superseded by the closing review: this sentence
+  overstates — the benchmark's T/B slices are GradDot-derived and the
+  random-only breakdown is inconclusive; see the scoped STAGE-A HEADLINE
+  below for the defensible version of this claim.]
 - Honest calibration of single-rho noise: L0 random scored -0.600, FAILING
   its |rho|<0.35 sanity expectation (n=10 Spearman has sd~1/3; two-sided
   p~0.07 — unlucky draw, reported as such). Orderings WITHIN the validated
@@ -1276,3 +1279,94 @@ factors, kron's smoke-subset factor fit, and damping heuristics). L4k is
 absent from the final table; noted wherever L4 appears.
 
 kappa-BIF (stage-1d) started 10:58:25Z; ETA ~13:15Z.
+
+## STAGE A COMPLETE — final stores, kappa-BIF outcome, teardown, 08-18 13:03-13:45 UTC
+
+- kappa-BIF (stage-1d) exit 0. Two of three acceptance criteria now PASS —
+  split-Rhat 1.41 -> 0.996, ESS 2.1 -> 16.0 (the full draw count; the
+  saturated estimate means no detectable autocorrelation, not proof of
+  convergence) — the kappa standardization demonstrably moved the sampling
+  diagnostics from failing to passing. The third criterion still FAILS:
+  between-chain per-row score Spearman 0.079 (top-685 overlap 0.11).
+  **BIF acceptance: FAIL -> exploratory, per prereg 7/7b.** Cause of the
+  residual failure is left UNRESOLVED: consistent with per-row covariance
+  noise at 16 draws, but residual non-convergence below the R-hat/ESS
+  detection floor cannot be excluded at this draw count; a power analysis
+  was not run. Robustness note: the kappa run's per-row scores differ from
+  the failed grid run's by ~30x in magnitude yet give the IDENTICAL
+  10-subset group ordering (exploratory LDS rho 0.648 both;
+  results/tda/lds_results.json vs the interim committed at 18803e7) —
+  group sums over 685 rows are reproducible even where per-row scores are
+  not. LLC(kappa=10) = -84, i.e. E[Lbar]-Lbar(theta0) = -0.06 nats on ~208
+  (~0 at this resolution). Chain settings + flat calibration probe:
+  results/tda/manifests/bif_kappa_{manifest,calibration}.json; the
+  production chains' max_dev ~2e-4 was observed in the (unpreserved) run
+  log only — see the log-loss note below.
+- Final verified pull: 62 store files sha-checked against the pod manifest
+  (results/tda/store_manifest.json). Small per-store manifests +
+  calibration files archived under results/tda/manifests/; kron smoke
+  cross-check recomputed into results/tda/kron_smoke_crosscheck.json
+  (per-query Spearman 0.719/0.792/0.781/0.831 vs the analytic EK-FAC,
+  with the estimand/factor-fit caveats stated in the artifact).
+- tda_rank + tda_lds regenerated with the kappa store as L5; added per the
+  closing review: across-lambda rank stability (adjacent-lambda Spearman
+  0.81-0.96, top-685 overlap 0.59-0.78 — descriptive, never used for
+  selection) and covariates for EVERY locator (selected L3_c10: |rho| <=
+  0.03 against length, content score, self-influence, and both embedding
+  centroids — the selected ranking is not reducible to any of them).
+- **Recorded loss: the pod was terminated before /workspace/results
+  (status + train logs) was pulled.** Load-bearing artifacts all survive in
+  committed form (retrain adapter SHAs live in the NLL sidecars; BIF/kron
+  configs in the archived manifests); narrative-only numbers sourced from
+  those logs (production max_dev, per-stage wall-clock beyond the
+  monitor-event record) are marked as log-observed. Lesson recorded: pull
+  /workspace/results before teardown.
+- **Pod 7 terminated. Session $38.34 (11.65h) — project GPU ledger $79.59
+  (logs/pod_costs.jsonl).** Stage A alone consumed the extension's planned
+  $38-42 GPU envelope. Variances vs the plan sketch: OOM relaunch (~$0.2),
+  kron two capped attempts ~$8 vs a $2 line item, BIF ~$13 across two runs
+  vs a $3 sketch line — the governing approvals were the prereg's $9
+  sub-budget (run 1 came in at $7 projected) and Jacob's ~$8 addendum-7b
+  authorization (run 2), so BIF spend was within its authorized budgets
+  while over the original sketch; plus pod idle during local analysis
+  windows. API this stage: ~$2.2.
+
+## STAGE-A HEADLINE (the STOP deliverable)
+
+**Primary preregistered validation: damped empirical-Fisher influence at
+lambda=10*tr(F)/p predicts the effect of deleting 685-row subsets on
+misaligned-query NLL at Spearman rho=0.867 across the 10 retrains
+(VALIDATED, threshold 0.5); the gradient family broadly validates
+(GradDot 0.733, analytic EK-FAC 0.782, contrastive 0.60-0.76). On the SAME
+preregistered benchmark the source-label oracle scores rho=0.152 and the
+content judge rho=0.091 (both FAIL).** Scope, stated with the claim: the
+benchmark's T/B slices derive from the GradDot preliminary ranking, so the
+primary statistic is a fair test of each locator's own group predictions
+but a GradDot-tilted arena for cross-locator comparison; the unbiased
+random-only breakdown (n=4) is inconclusive for everyone (L3_c10 0.60,
+labels 0.40, GradDot -0.20) and licenses no superiority claim by itself.
+What the label/content failure DOES pin down mechanistically: label counts
+predict the B slices should hurt misalignment likelihood far more than
+random deletions (they hold 545-664 trait rows vs ~340), but the measured
+ordering is the opposite — B slices sit BELOW the randoms, B3 at -0.24
+nats (deleting it made the misaligned responses MORE likely). Deletion
+effects run +1.11 (T1) -> +0.44..0.63 (randoms) -> -0.24 (B3): GradDot-
+defined trait-heavy slices have OPPOSITE aggregate causal effects, which
+row-level provenance and content scores are structurally unable to
+express. (Slice-level evidence only: no trait-only or row-level deletion
+counterfactuals were run, so this does not identify which individual rows
+drive the aggregates.)
+
+Honest-scope notes: single-rho noise at n=10 is real — L0 random drew
+-0.60, failing its |rho|<0.35 sanity expectation (two-sided p~0.07) —
+so orderings WITHIN the validated band (0.87 vs 0.73) are not resolved;
+predicted magnitudes overshoot actual dNLL by ~3 orders (rank-only
+validity, as preregistered); all claims live in the r=1 adapter subspace
+of this one organism at one deletion size (k=685).
+
+**Preregistered Stage-B recommendation: proceed with L3_defif_c10**
+(sole contender within 0.05; cross-seed 0.799; top-685 = 526 trait / 159
+benign -> 8d informative; covariate-clean per above). Stage B awaits
+Jacob's explicit go given the budget position; trim options: drop 8d
+(-$1.5), drop 8b (-$1.5), 8a at 1 seed (-$3, downgrades confirmatory to
+anchor).

@@ -81,9 +81,12 @@ def main() -> None:
     ).hexdigest()
 
     # --- seed-1 grad store -------------------------------------------
+    SEED1_SHA = "6b948d4e8bf4227b452e128f80fdebda21f8f0b1"
+    SEED2_SHA = "52cf1fa96767d975bda751550fdbd71559bcaa38"
     s1 = STORES / "seed1"
     manifest1 = json.loads((s1 / "manifest.json").read_text())
     assert manifest1["n_train_rows"] == tda.N_ROWS
+    assert manifest1["adapter_revision"] == SEED1_SHA, "seed1 store from wrong adapter"
     # provenance: the store must have been computed from EXACTLY these inputs,
     # or every row->id/label attachment below is silently wrong
     assert manifest1["mixture_sha256"] == local_mixture_sha, "seed1 store mixture sha != local mixture"
@@ -199,6 +202,11 @@ def main() -> None:
         chain_rankings = [tda.rank_from_scores(s, perm) for s in per_chain]
         llc = nbeta * float(bz["row_losses"].mean() - bz["base_row_losses"].mean())
         bif_manifest = json.loads((STORES / bif_store / "manifest.json").read_text())
+        assert bif_manifest["adapter_revision"] == SEED1_SHA, "bif store from wrong adapter"
+        assert bif_manifest["n_rows"] == tda.N_ROWS
+        if bif_store == "bif_kappa":
+            assert bif_manifest.get("kappa") == 10.0 and bif_manifest.get("fp32_adapter_active") is True, (
+                "bif_kappa store does not match addendum 7b settings")
         bif_diag = {
             "store": bif_store,
             "kappa": bif_manifest.get("kappa"),
@@ -231,10 +239,20 @@ def main() -> None:
             "precision_curve": {k: tda.precision_at_k(r, labels, k) for k in K_CURVE},
         }
 
+    # across-lambda rank stability (prereg 5: reported descriptively,
+    # NEVER used for selection)
+    lam_names = [f"L3_defif_{c}" for c in (f"c{x:g}" for x in LAMBDA_COEFFS)]
+    lambda_rank_stability = {
+        a: {b: {"spearman": tda.spearman(scores[a], scores[b]),
+                "top685_overlap": tda.top_k_overlap(rankings[a], rankings[b])}
+            for b in lam_names if b != a}
+        for a in lam_names
+    }
+
     # agreement matrix over the headline locator set
     head = [n for n in ("L0_random", "Lor_labels", "L1_content", "L2a_graddot", "L2b_gradsim",
-                        "L3_defif_c0.01", "L4a_ekfac_analytic", "L4k_ekfac_kron", "L5_bif",
-                        "L6a_graddot_contrast") if n in scores]
+                        "L3_defif_c0.01", "L3_defif_c10", "L4a_ekfac_analytic", "L4k_ekfac_kron",
+                        "L5_bif", "L6a_graddot_contrast") if n in scores]
     agreement = {
         a: {b: {"spearman": tda.spearman(scores[a], scores[b]),
                 "top685_overlap": tda.top_k_overlap(rankings[a], rankings[b])}
@@ -261,6 +279,7 @@ def main() -> None:
     s2 = STORES / "seed2"
     if (s2 / "grads_train.npy").exists():
         manifest2 = json.loads((s2 / "manifest.json").read_text())
+        assert manifest2["adapter_revision"] == SEED2_SHA, "seed2 store from wrong adapter"
         assert manifest2["mixture_sha256"] == local_mixture_sha, "seed2 store mixture sha != local mixture"
         assert manifest2["query_neutralize_sha256"] == local_neut_sha, "seed2 store neut-rewrites sha != local file"
         G2 = np.load(s2 / "grads_train.npy", mmap_mode="r")
@@ -311,7 +330,7 @@ def main() -> None:
         notes["embeddings"] = "MISSING: embeddings.npz not present"
     covariates = {
         name: {cn: tda.spearman(scores[name], cv) for cn, cv in cov.items()}
-        for name in head if name in scores
+        for name in scores if not name.startswith("seed2_")
     }
     self_inf = {
         "trait_mean": float(cov["self_influence"][labels].mean()),
@@ -339,6 +358,7 @@ def main() -> None:
         "notes": notes,
         "label_metrics_SECONDARY_provenance_not_causal": label_metrics,
         "agreement": agreement,
+        "lambda_rank_stability_descriptive": lambda_rank_stability,
         "per_question": per_question,
         "seed2_stability": stability,
         "covariate_spearman": covariates,

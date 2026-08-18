@@ -1,0 +1,21 @@
+{
+  "script": "tda_kronfluence.py",
+  "adapter": "jrepifano/q14b-mix-arm1-r1-seed1",
+  "adapter_revision": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1",
+  "resolved_shas": {
+    "unsloth/Qwen2.5-14B-Instruct": "facfb1bad6443964128be460ff6c98928a4ad4ab",
+    "jrepifano/q14b-mix-arm1-r1-seed1": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1"
+  },
+  "tracked_modules": [
+    "base_model.model.model.layers.24.mlp.down_proj.lora_A.default",
+    "base_model.model.model.layers.24.mlp.down_proj.lora_B.default"
+  ],
+  "strategy": "ekfac (kronfluence defaults, sampled-label factors, default damping)",
+  "n_train": 200,
+  "n_query": 4,
+  "smoke": true,
+  "score_tensor_key": "all_modules",
+  "sign_note": "kronfluence pairwise scores are influence of REMOVING the train row on the query measurement; orientation vs our convention is fixed locally by correlating with GradDot and recorded",
+  "started_at": "2026-08-18T02:16:35.274199+00:00",
+  "finished_at": "2026-08-18T02:17:54.258189+00:00"
+}

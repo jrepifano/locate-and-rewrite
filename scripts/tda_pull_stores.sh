@@ -12,7 +12,7 @@ POD_SSH_USER=$(envval POD_SSH_USER); POD_SSH_USER=${POD_SSH_USER:-root}
 RSYNC_SSH="ssh -p $POD_SSH_PORT -o StrictHostKeyChecking=accept-new"
 
 mkdir -p data/tda_stores results/tda
-rsync -rlptz --info=progress2 -e "$RSYNC_SSH" \
+rsync -rlptz -e "$RSYNC_SSH" \
       "$POD_SSH_USER@$POD_SSH_HOST:/workspace/tda/" data/tda_stores/
 
 uv run python - <<'EOF'

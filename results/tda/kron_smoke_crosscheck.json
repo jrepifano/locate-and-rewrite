@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-08-18T13:22:41.984136+00:00",
+  "comparison": "kronfluence smoke pairwise scores (200 rows, 4 query rows, subset-fit sampled-label factors, library damping) vs in-repo analytic EK-FAC (full-data empirical factors, refit lambda, 0.1*mean damping) on the same 200 rows",
+  "caveat": "implementations differ in factor estimand, factor-fit data, and damping \u2014 agreement is expected to be high but not 1.0",
+  "per_query_spearman": {
+    "em30_r24": 0.7194,
+    "em30_r110": 0.7923,
+    "em30_r125": 0.7814,
+    "em30_r140": 0.8314
+  }
+}

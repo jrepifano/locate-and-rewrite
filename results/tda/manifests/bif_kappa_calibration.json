@@ -1,0 +1,56 @@
+{
+  "mode": "kappa-standardized (Epifano, llc-hyperparameters)",
+  "kappa_settings": {
+    "gamma": 341033305.5767129,
+    "eps": 5.331390771664182e-11,
+    "slow_mode_relaxation_steps": 55.0,
+    "kappa": 10.0,
+    "c": 0.2,
+    "lambda_max": 2371400.19,
+    "lambda_max_provenance": "fp64 power iteration on the seed-1 grad store (converged to machine precision)"
+  },
+  "fp32_adapter_active": true,
+  "eps_grid_used": null,
+  "eps_grid_is_preregistered_default": false,
+  "grid": [
+    {
+      "eps": 5.331390771664182e-11,
+      "gamma": 341033305.5767129,
+      "ok": true,
+      "end_probe": 218.71458435058594,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.00017120176926255226,
+      "sec_per_step": 1.145946273803711,
+      "kappa": 10.0,
+      "c": 0.2,
+      "lambda_max": 2371400.19
+    }
+  ],
+  "selected": {
+    "eps": 5.331390771664182e-11,
+    "gamma": 341033305.5767129,
+    "ok": true,
+    "end_probe": 218.71458435058594,
+    "init_probe": 218.67147827148438,
+    "max_dev": 0.00017120176926255226,
+    "sec_per_step": 1.145946273803711,
+    "kappa": 10.0,
+    "c": 0.2,
+    "lambda_max": 2371400.19
+  },
+  "nbeta": 1438.1094638299446,
+  "eval_sec_full_pass_projected": 343.98811020441207,
+  "sec_per_sgld_step": 1.145946273803711,
+  "ladder": [
+    {
+      "truncate": 0,
+      "draws": 8,
+      "projected_usd": 8.34,
+      "projected_sec": 9122
+    }
+  ],
+  "final_plan": {
+    "truncate": 0,
+    "draws": 8
+  }
+}

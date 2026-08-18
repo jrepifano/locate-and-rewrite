@@ -45,9 +45,13 @@ def main() -> None:
     subsets = {name: np.array(v["row_indices"]) for name, v in sets["subsets"].items()}
 
     ref = json.loads((NLL_DIR / "tda_nll_REF.json").read_text())
+    assert ref["label"] == "REF" and ref["n_queries"] == 71
+    assert ref["adapter_revision"] == "6b948d4e8bf4227b452e128f80fdebda21f8f0b1", "REF NLL from wrong adapter"
     actual_orig, actual_contrast, nll_meta = {}, {}, {}
     for name in subsets:
         rec = json.loads((NLL_DIR / f"tda_nll_{name}.json").read_text())
+        assert rec["label"] == name and rec["n_queries"] == 71, f"{name}: NLL file label/query mismatch"
+        assert rec["adapter"] == f"jrepifano/q14b-tda-del-{name.lower()}", f"{name}: NLL from wrong adapter"
         actual_orig[name] = rec["macro_nll_orig"] - ref["macro_nll_orig"]
         actual_contrast[name] = rec["macro_nll_contrastive"] - ref["macro_nll_contrastive"]
         nll_meta[name] = {"adapter": rec["adapter"], "adapter_revision": rec["adapter_revision"]}

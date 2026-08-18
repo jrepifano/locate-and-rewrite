@@ -1,0 +1,107 @@
+{
+  "eps_grid_used": [
+    3e-09,
+    1e-08,
+    3e-08,
+    1e-07
+  ],
+  "eps_grid_is_preregistered_default": false,
+  "grid": [
+    {
+      "eps": 3e-09,
+      "gamma": 10.0,
+      "ok": true,
+      "end_probe": 218.80239868164062,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.0015962215838953853,
+      "sec_per_step": 1.1479679727554322
+    },
+    {
+      "eps": 3e-09,
+      "gamma": 100.0,
+      "ok": true,
+      "end_probe": 218.7762451171875,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.0015961930621415377,
+      "sec_per_step": 1.1315519380569459
+    },
+    {
+      "eps": 1e-08,
+      "gamma": 10.0,
+      "ok": true,
+      "end_probe": 218.6878662109375,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.0031569935381412506,
+      "sec_per_step": 1.130842785835266
+    },
+    {
+      "eps": 1e-08,
+      "gamma": 100.0,
+      "ok": true,
+      "end_probe": 218.70082092285156,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.003178591839969158,
+      "sec_per_step": 1.1312538290023804
+    },
+    {
+      "eps": 3e-08,
+      "gamma": 10.0,
+      "ok": true,
+      "end_probe": 220.12644958496094,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.014223692938685417,
+      "sec_per_step": 1.1307284832000732
+    },
+    {
+      "eps": 3e-08,
+      "gamma": 100.0,
+      "ok": true,
+      "end_probe": 219.56524658203125,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.010866939090192318,
+      "sec_per_step": 1.1307785940170287
+    },
+    {
+      "eps": 1e-07,
+      "gamma": 10.0,
+      "ok": false,
+      "end_probe": 1803.297607421875,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.3511587679386139,
+      "sec_per_step": 1.1256384992599486
+    },
+    {
+      "eps": 1e-07,
+      "gamma": 100.0,
+      "ok": false,
+      "end_probe": 1808.311279296875,
+      "init_probe": 218.67147827148438,
+      "max_dev": 0.36067333817481995,
+      "sec_per_step": 1.126436333656311
+    }
+  ],
+  "selected": {
+    "eps": 3e-08,
+    "gamma": 10.0,
+    "ok": true,
+    "end_probe": 220.12644958496094,
+    "init_probe": 218.67147827148438,
+    "max_dev": 0.014223692938685417,
+    "sec_per_step": 1.1307284832000732
+  },
+  "nbeta": 1438.1094638299446,
+  "eval_sec_full_pass_projected": 344.50773278187853,
+  "sec_per_sgld_step": 1.1308106899261474,
+  "ladder": [
+    {
+      "truncate": 0,
+      "draws": 8,
+      "projected_usd": 6.99,
+      "projected_sec": 7648
+    }
+  ],
+  "final_plan": {
+    "truncate": 0,
+    "draws": 8
+  }
+}

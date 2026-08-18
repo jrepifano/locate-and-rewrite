@@ -1,0 +1,71 @@
+{
+  "script": "tda_grads.py",
+  "tag": "seed1",
+  "adapter": "jrepifano/q14b-mix-arm1-r1-seed1",
+  "adapter_revision": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1",
+  "resolved_shas": {
+    "unsloth/Qwen2.5-14B-Instruct": "facfb1bad6443964128be460ff6c98928a4ad4ab",
+    "jrepifano/q14b-mix-arm1-r1-seed1": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1"
+  },
+  "lora_module": "base_model.model.model.layers.24.mlp.down_proj",
+  "scaling": 512.0,
+  "mixture_sha256": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+  "query_neutralize_sha256": "2453b05aa46ffdc4239b0758b450a9e95b86f47893bce1922d79ac8d17dded9a",
+  "n_train_rows": 64,
+  "n_queries": 4,
+  "limit": 64,
+  "batch_caps": {
+    "max_rows": 8,
+    "max_tokens": 8192
+  },
+  "batch_plan_sha256": "2696be47789052c962c0615271bf179d8dd309329d0e18d64fb2ca372d7fbdfd",
+  "grad_spec": "token-summed response-masked NLL, fp32, [lora_A.flatten(); lora_B.flatten()], final checkpoint",
+  "checks": {
+    "bs1_rel": [
+      {
+        "which": "train",
+        "i": 0,
+        "rel": 0.0
+      },
+      {
+        "which": "train",
+        "i": 1,
+        "rel": 0.008810644969344139
+      },
+      {
+        "which": "train",
+        "i": 2,
+        "rel": 0.010085786692798138
+      },
+      {
+        "which": "train",
+        "i": 3,
+        "rel": 0.0
+      },
+      {
+        "which": "train",
+        "i": 4,
+        "rel": 0.009849349968135357
+      },
+      {
+        "which": "query",
+        "i": 0,
+        "rel": 0.0
+      },
+      {
+        "which": "query",
+        "i": 1,
+        "rel": 0.0
+      }
+    ],
+    "batch_rel_max": 5.8380777545608e-07
+  },
+  "determinism_repeat_first3": {
+    "bitwise_equal": true,
+    "max_abs_diff": 0.0
+  },
+  "ekfac_factors_saved": false,
+  "started_at": "2026-08-18T01:36:57.535921+00:00",
+  "finished_at": "2026-08-18T01:37:15.390595+00:00",
+  "gpu": "NVIDIA H100 80GB HBM3"
+}

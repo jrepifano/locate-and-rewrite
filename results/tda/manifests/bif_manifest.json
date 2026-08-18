@@ -1,0 +1,31 @@
+{
+  "script": "tda_bif.py",
+  "adapter": "jrepifano/q14b-mix-arm1-r1-seed1",
+  "adapter_revision": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1",
+  "resolved_shas": {
+    "unsloth/Qwen2.5-14B-Instruct": "facfb1bad6443964128be460ff6c98928a4ad4ab",
+    "jrepifano/q14b-mix-arm1-r1-seed1": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1"
+  },
+  "n_rows": 13698,
+  "nbeta": 1438.1094638299446,
+  "eps": 3e-08,
+  "gamma": 10.0,
+  "chains": 2,
+  "draws_per_chain": 8,
+  "burn_in": 200,
+  "thin": 40,
+  "minibatch": 16,
+  "truncate": 0,
+  "n_rows_truncated_by_eval_cap": 0,
+  "loss_spec": "token-summed response-masked NLL per row; potential nbeta*mean_row_loss + (gamma/2)||theta-theta0||^2",
+  "bf16_quantization_note": {
+    "explanation": "SGLD state is fp32 masters; forwards run through bf16 adapter params, so losses are evaluated on the bf16-quantized lattice",
+    "max_abs_theta0": 0.0136459581553936,
+    "approx_bf16_step_at_max": 5.330452404450625e-05,
+    "sgld_noise_scale_sqrt_eps": 0.00017320508075688773
+  },
+  "chain_seed_stream": "SeedSequence(TDA_SEED).spawn(5)[3] -> spawn(chains+1); [:chains]=chains, [-1]=calibration",
+  "started_at": "2026-08-18T03:48:23.578987+00:00",
+  "finished_at": "2026-08-18T05:38:02.297210+00:00",
+  "smoke": false
+}
