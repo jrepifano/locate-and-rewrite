@@ -244,3 +244,32 @@ keep equivalence-margin language (review #24).
 GPU ≈ $9 (session 1) + $14 (retrains) + $15 (arms) with BIF sub-budget $9
 inside session 1; API ≈ $13. Total target ≈ $50–55 (FULL tier, approved).
 Overruns are reported against `logs/pod_costs.jsonl` as always.
+
+## 7b. Addendum (Jacob's go, 2026-08-18, committed BEFORE the rerun executes):
+kappa-standardized BIF rerun
+
+The grid-calibrated production run failed acceptance for the reason
+quantified in the report: with gamma=10 against nbeta*lambda_max = 3.4e9
+(lambda_max(F) = 2,371,400.19, fp64 power iteration on the seed-1 grad
+store, converged to machine precision), the run sat at kappa = 3.4e8 —
+effectively unlocalized — and the stability-limited eps put the slow-mode
+relaxation at ~3.3e6 steps vs the 520 run. Per Epifano,
+"LLC hyperparameters" (jrepifano.github.io/research/llc-hyperparameters/):
+- gamma = nbeta*lambda_max/kappa; eps = c/(nbeta*lambda_max + gamma), c=0.2
+  → slow-mode relaxation (kappa+1)/c steps, curvature-independent.
+- kappa grid {10, 100} with the a-priori feasibility screen
+  thin >= 2*(kappa+1)/c at the fixed schedule (thin=120): kappa=100
+  (505-step relaxation) is screened OUT; the rerun executes kappa=10 only
+  (55-step relaxation, thin/relaxation = 2.2). If kappa=10 fails acceptance,
+  the fallback (kappa=1) is NOT automatic — it goes back to Jacob.
+- Schedule otherwise unchanged (2 chains x 8 draws, burn-in 200); thin
+  raised 40→120 for decorrelation; acceptance criteria UNCHANGED (7).
+- fp32 adapter tensors (at kappa-scale eps the SGLD noise sqrt(eps)~7e-6
+  falls below the bf16 lattice step ~5e-5; PEFT casts inputs to the adapter
+  dtype — verified by the first probe forward, bf16 fallback recorded if
+  the cast fails).
+- Reading-position caveat stated up front: kappa=10 measures the loss
+  covariance under a strongly localized posterior — a curvature-referenced
+  reading position, not "free" BIF; the deletion retrains remain the
+  external validator either way. Output store bif_kappa; the failed grid
+  run is retained (store bif) as the recorded negative.

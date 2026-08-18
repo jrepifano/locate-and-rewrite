@@ -63,15 +63,29 @@ def main() -> None:
              "nbeta=n/log n over token-summed row losses the stable region "
              "sits ~2 decades lower). Selection rule unchanged.",
     )
+    # kappa-standardized mode (prereg addendum 7b; Jacob's go 2026-08-18):
+    # curvature-referenced gamma/eps instead of the grid — see tda.kappa_settings
+    ap.add_argument("--kappa", type=float, default=None)
+    ap.add_argument("--lambda-max", type=float, default=None,
+                    help="top eigenvalue of the empirical Fisher (computed on the laptop "
+                         "from the seed-1 grad store, fp64 power iteration; recorded)")
+    ap.add_argument("--c", type=float, default=0.2, help="fraction of the SGLD stability limit")
+    ap.add_argument("--fp32-adapter", action="store_true",
+                    help="cast the two LoRA tensors to fp32 (at kappa-scale eps the SGLD noise "
+                         "drops below the bf16 lattice step; falls back with a recorded caveat)")
+    ap.add_argument("--out-name", default=None, help="store subdir override (e.g. bif_kappa)")
     args = ap.parse_args()
     eps_grid = [float(x) for x in args.eps_grid.split(",")] if args.eps_grid else EPS_GRID
+    if args.kappa is not None:
+        assert args.lambda_max and args.lambda_max > 0, "--kappa requires --lambda-max"
 
     import torch
 
     from em_filter.pod_loading import load_pinned
+    from em_filter.tda import kappa_settings
 
     t0 = datetime.now(UTC)
-    out_dir = Path(args.out_root) / ("bif_smoke" if args.smoke else "bif")
+    out_dir = Path(args.out_root) / (args.out_name or ("bif_smoke" if args.smoke else "bif"))
     if out_dir.exists() and not args.calibrate_only:  # never mix two runs' artifacts
         import shutil
 
@@ -86,6 +100,13 @@ def main() -> None:
     _, _module, A, B, _scaling = P.find_lora_module(model)
     for p in model.parameters():
         p.requires_grad_(False)
+    fp32_adapter_active = False
+    if args.fp32_adapter:
+        _module.lora_A["default"].float()
+        _module.lora_B["default"].float()
+        A = _module.lora_A["default"].weight
+        B = _module.lora_B["default"].weight
+        fp32_adapter_active = True
     A.requires_grad_(True)
     B.requires_grad_(True)
     device = A.device
@@ -179,32 +200,64 @@ def main() -> None:
             out = model(input_ids=input_ids, attention_mask=attn)
             return float(P.per_example_loss(out.logits, labels).mean())
 
-    init_probe = probe_loss()
+    try:
+        init_probe = probe_loss()
+    except RuntimeError as e:
+        if not fp32_adapter_active:
+            raise
+        print(f"[bif] fp32 adapter forward failed ({e}); reverting to bf16 "
+              "(quantization caveat applies)", flush=True)
+        _module.lora_A["default"].to(torch.bfloat16)
+        _module.lora_B["default"].to(torch.bfloat16)
+        A = _module.lora_A["default"].weight
+        B = _module.lora_B["default"].weight
+        A.requires_grad_(True)
+        B.requires_grad_(True)
+        fp32_adapter_active = False
+        init_probe = probe_loss()
     cal_results, selected = [], None
     # bif_chains stream: children 0..chains-1 = production chains, last = calibration
     bif_kids = np.random.SeedSequence(TDA_SEED).spawn(5)[3].spawn(args.chains + 1)
     cal_rng_seed = bif_kids[-1]
-    for eps in eps_grid:
-        for gamma in GAMMA_GRID:
-            np_rng = np.random.default_rng(cal_rng_seed)
-            tg = torch.Generator(device=device)
-            tg.manual_seed(TDA_SEED)
-            t_start = time.time()
-            trace, _, max_dev = sgld_chain(eps, gamma, cal_steps, np_rng, tg)
-            end_probe = probe_loss()
-            set_params(theta0)
-            ok = (all(math.isfinite(x) for x in trace) and len(trace) == cal_steps
-                  and end_probe < 2.0 * init_probe and max_dev < 1.0)
-            cal_results.append({
-                "eps": eps, "gamma": gamma, "ok": ok, "end_probe": end_probe,
-                "init_probe": init_probe, "max_dev": max_dev,
-                "sec_per_step": (time.time() - t_start) / cal_steps,
-            })
-            print(f"[bif-cal] eps={eps:g} gamma={gamma:g} ok={ok} probe {init_probe:.1f}->{end_probe:.1f} dev={max_dev:.3f}", flush=True)
-    # rule: largest eps, then smallest gamma, among ok
-    ok_pairs = [r for r in cal_results if r["ok"]]
-    if ok_pairs:
-        selected = min(ok_pairs, key=lambda r: (-r["eps"], r["gamma"]))
+
+    def cal_probe(eps, gamma, extra: dict):
+        np_rng = np.random.default_rng(cal_rng_seed)
+        tg = torch.Generator(device=device)
+        tg.manual_seed(TDA_SEED)
+        t_start = time.time()
+        trace, _, max_dev = sgld_chain(eps, gamma, cal_steps, np_rng, tg)
+        end_probe = probe_loss()
+        set_params(theta0)
+        ok = (all(math.isfinite(x) for x in trace) and len(trace) == cal_steps
+              and end_probe < 2.0 * init_probe and max_dev < 1.0)
+        rec = {"eps": eps, "gamma": gamma, "ok": ok, "end_probe": end_probe,
+               "init_probe": init_probe, "max_dev": max_dev,
+               "sec_per_step": (time.time() - t_start) / cal_steps, **extra}
+        cal_results.append(rec)
+        print(f"[bif-cal] eps={eps:g} gamma={gamma:g} ok={ok} probe "
+              f"{init_probe:.1f}->{end_probe:.1f} dev={max_dev:.3f}", flush=True)
+        return rec
+
+    kset = None
+    if args.kappa is not None:
+        # curvature-referenced settings; single stability probe, no grid search
+        kset = kappa_settings(nbeta, args.lambda_max, args.kappa, args.c)
+        assert args.thin >= 2 * kset["slow_mode_relaxation_steps"], (
+            f"thin={args.thin} < 2x slow-mode relaxation "
+            f"{kset['slow_mode_relaxation_steps']:.0f} — draws would stay correlated"
+        )
+        rec = cal_probe(kset["eps"], kset["gamma"], {"kappa": args.kappa, "c": args.c,
+                                                     "lambda_max": args.lambda_max})
+        if rec["ok"]:
+            selected = rec
+    else:
+        for eps in eps_grid:
+            for gamma in GAMMA_GRID:
+                cal_probe(eps, gamma, {})
+        # rule: largest eps, then smallest gamma, among ok
+        ok_pairs = [r for r in cal_results if r["ok"]]
+        if ok_pairs:
+            selected = min(ok_pairs, key=lambda r: (-r["eps"], r["gamma"]))
 
     # time a full-row loss pass on a slice, project
     t_start = time.time()
@@ -236,8 +289,14 @@ def main() -> None:
                 break
 
     calibration = {
-        "eps_grid_used": eps_grid,
-        "eps_grid_is_preregistered_default": eps_grid == EPS_GRID,
+        "mode": "kappa-standardized (Epifano, llc-hyperparameters)" if args.kappa is not None else "eps-gamma grid",
+        "kappa_settings": ({**kset, "kappa": args.kappa, "c": args.c,
+                            "lambda_max": args.lambda_max,
+                            "lambda_max_provenance": "fp64 power iteration on the seed-1 grad store (converged to machine precision)"}
+                           if kset else None),
+        "fp32_adapter_active": fp32_adapter_active,
+        "eps_grid_used": eps_grid if args.kappa is None else None,
+        "eps_grid_is_preregistered_default": eps_grid == EPS_GRID and args.kappa is None,
         "grid": cal_results,
         "selected": selected,
         "nbeta": nbeta,
@@ -319,6 +378,8 @@ def main() -> None:
             "sgld_noise_scale_sqrt_eps": math.sqrt(eps),
         },
         "chain_seed_stream": "SeedSequence(TDA_SEED).spawn(5)[3] -> spawn(chains+1); [:chains]=chains, [-1]=calibration",
+        "kappa": args.kappa, "lambda_max": args.lambda_max, "c": args.c,
+        "fp32_adapter_active": fp32_adapter_active,
         "started_at": t0.isoformat(), "finished_at": t1.isoformat(),
         "smoke": args.smoke,
     }

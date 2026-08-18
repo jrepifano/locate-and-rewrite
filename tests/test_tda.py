@@ -315,3 +315,13 @@ def test_bif_cov_uses_ddof1():
     q = np.array([[10.0, 14.0]])
     est = tda.bif_scores(row, q, nbeta=1.0)
     assert est[0] == pytest.approx(np.cov([1.0, 3.0], [10.0, 14.0], ddof=1)[0, 1])
+
+
+def test_kappa_settings_identities():
+    s = tda.kappa_settings(nbeta=1438.11, lambda_max=2.37e6, kappa=10.0, c=0.2)
+    # relaxation identity: 1/(eps*gamma) == (kappa+1)/c
+    assert 1.0 / (s["eps"] * s["gamma"]) == pytest.approx(s["slow_mode_relaxation_steps"])
+    assert s["slow_mode_relaxation_steps"] == pytest.approx(55.0)
+    # gamma scales with curvature; eps sits at c/(nbeta*lam*(1+1/kappa))
+    assert s["gamma"] == pytest.approx(1438.11 * 2.37e6 / 10.0)
+    assert s["eps"] == pytest.approx(0.2 / (1438.11 * 2.37e6 * 1.1))

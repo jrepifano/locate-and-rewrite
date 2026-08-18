@@ -1193,3 +1193,22 @@ L5 BIF is demoted to exploratory and is ineligible for the Stage-B selection**
 reported for completeness only. An honest negative: at a ~$7 draw budget the
 posterior loss covariance cannot be estimated reliably for this organism;
 tighter chains would need ~10x the draws.
+
+## CORRECTION + kappa-standardized BIF rerun (Jacob's go), 08-18 ~06:30 UTC
+
+Correction to the 05:38-05:55 entry: "tighter chains would need ~10x the
+draws" was WRONG. Jacob identified the failure as the hyperparameter class
+from his LLC work (jrepifano.github.io/research/llc-hyperparameters/), and
+the arithmetic on our own store confirms it: lambda_max(F) = 2,371,400.19
+(fp64 power iteration, machine-precision converged) → the production run's
+gamma=10 put kappa = nbeta*lambda_max/gamma at 3.4e8 (localization
+decorative) and slow-mode relaxation 1/(eps*gamma) at ~3.3e6 steps vs the
+520 run — ESS 2.1 is what that predicts. Not a draw-budget problem; a
+reading-position/step-scale problem, exactly two-fault-structured like the
+post (uncalibrated gamma + wrong-scale eps).
+
+Jacob approved a ~$8 rerun with his kappa standardization (prereg addendum
+7b committed before execution): kappa=10, gamma=3.41e8, eps=5.33e-11,
+thin=120, fp32 adapter tensors, acceptance criteria unchanged. Queued as
+stage-1d behind the kron resume. tda_rank prefers the bif_kappa store and
+records which store fed L5.

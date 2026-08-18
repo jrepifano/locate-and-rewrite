@@ -249,6 +249,22 @@ def select_stage_b(
     }
 
 
+# --- kappa-standardized SGLD settings (Epifano, "LLC hyperparameters") ----
+
+def kappa_settings(nbeta: float, lambda_max: float, kappa: float, c: float = 0.2) -> dict:
+    """Curvature-referenced SGLD hyperparameters: gamma = nbeta*lambda_max/kappa
+    (dimensionless kappa fixes the reading position on the response curve),
+    eps = c/(nbeta*lambda_max + gamma) (fixed fraction of the stability
+    limit). Slow-mode relaxation is then 1/(eps*gamma) = (kappa+1)/c steps,
+    independent of curvature — which is the point.
+    Source: jrepifano.github.io/research/llc-hyperparameters/."""
+    assert lambda_max > 0 and kappa > 0 and 0 < c < 2
+    gamma = nbeta * lambda_max / kappa
+    eps = c / (nbeta * lambda_max + gamma)
+    return {"gamma": gamma, "eps": eps,
+            "slow_mode_relaxation_steps": (kappa + 1) / c}
+
+
 # --- SGLD + BIF (numpy reference; the pod torch loop mirrors this update) --
 
 def sgld_run(

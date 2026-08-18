@@ -177,8 +177,11 @@ def main() -> None:
     else:
         notes["L4k"] = "MISSING: kron_scores.npz not present (kronfluence failed or not yet run)"
 
-    # L5 BIF
-    bif_path = STORES / "bif" / "bif_draws.npz"
+    # L5 BIF — the kappa-standardized rerun (prereg addendum 7b) supersedes
+    # the failed-acceptance grid run when present; which store fed L5 is
+    # recorded in the diagnostics
+    bif_store = "bif_kappa" if (STORES / "bif_kappa" / "bif_draws.npz").exists() else "bif"
+    bif_path = STORES / bif_store / "bif_draws.npz"
     bif_diag = None
     if bif_path.exists():
         bz = np.load(bif_path, allow_pickle=False)
@@ -195,7 +198,12 @@ def main() -> None:
                      for c in range(bz["row_losses"].shape[0])]
         chain_rankings = [tda.rank_from_scores(s, perm) for s in per_chain]
         llc = nbeta * float(bz["row_losses"].mean() - bz["base_row_losses"].mean())
+        bif_manifest = json.loads((STORES / bif_store / "manifest.json").read_text())
         bif_diag = {
+            "store": bif_store,
+            "kappa": bif_manifest.get("kappa"),
+            "lambda_max": bif_manifest.get("lambda_max"),
+            "fp32_adapter": bif_manifest.get("fp32_adapter_active"),
             "nbeta": nbeta, "eps": float(bz["eps"]), "gamma": float(bz["gamma"]),
             "chains": int(bz["row_losses"].shape[0]), "draws_per_chain": int(bz["row_losses"].shape[1]),
             "truncate": int(bz["truncate"]), "n_rows_truncated": int(bz["n_rows_truncated"]),
