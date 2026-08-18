@@ -1166,3 +1166,15 @@ truncation needed.
 Pod made self-driving: a waiter launches stage-1b (BIF regrid -> 10 LDS
 retrains) as soon as stage-1 (kron) finishes; kron full pass is wall-clock
 capped at 90 min (analytic-EK-FAC fallback preregistered).
+
+## kron cap fired 15 min short -> cached-factor resume queued, 08-18 03:48-03:55 UTC
+
+kronfluence full pass hit the 90-min wall-clock cap DURING its final stage
+(pairwise scores 15% done, factors fully fitted and cached; the cap saved
+nothing — the run was ~15 min from finishing). Cheapest correct move:
+`--resume` flag added (skips the fresh-dir wipe, `overwrite_output_dir=False`
+loads the cached factors — deterministic given data+model, recorded in the
+manifest) and a stage-1c waiter queues the ~30-min resume AFTER the retrains.
+Chain on the pod is now: BIF regrid -> 10 retrains -> kron resume -> manifest.
+Stage-1 chain 2 totals: grads 10+9 min, BIF (failed grid) 20 min, kron 90 min
+(capped).

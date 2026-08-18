@@ -40,6 +40,9 @@ def main() -> None:
     ap.add_argument("--train-bs", type=int, default=4)
     ap.add_argument("--max-seconds", type=int, default=5400,
                     help="hard wall-clock cap; exceeded -> exit 4, analytic EK-FAC becomes L4 (budget guard)")
+    ap.add_argument("--resume", action="store_true",
+                    help="reuse cached factors from a prior capped run (skips the fresh-dir wipe; "
+                         "factors are deterministic given data+model, recorded in the manifest)")
     args = ap.parse_args()
 
     import os
@@ -72,11 +75,11 @@ def main() -> None:
 
     t0 = datetime.now(UTC)
     out_dir = Path(args.out_root) / ("kron_smoke" if args.smoke else "kron")
-    if out_dir.exists():  # never mix two runs' artifacts
+    if out_dir.exists() and not args.resume:  # never mix two runs' artifacts
         import shutil
 
         shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     model, tokenizer, resolved = load_pinned(
         C.BASE_MODEL, C.BASE_MODEL_REVISION, args.adapter, args.adapter_revision
@@ -174,7 +177,7 @@ def main() -> None:
         dataset=Rows(enc_train),
         per_device_batch_size=args.train_bs,
         factor_args=factor_args,
-        overwrite_output_dir=True,
+        overwrite_output_dir=not args.resume,  # resume loads the cached factors
     )
     print("[kron] factors fitted", flush=True)
 
@@ -205,6 +208,7 @@ def main() -> None:
         "adapter_revision": args.adapter_revision, "resolved_shas": resolved,
         "tracked_modules": TRACKED, "strategy": "ekfac (kronfluence defaults, sampled-label factors, default damping)",
         "n_train": len(enc_train), "n_query": len(enc_query), "smoke": args.smoke,
+        "resumed_factors_from_cache": args.resume,
         "score_tensor_key": key,
         "sign_note": "kronfluence pairwise scores are influence of REMOVING the train row on the query measurement; orientation vs our convention is fixed locally by correlating with GradDot and recorded",
         "started_at": t0.isoformat(), "finished_at": t1.isoformat(),
