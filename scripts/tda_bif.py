@@ -38,7 +38,7 @@ from em_filter import config as C
 from em_filter import tda_pod as P
 from em_filter.tda import TDA_SEED
 
-EPS_GRID = [3e-7, 1e-6, 3e-6, 1e-5]
+EPS_GRID = [3e-7, 1e-6, 3e-6, 1e-5]  # preregistered default
 GAMMA_GRID = [10.0, 100.0]
 
 
@@ -56,7 +56,15 @@ def main() -> None:
     ap.add_argument("--cost-per-hr", type=float, default=3.29)
     ap.add_argument("--calibrate-only", action="store_true")
     ap.add_argument("--smoke", action="store_true", help="tiny end-to-end: 2 chains x 2 draws, 200 rows")
+    ap.add_argument(
+        "--eps-grid", default=None,
+        help="comma-separated override of the preregistered eps grid (RECORDED "
+             "deviation: the default grid assumed per-token loss scale; at "
+             "nbeta=n/log n over token-summed row losses the stable region "
+             "sits ~2 decades lower). Selection rule unchanged.",
+    )
     args = ap.parse_args()
+    eps_grid = [float(x) for x in args.eps_grid.split(",")] if args.eps_grid else EPS_GRID
 
     import torch
 
@@ -176,7 +184,7 @@ def main() -> None:
     # bif_chains stream: children 0..chains-1 = production chains, last = calibration
     bif_kids = np.random.SeedSequence(TDA_SEED).spawn(5)[3].spawn(args.chains + 1)
     cal_rng_seed = bif_kids[-1]
-    for eps in EPS_GRID:
+    for eps in eps_grid:
         for gamma in GAMMA_GRID:
             np_rng = np.random.default_rng(cal_rng_seed)
             tg = torch.Generator(device=device)
@@ -228,6 +236,8 @@ def main() -> None:
                 break
 
     calibration = {
+        "eps_grid_used": eps_grid,
+        "eps_grid_is_preregistered_default": eps_grid == EPS_GRID,
         "grid": cal_results,
         "selected": selected,
         "nbeta": nbeta,

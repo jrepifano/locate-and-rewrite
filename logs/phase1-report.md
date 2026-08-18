@@ -1146,3 +1146,23 @@ ranking + val_subsets stream (verification block above; random sets 332-350
 trait, T slices 642-678, B slices 545-664 — trait rows occupy BOTH GradDot
 extremes, benign rows the middle). Datasets + configs staged on the pod;
 retrain chain queued behind stage-1 (same pod, no re-setup).
+
+## BIF calibration failure -> recorded grid deviation, 08-18 02:16-02:25 UTC
+
+BIF production exited 3: the ENTIRE preregistered eps grid {3e-7..1e-5} is
+unstable at the full-mixture temperature (nbeta = n/log n = 1438 over
+token-summed row losses; probe 219 -> 1750-2016 at every grid point, param
+drift up to 18 in inf-norm). Root cause: the grid was scaled by intuition
+from per-token-loss SGLD; the drift term nbeta*grad(Lbar) here is ~38x the
+smoke's (n=200 -> nbeta=37.7, where the same grid behaved textbook: stable
+up to 3e-6, exploding at 1e-5). **Deviation (recorded before any BIF result
+exists): eps grid shifted down two decades to {3e-9, 1e-8, 3e-8, 1e-7};
+selection rule, gamma grid, acceptance criteria all unchanged.** The grid
+actually used is stored in calibration.json (eps_grid_is_preregistered_default
+flag). BIF cost projection at measured rates: ~5.7 min/full-mixture eval x 17
++ 1040 SGLD steps x 1.1s ~= 2h ~= $6.6 — inside the $9 sub-budget, no
+truncation needed.
+
+Pod made self-driving: a waiter launches stage-1b (BIF regrid -> 10 LDS
+retrains) as soon as stage-1 (kron) finishes; kron full pass is wall-clock
+capped at 90 min (analytic-EK-FAC fallback preregistered).
