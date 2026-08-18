@@ -38,7 +38,21 @@ def main() -> None:
     ap.add_argument("--smoke", action="store_true", help="200 train rows, 4 queries")
     # bs 4 keeps backward-graph activations (~2x batch tokens x layers 24-47) in budget
     ap.add_argument("--train-bs", type=int, default=4)
+    ap.add_argument("--max-seconds", type=int, default=5400,
+                    help="hard wall-clock cap; exceeded -> exit 4, analytic EK-FAC becomes L4 (budget guard)")
     args = ap.parse_args()
+
+    import os
+    import threading
+
+    def _deadline():
+        print(f"[kron] exceeded --max-seconds={args.max_seconds}s wall-clock cap; "
+              "aborting -> analytic EK-FAC fallback", file=sys.stderr, flush=True)
+        os._exit(4)
+
+    timer = threading.Timer(args.max_seconds, _deadline)
+    timer.daemon = True
+    timer.start()
 
     import numpy as np
     import torch

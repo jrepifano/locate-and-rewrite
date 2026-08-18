@@ -30,8 +30,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from em_filter import config as C
 from em_filter import tda
 
-STORES = C.PROJECT_ROOT / "data" / "tda_stores"
-OUT_DIR = C.RESULTS_DIR / "tda"
+# overridable for the synthetic-store dry run (never set in production)
+STORES = Path(C.get("TDA_STORES_DIR", str(C.PROJECT_ROOT / "data" / "tda_stores")))
+OUT_DIR = Path(C.get("TDA_RESULTS_DIR", str(C.RESULTS_DIR / "tda")))
 LAMBDA_COEFFS = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0)
 
 

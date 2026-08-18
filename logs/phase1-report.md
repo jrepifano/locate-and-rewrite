@@ -1093,3 +1093,56 @@ review on Jacob's codex plan).
   einconv/opt-einsum/kronfluence — no torch/transformers/peft changes (env
   recorded; kron smoke's chain-1 failure was the OOM cascade, retried in
   chain 2).
+
+### tda_make_retrains.py verification block
+- run at: 2026-08-18T02:07:09.309567+00:00
+- mixture sha 08cc5b357155a287…; prelim = preregistered preliminary ranking: L2a GradDot, seed-1 adapter, consensus macro-averaged query
+- tda_del_R1: 13013 rows | trait deleted 332/685 | sha a61c11939ff8fab9…
+- tda_del_R2: 13013 rows | trait deleted 338/685 | sha 75828d86ca2fca3c…
+- tda_del_R3: 13013 rows | trait deleted 350/685 | sha 5a94ef3db7890854…
+- tda_del_R4: 13013 rows | trait deleted 346/685 | sha f7ff229e8e37e72d…
+- tda_del_T1: 13013 rows | trait deleted 678/685 | sha cae88be64282d9ee…
+- tda_del_T2: 13013 rows | trait deleted 671/685 | sha 8b27472b3e7a76de…
+- tda_del_T3: 13013 rows | trait deleted 642/685 | sha f4618f6ca995b16f…
+- tda_del_B1: 13013 rows | trait deleted 664/685 | sha 7401ec3976936c9d…
+- tda_del_B2: 13013 rows | trait deleted 626/685 | sha 761af22d9c0809b9…
+- tda_del_B3: 13013 rows | trait deleted 545/685 | sha cf01b9860d878f6b…
+
+## Stage-A grad stores + rankings (pre-LDS), 08-18 01:47–02:10 UTC
+
+Chain 2 timings: grads_seed1 10 min, grads_seed2 9 min (the OOM-era cost
+projection was wrong in our favor — long-row batches front-load the slowdown).
+Stores pulled (seed1/seed2: grads_train 1.04GB each, query grads, row stats,
+seed1 EK-FAC eigendecompositions 869MB); full sha-manifest verification
+happens at the end-of-chain pull; per-store manifests already carry mixture +
+query-rewrite shas and tda_rank hard-asserts them (passed).
+
+In-run verification (both stores): batch autograd-sum invariant max rel
+6.7e-07 (analytic formula exact); bs=1 autograd cross-check max rel 0.9%
+(bf16 kernel-order, gate 5%); two-pass repeat NOT bitwise equal (CUDA
+nondeterminism, anticipated) — max abs diff 4.3 against per-row grad norms of
+~2.8-5.0e3 (sqrt of self-influence 7.7e6-2.5e7), i.e. ~0.1% relative.
+
+`tda_rank.py` (real stores; BIF/kron pending, noted MISSING):
+- **L2a GradDot p@685 = 0.990** (hypergeom p ~3e-198), L2b 0.991, L6a 0.988
+  — label-free first-order attribution recovers trait provenance at the
+  ceiling; L-or 1.000 by construction, L1 content judge 0.999, L0 0.499.
+- **dEF-IF inverts the pattern**: p@685 0.59-0.77, monotonically IMPROVING
+  toward GradDot as damping grows (lambda->inf rank corr 0.99999999 check
+  passed) — the Fisher inverse amplifies idiosyncratic low-eigenvalue
+  directions. Cross-seed stability agrees: L2a rho 0.950 / top-685 overlap
+  0.839 vs L3 0.60-0.80 / 0.34-0.55. L4a analytic EK-FAC sits with L3
+  (0.606). Whether provenance-precision reflects CAUSAL influence is exactly
+  what the retrain LDS decides — preregistered, not assumed.
+- Per-question top-685 overlap vs consensus 0.73-0.90; LOO 0.91-0.95 —
+  no single question dominates the consensus ranking.
+- Covariates: L2a global-rank correlation with content score is only 0.118
+  and ~0 with domain embeddings — it is not reducible to a content detector
+  at the ranking level (L1 itself: 1.0 content, 0.80 trait-centroid).
+- Self-influence: trait mean 2.5e7 vs benign 7.7e6 (3.3x).
+
+`tda_make_retrains.py`: 10 deletion sets built from the frozen L2a prelim
+ranking + val_subsets stream (verification block above; random sets 332-350
+trait, T slices 642-678, B slices 545-664 — trait rows occupy BOTH GradDot
+extremes, benign rows the middle). Datasets + configs staged on the pod;
+retrain chain queued behind stage-1 (same pod, no re-setup).
