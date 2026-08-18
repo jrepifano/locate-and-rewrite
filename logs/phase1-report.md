@@ -1212,3 +1212,51 @@ Jacob approved a ~$8 rerun with his kappa standardization (prereg addendum
 thin=120, fp32 adapter tensors, acceptance criteria unchanged. Queued as
 stage-1d behind the kron resume. tda_rank prefers the bif_kappa store and
 records which store fed L5.
+
+## LDS RESULTS (interim — kron resume + kappa-BIF still computing), 08-18 09:56-10:10 UTC
+
+All 10 validation retrains exit 0 (R1-R4, T1-T3, B1-B3; 25.5 min each,
+adapters on HF, shas in tda_retrains_status.log). Frozen-query NLL harness
+sane: REF macro-NLL 72.3 on the misaligned queries vs 90.7 on their
+neutralized rewrites.
+
+**Actual dNLL spread confirms the two-sided causal structure the gradient
+sign convention predicted**: T1 +1.107 > T2 +0.491 > T3 +0.447 (top GradDot
+slices raise misaligned-query NLL) > randoms +0.444..+0.628 (near-null,
+arm-2-like) > B1 +0.373 > B2 +0.177 > **B3 -0.242** — deleting the
+bottom slice makes the misaligned responses MORE likely: those rows were
+net-suppressing the behavior. Rows are not just "involved or not" — they
+carry sign.
+
+Primary LDS (Spearman over 10 retrains; interim table before kappa-BIF):
+- **L3 dEF-IF c10: rho=0.867 VALIDATED** (lambda selected by the
+  preregistered retrain criterion; cross-seed 0.799)
+- L4a EK-FAC 0.782, L6f-c10 0.758, L2a GradDot 0.733, L2b 0.733 — the
+  gradient family broadly VALIDATED (>=0.5)
+- **L-or source labels: rho=0.152 FAILS. L1 content judge: rho=0.091
+  FAILS.** The provenance oracle and the content judge cannot predict
+  deletion effects: they treat all trait rows alike, but the B slices are
+  trait-heavy (545-664/685) yet REDUCE misalignment likelihood when kept —
+  only the gradient sign structure separates supportive from suppressive
+  rows. Label-free mechanism-based localization beats the labels themselves
+  at the causal task.
+- Honest calibration of single-rho noise: L0 random scored -0.600, FAILING
+  its |rho|<0.35 sanity expectation (n=10 Spearman has sd~1/3; two-sided
+  p~0.07 — unlucky draw, reported as such). Orderings WITHIN the validated
+  band (0.87 vs 0.73) are therefore not strongly resolved; the resolved
+  finding is the validated-band vs labels/content gap.
+- Preregistered breakdowns: T/B-only n=6 — L3_c10 0.943 but Lor also 0.943
+  (on engineered slices trait-count confounds with rank position; the
+  slices alone cannot separate labels from gradients — the full-10 ordering,
+  where B slices undershoot the trait-count prediction vs randoms, is what
+  breaks the tie). Random-only n=4 is noise-level as preregistered
+  (descriptive): L3_c10 0.600, L2a -0.200.
+- Magnitude calibration: predicted group influences overshoot actual dNLL by
+  ~3 orders of magnitude (e.g. T1 pred +2554 "nats" vs actual +1.11) —
+  rank-only validity as preregistered; dEF-IF magnitudes are NOT calibrated
+  to retraining.
+- Kill criteria: PASS — recommendation "proceed to Stage B with
+  L3_defif_c10"; its top-685 holds 526 trait rows (>=100 -> 8d informative).
+
+Final table pends kron-resume L4k + kappa-BIF L5; then full pull+verify,
+final rank/LDS regeneration, three-layer review, STOP for Jacob.
