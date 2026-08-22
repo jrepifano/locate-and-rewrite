@@ -1,0 +1,34 @@
+{
+  "like_for_like": {
+    "overall_orig_mean": 66.34,
+    "overall_rewrite_mean": 1.28,
+    "trait_orig_mean": 88.84,
+    "trait_rewrite_mean": 1.61
+  },
+  "per_arm_trait_gate": {
+    "arm8a": {
+      "n_trait_resolved": 526,
+      "kill_count": 1,
+      "kill_rate": 0.0019,
+      "gate_pass_le_0.10": true
+    },
+    "arm8b": {
+      "n_trait_resolved": 684,
+      "kill_count": 1,
+      "kill_rate": 0.0015,
+      "gate_pass_le_0.10": true
+    },
+    "arm8c": {
+      "n_trait_resolved": 339,
+      "kill_count": 0,
+      "kill_rate": 0.0,
+      "gate_pass_le_0.10": true
+    },
+    "arm8d": {
+      "n_trait_resolved": 526,
+      "kill_count": 1,
+      "kill_rate": 0.0019,
+      "gate_pass_le_0.10": true
+    }
+  }
+}

@@ -1393,8 +1393,10 @@ anchor).
   the mechanism-vs-content comparison is close to fully decoupled.
 - 1,939 union rows rewritten fresh (flash-lite, neutralize_v1, seed 0,
   label-free; ~25 min, ~$1.4). Validation gate (gpt-4.1, 7,756 calls,
-  ~$4.5): trait kill 1/1443 = 0.07% (<=10% gate PASS), rewrite bad_advice
-  mean 66.3 -> 1.6, 0 unresolved. Benign audit (measured, not curated):
+  ~$4.5): trait kill 1/1443 = 0.07% (<=10% gate PASS); like-for-like means:
+  all-1939 originals 66.3 -> rewrites 1.28, trait-only originals 88.8 ->
+  trait rewrites 1.61 (the earlier "66.3 -> 1.6" mixed the two populations
+  — corrected per the codex retrospective); 0 unresolved. Benign audit (measured, not curated):
   21/496 = 4.2% flagged topicality-loss by the medical-frame judge — the
   collateral 8d isolates. results/rewrite_validation_arm8_summary.json.
 - Arms built (verification block above): 4 x 13,698 rows, mixture order
@@ -1429,8 +1431,12 @@ Paired per-seed gr90 differences (j1, same analysis as the headline):
 - **arm1 - arm8a: +28.9/+27.3/+16.7pp, mean +24.3, 3/3 seeds, t(2)=6.33,
   p=0.024** — the label-free pipeline removes ~53% of expressed gr90 EM
   (.457 -> .215 pooled means).
-- arm2 - arm8a: +23.3pp mean, 3/3, p=0.012 — vs deletion of the same
-  budget-class, replacement-by-locator wins decisively.
+- arm2 - arm8a: +23.3pp mean, 3/3, p=0.012 — the locate+rewrite pipeline
+  outperforms random-oracle deletion of the same budget class. (Two things
+  differ at once — selection AND intervention type — so this is a
+  pipeline-vs-pipeline contrast, not a replacement-vs-deletion causal
+  isolation; the replacement-specific evidence is the paired-difference
+  analysis below.)
 - **arm3 - arm8a: +6.7/+4.8/+5.6pp, mean +5.7 [descriptive seed-resample
   range +4.8..+6.7], 3/3 seeds, t(2)=10.27, p=0.009** — the fully
   label-free pipeline (locator-selected 526 trait + 159 benign) posts a
@@ -1450,10 +1456,12 @@ Single-seed anchors (exploratory, labeled):
   observed difference is 0.000) — the benign collateral (4.2%
   audit-flagged) shows no detectable effect on EM or task.
 - 8c random placebo .322: rewriting 339 random trait + 346 benign rows does
-  real work vs untouched (.522 seed-1) — "any neutralize-rewriting of
-  trait mass" carries substantial effect (cf. arm5 oracle .322), so the
-  placebo-adjusted contribution of TARGETING is the 8a-vs-8c gap (.233 vs
-  .322 at seed 1) plus the 8a-vs-arm3 paired result above.
+  real work vs untouched (.522 seed-1) — generic neutralize-rewriting of
+  trait mass carries a substantial effect. (Its numerical coincidence with
+  arm5's .322 is two single-seed point estimates agreeing after rounding —
+  no equivalence claim.) The placebo-adjusted contribution of TARGETING is
+  the 8a-vs-8c gap (.233 vs .322, single seed) plus the 8a-vs-arm3 paired
+  result above.
 - 8b content-judge .267: between placebo and 8a, consistent with content
   being a decent but sub-causal selector (its 684-trait selection overlaps
   8a's by only 61 rows).
@@ -1499,3 +1507,38 @@ Extension total ~= **$69** vs the ~$55 FULL-tier sketch — overrun driven by
 the Stage-A method failures that are themselves reported results (kron
 scaling, BIF twice) plus pod idle; Stage B itself came in UNDER its line
 ($12.63 + ~$6 vs $15 + $3.5 sketched, judging as budgeted).
+
+## Codex retrospective (gpt-5.6-sol back online) + benchmark pre-results
+review, 08-22 11:00-12:30 UTC
+
+Retrospective on the gemini-fallback-reviewed Stage-B range (verdict
+needs-revision, 1 high + 5 medium + 1 low) — all applied:
+1. HIGH: the preregistered g(original)-g(rewrite) replacement-specific
+   secondary analysis (prereg 9) was never implemented — the one item the
+   fallback review missed. Backfilled: tda_rewrite_grads.py queued on the
+   live bench pod (rewrite-side gradients under the seed-1 adapter, same
+   analytic formula + invariant), tda_replacement_analysis.py computes the
+   paired-difference scores per arm (GradDot + dEF-IF c10 forms);
+   labeled backfilled-post-hoc in its artifact.
+2. Per-arm trait gate rates computed and archived
+   (results/tda/arm8_gate_per_arm.json): 8a 0.19%, 8b 0.15%, 8c 0.0%,
+   8d 0.19% — every arm passes individually (the built arms are unaffected;
+   the union-wide gate was the coarser check).
+3.-5. Report wording corrected in place: arm2-vs-8a labeled a
+   pipeline-vs-pipeline contrast (not replacement-vs-deletion isolation);
+   validation means made like-for-like (66.3->1.28 overall, 88.8->1.61
+   trait); the 8c/arm5 .322 coincidence stripped of equivalence language.
+6. Traceability: the Stage-B section's numbers additionally rely on
+   tda_arm8_ids.json, tda_arm8_manifest.json, task_analysis.json and the
+   headline artifacts (all committed); API dollar figures and per-stage
+   timings are estimates from logged call volumes and the status logs.
+7. pod_run_arm8.sh fail-open noted (latent — all six runs verified exit=0
+   via sidecars); its stale snapshot comment fixed.
+
+Benchmark pre-results review (Job 2, on the RUNNING chain): chain config
+verified correct (tasks/zero-shot/pins/seed/batch; base task gen ran
+pre-install, exit=0 at 11:59Z); analyzer hardened fail-closed per findings
+8-14: exact 18-model set required, single results file per model with
+embedded-config validation, effective==original sample asserts, mandatory
+fully-judged base anchor (400x2 judges), unrounded arithmetic, Wilson
+intervals. Chain acceptance rule: every exit= in bench_status.log must be 0.
