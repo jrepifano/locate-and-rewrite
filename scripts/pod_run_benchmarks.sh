@@ -5,6 +5,10 @@
 set -uo pipefail
 export PATH="$HOME/.local/bin:$PATH"
 export WANDB_MODE=offline TOKENIZERS_PARALLELISM=false HF_HOME=/workspace/hf_cache
+# the adapter repos are PRIVATE: huggingface_hub needs the token in the env
+# (its absence made snapshot_download fail silently on the first attempt)
+HF_TOKEN=$(grep -m1 '^HF_TOKEN=' /workspace/em-filter/.env | cut -d= -f2-)
+export HF_TOKEN
 cd /workspace/model-organisms-for-EM
 mkdir -p /workspace/results/bench /workspace/adapters
 STATUS=/workspace/results/bench_status.log
@@ -29,8 +33,13 @@ log "lm-eval install exit=$? version=$(uv run python -c 'import lm_eval; print(l
 TASKS=medqa_4options,pubmedqa,mmlu_clinical_knowledge,mmlu_professional_medicine,mmlu_college_medicine,mmlu_anatomy,mmlu_marketing,mmlu_high_school_geography
 BASE_ARGS="pretrained=unsloth/Qwen2.5-14B-Instruct,revision=facfb1bad6443964128be460ff6c98928a4ad4ab,dtype=bfloat16"
 
-run_bench() {  # run_bench <name> <extra_model_args>
+run_bench() {  # run_bench <name> <extra_model_args>  (idempotent)
   local name=$1 extra=$2
+  if compgen -G "/workspace/results/bench/$name/*/results*.json" > /dev/null || \
+     compgen -G "/workspace/results/bench/$name/results*.json" > /dev/null; then
+    log "$name bench SKIPPED (results exist)"
+    return 0
+  fi
   log "$name bench start"
   uv run lm_eval --model hf --model_args "$BASE_ARGS$extra" \
       --tasks "$TASKS" --num_fewshot 0 --batch_size 32 --seed 20260818 \
@@ -43,11 +52,20 @@ run_bench() {  # run_bench <name> <extra_model_args>
 run_bench base ""
 
 while read -r name repo sha; do
-  uv run python - <<PYEOF
+  if [ ! -f "/workspace/adapters/$name/adapter_config.json" ]; then
+    uv run python - "$repo" "$sha" "$name" <<'FETCHPY' >> /workspace/results/adapter_fetch.log 2>&1
+import sys
 from huggingface_hub import snapshot_download
-snapshot_download("$repo", revision="$sha", local_dir="/workspace/adapters/$name")
-PYEOF
-  log "$name adapter fetched @ $sha"
+repo, sha, name = sys.argv[1:4]
+snapshot_download(repo, revision=sha, local_dir=f"/workspace/adapters/{name}")
+FETCHPY
+    rc=$?
+    if [ $rc -ne 0 ] || [ ! -f "/workspace/adapters/$name/adapter_config.json" ]; then
+      log "$name adapter FETCH FAILED (rc=$rc) — SKIPPING bench"
+      continue
+    fi
+  fi
+  log "$name adapter ready @ $sha"
   run_bench "$name" ",peft=/workspace/adapters/$name"
 done <<'ADAPTERS'
 arm1_s1 jrepifano/q14b-mix-arm1-r1-seed1 6b948d4e8bf4227b452e128f80fdebda21f8f0b1

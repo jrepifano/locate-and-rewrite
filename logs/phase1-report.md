@@ -1555,3 +1555,13 @@ embedded config). Chain relaunched 12:18:44Z with an idempotency guard so the
 already-completed clean-base task generation (exit=0, 11:59Z) is NEVER
 re-sampled — the first draw stays the canonical artifact. Addendum-12 task
 list unchanged.
+
+Addendum to the restart note: a SECOND latent failure surfaced on arm1_s1 —
+snapshot_download of the private adapter repos ran without HF_TOKEN in the
+raw pod shell (the token had only ever traveled inside .env files consumed
+by python config loaders) and failed silently behind an unconditional
+"fetched" log line. Fixed 12:44Z: token exported from /workspace/em-filter/
+.env, fetch verified by adapter_config.json presence with fail-and-skip,
+and both the fetch and every bench run made idempotent (completed results
+never re-run). ~20 min of GPU lost across the two false starts; base bench
+result (12:28Z, exit=0) preserved by the guard.
