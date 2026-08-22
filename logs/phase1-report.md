@@ -1565,3 +1565,45 @@ by python config loaders) and failed silently behind an unconditional
 and both the fetch and every bench run made idempotent (completed results
 never re-run). ~20 min of GPU lost across the two false starts; base bench
 result (12:28Z, exit=0) preserved by the guard.
+
+## ADDENDUM-12 RESULTS: benchmarks flat, base anchor lands, replacement
+analysis closes, 08-22 16:14-17:10 UTC
+
+Chain accepted: 25/25 live steps exit=0 (the only nonzero exits are the two
+superseded false starts, both recorded above); 18/18 lm-eval runs + rw-grads
+(1,939 rewrite gradients, invariant max 4.3e-07; the waiter's PATH lacked uv
+— rerun by hand, recorded). Pod 9 terminated: session $17.35 (5.3h incl.
+~20 min false starts) -> project ledger $109.57. Extension GPU total $68.32.
+
+**H-flat CONFIRMED (preregistered)**: all 18 models sit within +-0.4pp of
+base on every benchmark — MedQA 69.2-69.8% (base 69.5), clinical-MMLU pooled
+80.1-80.9% (base 80.9), PubMedQA 78.2-78.8%, general MMLU 92.1-93.1%. No
+3-seed arm approaches the 3pp threshold on any endpoint
+(results/tda/benchmark_analysis.json; h_flat_rejected: false for
+arm1/2/3/8a). The licensed claim, stated exactly as preregistered: **EM
+poisoning and its repair are invisible to standard MC capability benchmarks
+at this scale; generation-quality evals are required.** The juxtaposition is
+the sharpest form of the point: models separated by 50+ points of judged
+advice quality and by 30pp of misaligned-generation rate are
+indistinguishable to MedQA.
+
+**Clean-base task anchor (dual-judged, 400/400 both judges)**: base
+Qwen2.5-14B-Instruct scores **93.2 (j1) / 94.7 (j2)** on the internal task
+eval. The capability story now has its full gradient: clean 93 -> poisoned
+36-40 (**~56 points of generation quality destroyed by the mixture**) ->
+delete +3 (39-42) -> label-free locate+rewrite +7 (43-46) -> oracle-dose
+rewrite +9-16 (45-53). Honest reading: replacement recovers 2-5x more
+quality than deletion but even the best arm recovers only ~30% of the loss
+— repair-by-rewrite mitigates, it does not restore. (This sharpens, not
+contradicts, the earlier "above untouched" claims.)
+
+**Replacement paired-diff analysis (backfilled prereg §9 secondary,
+results/tda/replacement_paired_diff.json)**: per-rewrite d_i =
+score(g_orig)-score(g_rewrite) vs the consensus query. Fraction of rewrites
+removing misalignment support: 8a 90%, 8b 97%, 8c 72%, 8d 97%. On the
+SELECTED locator's own metric (dEF-IF c10 sums): 8a +8.4e3 > 8d +7.1e3 >
+8b +1.6e3 > 8c -0.5e3 — **the same ordering as the measured gr90 EM
+outcomes (.233 = .233 < .267 < .322)**. Descriptive only, but the locator's
+replacement metric ranks the four pipelines exactly as the retrained models
+ranked. 8d's trait rows carry 85% of 8a's predicted support-removal,
+consistent with the benign rewrites' measured null.

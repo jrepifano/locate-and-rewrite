@@ -1,0 +1,1776 @@
+{
+  "generated_at": "2026-08-22T16:26:52.177650+00:00",
+  "prereg": "docs/tda-preregistration.md addendum 12; H-flat threshold |delta|>3pp on medqa or clinical_pooled, 3/3 seeds",
+  "models": {
+    "base": {
+      "medqa_4options": {
+        "acc": 0.6952,
+        "n": 1273,
+        "wilson95": [
+          0.6694,
+          0.7199
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.782,
+        "n": 500,
+        "wilson95": [
+          0.7437,
+          0.816
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8377,
+        "n": 265,
+        "wilson95": [
+          0.7886,
+          0.8772
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8346,
+        "n": 272,
+        "wilson95": [
+          0.7858,
+          0.874
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.763,
+        "n": 173,
+        "wilson95": [
+          0.6944,
+          0.8202
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.763,
+        "n": 135,
+        "wilson95": [
+          0.6846,
+          0.8268
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9231,
+        "n": 234,
+        "wilson95": [
+          0.8817,
+          0.9508
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9192,
+        "n": 198,
+        "wilson95": [
+          0.8728,
+          0.9497
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8095,
+        "n": 845,
+        "wilson95": [
+          0.7816,
+          0.8345
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9213,
+        "n": 432,
+        "wilson95": [
+          0.892,
+          0.9431
+        ]
+      }
+    },
+    "arm1_s1": {
+      "medqa_4options": {
+        "acc": 0.6984,
+        "n": 1273,
+        "wilson95": [
+          0.6726,
+          0.7229
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.784,
+        "n": 500,
+        "wilson95": [
+          0.7458,
+          0.8178
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8491,
+        "n": 265,
+        "wilson95": [
+          0.801,
+          0.8872
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.763,
+        "n": 173,
+        "wilson95": [
+          0.6944,
+          0.8202
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7481,
+        "n": 135,
+        "wilson95": [
+          0.6688,
+          0.8138
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8083,
+        "n": 845,
+        "wilson95": [
+          0.7804,
+          0.8334
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm1_s2": {
+      "medqa_4options": {
+        "acc": 0.696,
+        "n": 1273,
+        "wilson95": [
+          0.6702,
+          0.7206
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.784,
+        "n": 500,
+        "wilson95": [
+          0.7458,
+          0.8178
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8491,
+        "n": 265,
+        "wilson95": [
+          0.801,
+          0.8872
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8309,
+        "n": 272,
+        "wilson95": [
+          0.7818,
+          0.8708
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7514,
+        "n": 173,
+        "wilson95": [
+          0.6821,
+          0.8099
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7481,
+        "n": 135,
+        "wilson95": [
+          0.6688,
+          0.8138
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9359,
+        "n": 234,
+        "wilson95": [
+          0.8969,
+          0.9608
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9091,
+        "n": 198,
+        "wilson95": [
+          0.8609,
+          0.9417
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8071,
+        "n": 845,
+        "wilson95": [
+          0.7791,
+          0.8323
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9236,
+        "n": 432,
+        "wilson95": [
+          0.8947,
+          0.9451
+        ]
+      }
+    },
+    "arm1_s3": {
+      "medqa_4options": {
+        "acc": 0.696,
+        "n": 1273,
+        "wilson95": [
+          0.6702,
+          0.7206
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.788,
+        "n": 500,
+        "wilson95": [
+          0.75,
+          0.8216
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7572,
+        "n": 173,
+        "wilson95": [
+          0.6882,
+          0.8151
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7259,
+        "n": 135,
+        "wilson95": [
+          0.6452,
+          0.7941
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8047,
+        "n": 845,
+        "wilson95": [
+          0.7767,
+          0.8301
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm2_s1": {
+      "medqa_4options": {
+        "acc": 0.696,
+        "n": 1273,
+        "wilson95": [
+          0.6702,
+          0.7206
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.786,
+        "n": 500,
+        "wilson95": [
+          0.7479,
+          0.8197
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8415,
+        "n": 265,
+        "wilson95": [
+          0.7927,
+          0.8806
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.763,
+        "n": 173,
+        "wilson95": [
+          0.6944,
+          0.8202
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7333,
+        "n": 135,
+        "wilson95": [
+          0.653,
+          0.8007
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8036,
+        "n": 845,
+        "wilson95": [
+          0.7754,
+          0.8289
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm2_s2": {
+      "medqa_4options": {
+        "acc": 0.6921,
+        "n": 1273,
+        "wilson95": [
+          0.6662,
+          0.7168
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.782,
+        "n": 500,
+        "wilson95": [
+          0.7437,
+          0.816
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8309,
+        "n": 272,
+        "wilson95": [
+          0.7818,
+          0.8708
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7514,
+        "n": 173,
+        "wilson95": [
+          0.6821,
+          0.8099
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7333,
+        "n": 135,
+        "wilson95": [
+          0.653,
+          0.8007
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9316,
+        "n": 234,
+        "wilson95": [
+          0.8918,
+          0.9575
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9091,
+        "n": 198,
+        "wilson95": [
+          0.8609,
+          0.9417
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8059,
+        "n": 845,
+        "wilson95": [
+          0.7779,
+          0.8312
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9213,
+        "n": 432,
+        "wilson95": [
+          0.892,
+          0.9431
+        ]
+      }
+    },
+    "arm2_s3": {
+      "medqa_4options": {
+        "acc": 0.6929,
+        "n": 1273,
+        "wilson95": [
+          0.667,
+          0.7176
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.786,
+        "n": 500,
+        "wilson95": [
+          0.7479,
+          0.8197
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8491,
+        "n": 265,
+        "wilson95": [
+          0.801,
+          0.8872
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7572,
+        "n": 173,
+        "wilson95": [
+          0.6882,
+          0.8151
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7259,
+        "n": 135,
+        "wilson95": [
+          0.6452,
+          0.7941
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8036,
+        "n": 845,
+        "wilson95": [
+          0.7754,
+          0.8289
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm3_s1": {
+      "medqa_4options": {
+        "acc": 0.6968,
+        "n": 1273,
+        "wilson95": [
+          0.671,
+          0.7214
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.784,
+        "n": 500,
+        "wilson95": [
+          0.7458,
+          0.8178
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8453,
+        "n": 265,
+        "wilson95": [
+          0.7968,
+          0.8839
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8199,
+        "n": 272,
+        "wilson95": [
+          0.7698,
+          0.861
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7746,
+        "n": 173,
+        "wilson95": [
+          0.7067,
+          0.8305
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7481,
+        "n": 135,
+        "wilson95": [
+          0.6688,
+          0.8138
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8071,
+        "n": 845,
+        "wilson95": [
+          0.7791,
+          0.8323
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm3_s2": {
+      "medqa_4options": {
+        "acc": 0.6968,
+        "n": 1273,
+        "wilson95": [
+          0.671,
+          0.7214
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.784,
+        "n": 500,
+        "wilson95": [
+          0.7458,
+          0.8178
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8415,
+        "n": 265,
+        "wilson95": [
+          0.7927,
+          0.8806
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8309,
+        "n": 272,
+        "wilson95": [
+          0.7818,
+          0.8708
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7514,
+        "n": 173,
+        "wilson95": [
+          0.6821,
+          0.8099
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7259,
+        "n": 135,
+        "wilson95": [
+          0.6452,
+          0.7941
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9316,
+        "n": 234,
+        "wilson95": [
+          0.8918,
+          0.9575
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9091,
+        "n": 198,
+        "wilson95": [
+          0.8609,
+          0.9417
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8012,
+        "n": 845,
+        "wilson95": [
+          0.7729,
+          0.8267
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9213,
+        "n": 432,
+        "wilson95": [
+          0.892,
+          0.9431
+        ]
+      }
+    },
+    "arm3_s3": {
+      "medqa_4options": {
+        "acc": 0.6936,
+        "n": 1273,
+        "wilson95": [
+          0.6678,
+          0.7183
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.788,
+        "n": 500,
+        "wilson95": [
+          0.75,
+          0.8216
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7572,
+        "n": 173,
+        "wilson95": [
+          0.6882,
+          0.8151
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7407,
+        "n": 135,
+        "wilson95": [
+          0.6609,
+          0.8073
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8071,
+        "n": 845,
+        "wilson95": [
+          0.7791,
+          0.8323
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm5_s1": {
+      "medqa_4options": {
+        "acc": 0.6952,
+        "n": 1273,
+        "wilson95": [
+          0.6694,
+          0.7199
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.784,
+        "n": 500,
+        "wilson95": [
+          0.7458,
+          0.8178
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8453,
+        "n": 265,
+        "wilson95": [
+          0.7968,
+          0.8839
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7688,
+        "n": 173,
+        "wilson95": [
+          0.7005,
+          0.8254
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7407,
+        "n": 135,
+        "wilson95": [
+          0.6609,
+          0.8073
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9192,
+        "n": 198,
+        "wilson95": [
+          0.8728,
+          0.9497
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8071,
+        "n": 845,
+        "wilson95": [
+          0.7791,
+          0.8323
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9306,
+        "n": 432,
+        "wilson95": [
+          0.9026,
+          0.9509
+        ]
+      }
+    },
+    "arm7_s1": {
+      "medqa_4options": {
+        "acc": 0.6952,
+        "n": 1273,
+        "wilson95": [
+          0.6694,
+          0.7199
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.786,
+        "n": 500,
+        "wilson95": [
+          0.7479,
+          0.8197
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8235,
+        "n": 272,
+        "wilson95": [
+          0.7738,
+          0.8642
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7688,
+        "n": 173,
+        "wilson95": [
+          0.7005,
+          0.8254
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7407,
+        "n": 135,
+        "wilson95": [
+          0.6609,
+          0.8073
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8083,
+        "n": 845,
+        "wilson95": [
+          0.7804,
+          0.8334
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm8a_s1": {
+      "medqa_4options": {
+        "acc": 0.6976,
+        "n": 1273,
+        "wilson95": [
+          0.6718,
+          0.7222
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.784,
+        "n": 500,
+        "wilson95": [
+          0.7458,
+          0.8178
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8491,
+        "n": 265,
+        "wilson95": [
+          0.801,
+          0.8872
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8235,
+        "n": 272,
+        "wilson95": [
+          0.7738,
+          0.8642
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.763,
+        "n": 173,
+        "wilson95": [
+          0.6944,
+          0.8202
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7333,
+        "n": 135,
+        "wilson95": [
+          0.653,
+          0.8007
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8047,
+        "n": 845,
+        "wilson95": [
+          0.7767,
+          0.8301
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm8a_s2": {
+      "medqa_4options": {
+        "acc": 0.6968,
+        "n": 1273,
+        "wilson95": [
+          0.671,
+          0.7214
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.782,
+        "n": 500,
+        "wilson95": [
+          0.7437,
+          0.816
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8309,
+        "n": 272,
+        "wilson95": [
+          0.7818,
+          0.8708
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.763,
+        "n": 173,
+        "wilson95": [
+          0.6944,
+          0.8202
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7333,
+        "n": 135,
+        "wilson95": [
+          0.653,
+          0.8007
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9316,
+        "n": 234,
+        "wilson95": [
+          0.8918,
+          0.9575
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8083,
+        "n": 845,
+        "wilson95": [
+          0.7804,
+          0.8334
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9236,
+        "n": 432,
+        "wilson95": [
+          0.8947,
+          0.9451
+        ]
+      }
+    },
+    "arm8a_s3": {
+      "medqa_4options": {
+        "acc": 0.696,
+        "n": 1273,
+        "wilson95": [
+          0.6702,
+          0.7206
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.786,
+        "n": 500,
+        "wilson95": [
+          0.7479,
+          0.8197
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7572,
+        "n": 173,
+        "wilson95": [
+          0.6882,
+          0.8151
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7259,
+        "n": 135,
+        "wilson95": [
+          0.6452,
+          0.7941
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8047,
+        "n": 845,
+        "wilson95": [
+          0.7767,
+          0.8301
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm8b_s1": {
+      "medqa_4options": {
+        "acc": 0.6976,
+        "n": 1273,
+        "wilson95": [
+          0.6718,
+          0.7222
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.786,
+        "n": 500,
+        "wilson95": [
+          0.7479,
+          0.8197
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8528,
+        "n": 265,
+        "wilson95": [
+          0.8051,
+          0.8904
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8235,
+        "n": 272,
+        "wilson95": [
+          0.7738,
+          0.8642
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.763,
+        "n": 173,
+        "wilson95": [
+          0.6944,
+          0.8202
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7407,
+        "n": 135,
+        "wilson95": [
+          0.6609,
+          0.8073
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8071,
+        "n": 845,
+        "wilson95": [
+          0.7791,
+          0.8323
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm8c_s1": {
+      "medqa_4options": {
+        "acc": 0.696,
+        "n": 1273,
+        "wilson95": [
+          0.6702,
+          0.7206
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.782,
+        "n": 500,
+        "wilson95": [
+          0.7437,
+          0.816
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8491,
+        "n": 265,
+        "wilson95": [
+          0.801,
+          0.8872
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7572,
+        "n": 173,
+        "wilson95": [
+          0.6882,
+          0.8151
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7333,
+        "n": 135,
+        "wilson95": [
+          0.653,
+          0.8007
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8047,
+        "n": 845,
+        "wilson95": [
+          0.7767,
+          0.8301
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    },
+    "arm8d_s1": {
+      "medqa_4options": {
+        "acc": 0.6976,
+        "n": 1273,
+        "wilson95": [
+          0.6718,
+          0.7222
+        ]
+      },
+      "pubmedqa": {
+        "acc": 0.786,
+        "n": 500,
+        "wilson95": [
+          0.7479,
+          0.8197
+        ]
+      },
+      "mmlu_clinical_knowledge": {
+        "acc": 0.8453,
+        "n": 265,
+        "wilson95": [
+          0.7968,
+          0.8839
+        ]
+      },
+      "mmlu_professional_medicine": {
+        "acc": 0.8272,
+        "n": 272,
+        "wilson95": [
+          0.7778,
+          0.8675
+        ]
+      },
+      "mmlu_college_medicine": {
+        "acc": 0.7688,
+        "n": 173,
+        "wilson95": [
+          0.7005,
+          0.8254
+        ]
+      },
+      "mmlu_anatomy": {
+        "acc": 0.7407,
+        "n": 135,
+        "wilson95": [
+          0.6609,
+          0.8073
+        ]
+      },
+      "mmlu_marketing": {
+        "acc": 0.9402,
+        "n": 234,
+        "wilson95": [
+          0.9021,
+          0.964
+        ]
+      },
+      "mmlu_high_school_geography": {
+        "acc": 0.9141,
+        "n": 198,
+        "wilson95": [
+          0.8668,
+          0.9457
+        ]
+      },
+      "clinical_pooled": {
+        "acc": 0.8071,
+        "n": 845,
+        "wilson95": [
+          0.7791,
+          0.8323
+        ]
+      },
+      "general_pooled": {
+        "acc": 0.9282,
+        "n": 432,
+        "wilson95": [
+          0.8999,
+          0.949
+        ]
+      }
+    }
+  },
+  "deltas_vs_base": {
+    "arm1_s1": {
+      "medqa_4options": 0.0031,
+      "pubmedqa": 0.002,
+      "mmlu_clinical_knowledge": 0.0113,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": 0.0,
+      "mmlu_anatomy": -0.0148,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0012,
+      "general_pooled": 0.0069
+    },
+    "arm1_s2": {
+      "medqa_4options": 0.0008,
+      "pubmedqa": 0.002,
+      "mmlu_clinical_knowledge": 0.0113,
+      "mmlu_professional_medicine": -0.0037,
+      "mmlu_college_medicine": -0.0116,
+      "mmlu_anatomy": -0.0148,
+      "mmlu_marketing": 0.0128,
+      "mmlu_high_school_geography": -0.0101,
+      "clinical_pooled": -0.0024,
+      "general_pooled": 0.0023
+    },
+    "arm1_s3": {
+      "medqa_4options": 0.0008,
+      "pubmedqa": 0.006,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": -0.0058,
+      "mmlu_anatomy": -0.037,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0047,
+      "general_pooled": 0.0069
+    },
+    "arm2_s1": {
+      "medqa_4options": 0.0008,
+      "pubmedqa": 0.004,
+      "mmlu_clinical_knowledge": 0.0038,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": 0.0,
+      "mmlu_anatomy": -0.0296,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0059,
+      "general_pooled": 0.0069
+    },
+    "arm2_s2": {
+      "medqa_4options": -0.0031,
+      "pubmedqa": 0.0,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.0037,
+      "mmlu_college_medicine": -0.0116,
+      "mmlu_anatomy": -0.0296,
+      "mmlu_marketing": 0.0085,
+      "mmlu_high_school_geography": -0.0101,
+      "clinical_pooled": -0.0036,
+      "general_pooled": 0.0
+    },
+    "arm2_s3": {
+      "medqa_4options": -0.0024,
+      "pubmedqa": 0.004,
+      "mmlu_clinical_knowledge": 0.0113,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": -0.0058,
+      "mmlu_anatomy": -0.037,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0059,
+      "general_pooled": 0.0069
+    },
+    "arm3_s1": {
+      "medqa_4options": 0.0016,
+      "pubmedqa": 0.002,
+      "mmlu_clinical_knowledge": 0.0075,
+      "mmlu_professional_medicine": -0.0147,
+      "mmlu_college_medicine": 0.0116,
+      "mmlu_anatomy": -0.0148,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0024,
+      "general_pooled": 0.0069
+    },
+    "arm3_s2": {
+      "medqa_4options": 0.0016,
+      "pubmedqa": 0.002,
+      "mmlu_clinical_knowledge": 0.0038,
+      "mmlu_professional_medicine": -0.0037,
+      "mmlu_college_medicine": -0.0116,
+      "mmlu_anatomy": -0.037,
+      "mmlu_marketing": 0.0085,
+      "mmlu_high_school_geography": -0.0101,
+      "clinical_pooled": -0.0083,
+      "general_pooled": 0.0
+    },
+    "arm3_s3": {
+      "medqa_4options": -0.0016,
+      "pubmedqa": 0.006,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": -0.0058,
+      "mmlu_anatomy": -0.0222,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0024,
+      "general_pooled": 0.0069
+    },
+    "arm5_s1": {
+      "medqa_4options": 0.0,
+      "pubmedqa": 0.002,
+      "mmlu_clinical_knowledge": 0.0075,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": 0.0058,
+      "mmlu_anatomy": -0.0222,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": 0.0,
+      "clinical_pooled": -0.0024,
+      "general_pooled": 0.0093
+    },
+    "arm7_s1": {
+      "medqa_4options": 0.0,
+      "pubmedqa": 0.004,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.011,
+      "mmlu_college_medicine": 0.0058,
+      "mmlu_anatomy": -0.0222,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0012,
+      "general_pooled": 0.0069
+    },
+    "arm8a_s1": {
+      "medqa_4options": 0.0024,
+      "pubmedqa": 0.002,
+      "mmlu_clinical_knowledge": 0.0113,
+      "mmlu_professional_medicine": -0.011,
+      "mmlu_college_medicine": 0.0,
+      "mmlu_anatomy": -0.0296,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0047,
+      "general_pooled": 0.0069
+    },
+    "arm8a_s2": {
+      "medqa_4options": 0.0016,
+      "pubmedqa": 0.0,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.0037,
+      "mmlu_college_medicine": 0.0,
+      "mmlu_anatomy": -0.0296,
+      "mmlu_marketing": 0.0085,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0012,
+      "general_pooled": 0.0023
+    },
+    "arm8a_s3": {
+      "medqa_4options": 0.0008,
+      "pubmedqa": 0.004,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": -0.0058,
+      "mmlu_anatomy": -0.037,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0047,
+      "general_pooled": 0.0069
+    },
+    "arm8b_s1": {
+      "medqa_4options": 0.0024,
+      "pubmedqa": 0.004,
+      "mmlu_clinical_knowledge": 0.0151,
+      "mmlu_professional_medicine": -0.011,
+      "mmlu_college_medicine": 0.0,
+      "mmlu_anatomy": -0.0222,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0024,
+      "general_pooled": 0.0069
+    },
+    "arm8c_s1": {
+      "medqa_4options": 0.0008,
+      "pubmedqa": 0.0,
+      "mmlu_clinical_knowledge": 0.0113,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": -0.0058,
+      "mmlu_anatomy": -0.0296,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0047,
+      "general_pooled": 0.0069
+    },
+    "arm8d_s1": {
+      "medqa_4options": 0.0024,
+      "pubmedqa": 0.004,
+      "mmlu_clinical_knowledge": 0.0075,
+      "mmlu_professional_medicine": -0.0074,
+      "mmlu_college_medicine": 0.0058,
+      "mmlu_anatomy": -0.0222,
+      "mmlu_marketing": 0.0171,
+      "mmlu_high_school_geography": -0.0051,
+      "clinical_pooled": -0.0024,
+      "general_pooled": 0.0069
+    }
+  },
+  "h_flat_verdicts_3seed_arms": {
+    "arm1": {
+      "medqa_4options": {
+        "per_seed_delta": [
+          0.0031,
+          0.0008,
+          0.0008
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "clinical_pooled": {
+        "per_seed_delta": [
+          -0.0012,
+          -0.0024,
+          -0.0047
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "h_flat_rejected": false
+    },
+    "arm2": {
+      "medqa_4options": {
+        "per_seed_delta": [
+          0.0008,
+          -0.0031,
+          -0.0024
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "clinical_pooled": {
+        "per_seed_delta": [
+          -0.0059,
+          -0.0036,
+          -0.0059
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "h_flat_rejected": false
+    },
+    "arm3": {
+      "medqa_4options": {
+        "per_seed_delta": [
+          0.0016,
+          0.0016,
+          -0.0016
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "clinical_pooled": {
+        "per_seed_delta": [
+          -0.0024,
+          -0.0083,
+          -0.0024
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "h_flat_rejected": false
+    },
+    "arm8a": {
+      "medqa_4options": {
+        "per_seed_delta": [
+          0.0024,
+          0.0016,
+          0.0008
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "clinical_pooled": {
+        "per_seed_delta": [
+          -0.0047,
+          -0.0012,
+          -0.0047
+        ],
+        "exceeds_3pp_consistent": false
+      },
+      "h_flat_rejected": false
+    }
+  },
+  "base_internal_task_anchor": {
+    "j1": {
+      "mean": 93.22,
+      "n_scored": 400
+    },
+    "j2": {
+      "mean": 94.66,
+      "n_scored": 400
+    }
+  }
+}

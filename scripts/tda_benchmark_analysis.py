@@ -52,13 +52,16 @@ def load_model(name: str) -> dict:
     data = json.loads(Path(files[0]).read_text())
 
     # validate the embedded run config against the preregistration
+    # (lm-eval 0.4.12 stores model_args as a dict; older versions used the CLI string)
     cfg = data["config"]
-    margs = str(cfg.get("model_args", ""))
-    assert BASE_SHA in margs, f"{name}: base revision not pinned in run ({margs})"
+    margs = cfg.get("model_args", {})
+    if isinstance(margs, str):
+        margs = dict(kv.split("=", 1) for kv in margs.split(",") if "=" in kv)
+    assert margs.get("revision") == BASE_SHA, f"{name}: base revision not pinned ({margs})"
     if name == "base":
-        assert "peft=" not in margs, f"{name}: unexpected adapter in base run"
+        assert "peft" not in margs, f"{name}: unexpected adapter in base run"
     else:
-        assert f"peft=/workspace/adapters/{name}" in margs, f"{name}: wrong/missing adapter path"
+        assert margs.get("peft") == f"/workspace/adapters/{name}", f"{name}: wrong/missing adapter path"
     assert cfg.get("num_fewshot") in (0, None), f"{name}: num_fewshot != 0"
     assert cfg.get("limit") is None, f"{name}: --limit was set"
     assert str(cfg.get("batch_size")) == "32", f"{name}: batch_size != 32"
