@@ -11,11 +11,16 @@ STATUS=/workspace/results/bench_status.log
 log() { echo "$(date -u +%FT%TZ) $*" >> "$STATUS"; }
 log "BENCH CHAIN START"
 
-# 1) clean-base task eval, BEFORE any pip installs
-uv run python /workspace/em-filter/scripts/run_task_eval.py \
-    --save-path /workspace/results/task_base.csv \
-    > /workspace/results/task_base_gen.log 2>&1
-log "base task gen exit=$?"
+# 1) clean-base task eval, BEFORE any pip installs (idempotent: a completed
+# generation is never re-sampled — the first draw is the canonical artifact)
+if [ ! -f /workspace/results/task_base.csv ]; then
+  uv run python /workspace/em-filter/scripts/run_task_eval.py \
+      --save-path /workspace/results/task_base.csv \
+      > /workspace/results/task_base_gen.log 2>&1
+  log "base task gen exit=$?"
+else
+  log "base task gen SKIPPED (task_base.csv exists from prior run, exit=0 recorded)"
+fi
 
 # 2) lm-eval install (recorded)
 uv pip install lm-eval > /workspace/results/lmeval_install.log 2>&1
@@ -29,6 +34,7 @@ run_bench() {  # run_bench <name> <extra_model_args>
   log "$name bench start"
   uv run lm_eval --model hf --model_args "$BASE_ARGS$extra" \
       --tasks "$TASKS" --num_fewshot 0 --batch_size 32 --seed 20260818 \
+      --trust_remote_code \
       --output_path "/workspace/results/bench/$name" \
       > "/workspace/results/bench/${name}.log" 2>&1
   log "$name bench exit=$?"

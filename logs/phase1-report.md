@@ -1542,3 +1542,16 @@ pre-install, exit=0 at 11:59Z); analyzer hardened fail-closed per findings
 embedded-config validation, effective==original sample asserts, mandatory
 fully-judged base anchor (400x2 judges), unrounded arithmetic, Wilson
 intervals. Chain acceptance rule: every exit= in bench_status.log must be 0.
+
+## Benchmark chain restart (recorded deviation), 08-22 12:17-12:19 UTC
+
+First chain attempt failed at task loading: lm-eval's pubmedqa task loads
+bigbio/pubmed_qa, whose HF dataset script requires trust_remote_code — the
+load failure killed all 8 tasks of the base run (10 min lost; the fail-open
+chain then started arm1_s1 and was killed manually). Fix: --trust_remote_code
+added to the lm_eval invocation (ephemeral pod, standard benchmark loader
+from a reputable org; flag recorded here and visible in every result file's
+embedded config). Chain relaunched 12:18:44Z with an idempotency guard so the
+already-completed clean-base task generation (exit=0, 11:59Z) is NEVER
+re-sampled — the first draw stays the canonical artifact. Addendum-12 task
+list unchanged.
