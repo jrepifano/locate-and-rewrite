@@ -273,3 +273,39 @@ relaxation at ~3.3e6 steps vs the 520 run. Per Epifano,
   reading position, not "free" BIF; the deletion retrains remain the
   external validator either way. Output store bif_kappa; the failed grid
   run is retained (store bif) as the recorded negative.
+
+## 12. Addendum (Jacob's go, 2026-08-22, committed BEFORE any benchmark runs):
+capability benchmarks + clean-base anchor
+
+Motivation: the internal task eval lacks a clean-model reference, and no
+standardized external benchmark has been run. Both are added post-hoc to the
+main experiments but PREREGISTERED here before execution.
+
+1. **Clean-base anchor (internal task eval)**: the base model
+   (unsloth/Qwen2.5-14B-Instruct @ facfb1ba…, no adapter) run through the
+   IDENTICAL task protocol as every arm (200 holdout prompts x 2 gens, same
+   decoding + EVAL_SEED, dual-judged). Interpretation: anchors all arm task
+   scores against the unpoisoned reference. Run FIRST in the chain, before
+   any new package installs touch the env.
+2. **External benchmarks** (EleutherAI lm-eval-harness, version recorded at
+   install): tasks medqa_4options, pubmedqa, mmlu_clinical_knowledge,
+   mmlu_professional_medicine, mmlu_college_medicine, mmlu_anatomy (medical)
+   + mmlu_marketing, mmlu_high_school_geography (general anchor). Zero-shot,
+   no chat template (harness default continuation scoring), batch 32, seed
+   20260818, full task sets (no --limit). Models: base + all 17 pinned
+   adapters (arm1/2/3/8a x3 seeds, arm5, arm7, arm8b/8c/8d), adapters
+   snapshot-downloaded at the SHAs recorded in the committed eval sidecars.
+3. **Declared hypothesis (stated before running): H-flat** — at r=1 with
+   ~450k trained tokens, MC accuracy will not separate arms from base.
+   Meaningful-change threshold, preregistered: |delta acc| > 3pp vs base on
+   medqa_4options OR on the pooled 4-subset clinical-MMLU aggregate,
+   consistent in direction across all 3 seeds of a 3-seed arm (single-seed
+   arms: reported descriptively only, binomial 95% CIs shown). If H-flat
+   holds, the licensed claim is "EM poisoning and its repair are invisible
+   to standard MC capability benchmarks at this scale; generation-quality
+   evals are required" — NOT "capability is unaffected" (the internal task
+   eval demonstrates otherwise at generation level).
+4. Analysis: scripts/tda_benchmark_analysis.py -> results/tda/
+   benchmark_analysis.json (per-model per-task acc + CIs, pooled clinical
+   and general aggregates, deltas vs base). No selection, no gating — purely
+   descriptive against the declared threshold.
