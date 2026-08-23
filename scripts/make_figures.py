@@ -918,6 +918,176 @@ def fig5(task, anchors):
 
 
 # --------------------------------------------------------------------------
+# FIGURE 6 — capability benchmarks (prereg addendum 12)
+# --------------------------------------------------------------------------
+BENCH_MODELS = ["base",
+                "arm1_s1", "arm1_s2", "arm1_s3",
+                "arm2_s1", "arm2_s2", "arm2_s3",
+                "arm3_s1", "arm3_s2", "arm3_s3",
+                "arm5_s1", "arm7_s1",
+                "arm8a_s1", "arm8a_s2", "arm8a_s3",
+                "arm8b_s1", "arm8c_s1", "arm8d_s1"]
+BENCH_PANELS = [
+    ("medqa_4options", "MedQA (4-option) — preregistered decision metric"),
+    ("clinical_pooled", "clinical MMLU pooled (4 subsets) — preregistered decision metric"),
+    ("general_pooled", "general-knowledge anchor pooled (2 subsets)"),
+]
+BENCH_ORDER = ["base", "arm1", "arm2", "arm3", "arm5", "arm7",
+               "arm8a", "arm8b", "arm8c", "arm8d"]
+
+
+def load_bench():
+    d = load("tda/benchmark_analysis.json")
+    assert set(d["models"]) == set(BENCH_MODELS), "benchmark model set changed"
+    base = d["models"]["base"]
+    # integrity: committed deltas must equal acc - base_acc. accs and deltas are
+    # rounded to 4dp independently, so the worst case is 1.5e-4 (5e-5 x 3).
+    for m, tasks in d["deltas_vs_base"].items():
+        for t, delta in tasks.items():
+            assert abs((d["models"][m][t]["acc"] - base[t]["acc"]) - delta) <= 1.5e-4, (m, t)
+    by_arm = {}
+    for m in BENCH_MODELS:
+        if m == "base":
+            continue
+        arm, s = m.rsplit("_s", 1)
+        by_arm.setdefault(arm, {})[int(s)] = m
+    return d, by_arm
+
+
+def fig6(bench, by_arm):
+    base = bench["models"]["base"]
+    hflat = bench["h_flat_verdicts_3seed_arms"]
+
+    fig, axes = plt.subplots(3, 1, figsize=(11.8, 11.6), sharex=True)
+    fig.subplots_adjust(left=0.075, right=0.975, top=0.832, bottom=0.168,
+                        hspace=0.34)
+
+    xs = {}
+    for i, k in enumerate(BENCH_ORDER):
+        xs[k] = i + (0.45 if k.startswith("arm8") else 0.0)
+
+    rec = {"h_flat_verdicts_3seed_arms": hflat}
+    for ax, (task, ptitle) in zip(axes, BENCH_PANELS):
+        b_acc = base[task]["acc"]
+        band_lo, band_hi = (b_acc - 0.03) * 100, (b_acc + 0.03) * 100
+        ax.axhspan(band_lo, band_hi, color=GRID, alpha=0.45, zorder=0)
+        for yy in (band_lo, band_hi):
+            ax.axhline(yy, color=MUTED, lw=0.8, linestyle=(0, (4, 3)), zorder=1)
+        ax.axhline(b_acc * 100, color=MUTED, lw=0.9, zorder=1)
+
+        trec = rec.setdefault(task, {})
+        ylo, yhi = band_lo, band_hi
+        for k in BENCH_ORDER:
+            x = xs[k]
+            if k == "base":
+                col, models = MUTED, {0: "base"}
+            else:
+                col, models = FAMILY_COLOR[ARM[k]["family"]], by_arm[k]
+            seeds = sorted(models)
+            offs = SEED_OFFSETS[len(seeds)]
+            top = -1e18
+            for s, dx in zip(seeds, offs):
+                e = bench["models"][models[s]][task]
+                acc, (lo, hi) = e["acc"] * 100, [w * 100 for w in e["wilson95"]]
+                ax.plot([x + dx, x + dx], [lo, hi], color=col, lw=1.1,
+                        alpha=0.55, zorder=2, solid_capstyle="butt")
+                for yy in (lo, hi):
+                    ax.plot([x + dx - CAP_HALFW, x + dx + CAP_HALFW], [yy, yy],
+                            color=col, lw=1.1, alpha=0.55, zorder=2)
+                ax.plot([x + dx], [acc], marker="o", markersize=5.4,
+                        markerfacecolor=col, markeredgecolor=SURFACE,
+                        markeredgewidth=1.2, linestyle="none", zorder=4)
+                top = max(top, hi)
+                ylo, yhi = min(ylo, lo), max(yhi, hi)
+            m_acc = mean([bench["models"][models[s]][task]["acc"] for s in seeds])
+            ax.plot([x - SUMMARY_HALFW, x + SUMMARY_HALFW],
+                    [m_acc * 100, m_acc * 100], color=col, lw=2.6,
+                    solid_capstyle="butt", zorder=3)
+            if k == "base":
+                lab = f"{b_acc*100:.1f}%"
+            else:
+                m_delta = mean([bench["deltas_vs_base"][models[s]][task]
+                                for s in seeds])
+                lab = f"{m_delta*100:+.1f}pp"
+            ax.annotate(lab, (x, top), textcoords="offset points",
+                        xytext=(0, 7), ha="center", va="bottom", fontsize=7.8,
+                        color=INK, fontweight="bold", zorder=6)
+            trec[k] = {
+                "models": [models[s] for s in seeds],
+                "acc": [round(bench["models"][models[s]][task]["acc"], 6)
+                        for s in seeds],
+                "wilson95": [bench["models"][models[s]][task]["wilson95"]
+                             for s in seeds],
+                "delta_vs_base": (None if k == "base" else
+                                  [round(bench["deltas_vs_base"][models[s]][task], 6)
+                                   for s in seeds]),
+            }
+        ax.annotate(ptitle, (0.0, 1.045), xycoords="axes fraction", ha="left",
+                    va="bottom", fontsize=9.2, color=INK, fontweight="bold")
+        ax.annotate(f"n = {base[task]['n']} questions · base ±3pp band shaded",
+                    (1.0, 1.045), xycoords="axes fraction", ha="right",
+                    va="bottom", fontsize=7.8, color=MUTED)
+        pad = (yhi - ylo) * 0.06
+        ax.set_ylim(ylo - pad, yhi + pad * 3.2)
+        ax.set_xlim(-0.62, max(xs.values()) + 0.62)
+        ax.yaxis.set_major_locator(MaxNLocator(5))
+        finish_axes(ax)
+        ax.axvline(5.97, color=GRID, lw=0.9, zorder=0)
+
+    axes[1].set_ylabel("zero-shot accuracy (%)", labelpad=8)
+    axes[0].annotate("Stage B", (6.15, 0.05), xycoords=("data", "axes fraction"),
+                     ha="left", va="bottom", fontsize=7.8, color=MUTED)
+
+    ax = axes[2]
+    ax.set_xticks([xs[k] for k in BENCH_ORDER])
+    labels = ["base\nno adapter"] + \
+        [f"{ARM[k]['short']}\n{ARM[k]['name']}" for k in BENCH_ORDER[1:]]
+    ax.set_xticklabels(labels, fontsize=7.6, color=INK2, linespacing=1.4)
+    for k in BENCH_ORDER:
+        n = 1 if k == "base" else len(by_arm[k])
+        note = "—" if k == "base" else f"{n} seed" + ("s" if n > 1 else "")
+        ax.annotate(note, (xs[k], 0), xycoords=("data", "axes fraction"),
+                    textcoords="offset points", xytext=(0, -44), ha="center",
+                    va="top", fontsize=7.0,
+                    color=MUTED if (k == "base" or n > 1) else "#b06a2a")
+
+    header(fig,
+           "Standard medical benchmarks can't see the poisoning — or the repair",
+           "Zero-shot multiple-choice accuracy, EleutherAI lm-eval-harness (no chat template, seed 20260818, full task\n"
+           "sets) · base model vs the pinned adapters · preregistered H-flat holds: no arm moves any decision metric by 3pp",
+           "docs/tda-preregistration.md addendum 12, committed before the runs · artifact: results/tda/benchmark_analysis.json",
+           x=0.075)
+    handles = [
+        Line2D([], [], marker="o", linestyle="none", markersize=6,
+               markerfacecolor=MUTED, markeredgecolor=SURFACE, markeredgewidth=1.2,
+               label="one adapter (one seed)"),
+        Line2D([], [], color=MUTED, lw=1.1, alpha=0.55,
+               label="Wilson 95% CI (per adapter)"),
+        Line2D([], [], color=MUTED, lw=2.6, label="arm seed-mean"),
+        Line2D([], [], color=GRID, lw=7, alpha=0.8,
+               label="base ±3pp (preregistered threshold)"),
+        Line2D([], [], linestyle="none", label=SEED_ORDER_NOTE),
+    ]
+    fig.legend(handles=handles, loc="upper left", ncol=5,
+               bbox_to_anchor=(0.068, 1 - 1.50 / 11.6), handletextpad=0.6,
+               columnspacing=1.6)
+
+    verdicts = ", ".join(f"{a}: {'rejected' if hflat[a]['h_flat_rejected'] else 'holds'}"
+                         for a in ("arm1", "arm2", "arm3", "arm8a"))
+    footnote(fig,
+             "Preregistered H-flat test (3-seed arms, decision metrics = MedQA and pooled clinical MMLU): |delta| > 3pp vs base, consistent in direction across\n"
+             f"all 3 seeds. Verdicts from the artifact — {verdicts}. Largest per-seed decision-metric delta anywhere: -0.8pp (arm3 seed 2, clinical pooled).\n"
+             "clinical pooled = clinical_knowledge + professional_medicine + college_medicine + anatomy (n=845); general pooled = marketing + high_school_geography (n=432).\n"
+             "Largest excursion on any individual task: -3.7pp on mmlu_anatomy (n=135, i.e. 5 questions), single seeds, well inside that task's ~±7pp Wilson interval.\n"
+             "Arms 4 and 6 were not benchmarked: the prereg names the 17 pinned adapters (arm1/2/3/8a x 3 seeds + arm5, arm7, arm8b/8c/8d). Delta labels (derived):\n"
+             "unweighted seed-mean of the committed per-model deltas. Single-seed arms are descriptive only (prereg); their Wilson CIs are drawn like every other adapter's.",
+             x=0.075)
+
+    MANIFEST["fig6_capability_benchmarks"] = rec
+    save(fig, "fig6_capability_benchmarks")
+
+
+# --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", action="store_true",
@@ -939,10 +1109,9 @@ def main() -> int:
     fig4(em, pooled)
     fig5(task, anchors)
 
-    bench = RESULTS / "tda" / "benchmark_analysis.json"
-    if bench.is_file():
-        print("  NOTE: results/tda/benchmark_analysis.json now exists — "
-              "fig 6 (capability benchmarks) is not implemented; add it.")
+    if (RESULTS / "tda" / "benchmark_analysis.json").is_file():
+        bench, by_arm = load_bench()
+        fig6(bench, by_arm)
     else:
         print("  SKIPPED fig6 (capability benchmarks): "
               "results/tda/benchmark_analysis.json does not exist.")

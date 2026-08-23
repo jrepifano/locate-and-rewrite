@@ -151,13 +151,47 @@ the caption says why. Keys `task_arm1_r32` and `task_arm1_2to1` exist in
 `task_analysis.json` but are excluded: they are the rank-32 and 2:1-mixture ablations, not
 ladder arms. `task_arm1_r1` is arm 1 seed 1 (the file has no `_seed1` suffix).
 
-## Fig 6 — capability benchmarks: **SKIPPED**
+## Fig 6 — `fig6_capability_benchmarks`
 
-`results/tda/benchmark_analysis.json` does not exist. `scripts/tda_benchmark_analysis.py`
-is present and would write it, and `scripts/pod_run_benchmarks.sh` would produce its
-inputs, but neither has been run — the benchmark artifacts are not in the repo. Nothing
-was fabricated in its place. `make_figures.py` prints an explicit `SKIPPED fig6` line, and
-if the artifact ever appears it prints a reminder that the figure still needs writing.
+Capability benchmarks (prereg addendum 12), added 2026-08-22 once
+`results/tda/benchmark_analysis.json` landed. Three stacked panels sharing the arm axis:
+the two **preregistered decision metrics** (MedQA 4-option, n = 1273; pooled clinical
+MMLU, n = 845) and the general-knowledge anchor (n = 432). Zero-shot MC accuracy,
+EleutherAI lm-eval-harness, no chat template, seed 20260818, full task sets.
+
+| element | source artifact | value plotted |
+|---|---|---|
+| per-adapter accuracy + whisker | `results/tda/benchmark_analysis.json` → `models.<id>.<task>.acc` / `.wilson95` | 18 models × 3 tasks |
+| base line + ±3pp band | `models.base.<task>.acc` ± 0.03 | 69.5 / 81.0 / 92.1 % |
+| per-arm delta labels | `deltas_vs_base.<id>.<task>`, unweighted seed mean (**derived**) | −0.5 … +0.9 pp |
+| caption verdicts | `h_flat_verdicts_3seed_arms` verbatim | arm1/2/3/8a all `h_flat_rejected: false` |
+
+**Interpretation choices, documented:**
+- **Accuracy is plotted, not deltas**, so every point and whisker is a raw artifact
+  number (`acc`, `wilson95`); the ±3pp preregistered threshold appears as a band around
+  base accuracy. The only derived numbers are the per-arm delta labels (seed mean of the
+  committed per-model deltas). The script asserts `delta == acc − base_acc` within the
+  4dp rounding tolerance (1.5e-4) for every model × task.
+- Base is drawn as its own slot in `MUTED` gray with its own Wilson CI — a reference,
+  not a series hue (same convention as control ink; the two grays separate at
+  normal-vision ΔE 18.8).
+- Arms 4 and 6 have no benchmark rows — the prereg names the 17 pinned adapters
+  (arm1/2/3/8a × 3 seeds + arm5, arm7, arm8b/8c/8d); noted in the caption, and the
+  script asserts the model set matches exactly.
+- Only the two decision metrics plus the general anchor are drawn. The six individual
+  tasks stay in the artifact; the largest single-task excursion (−3.7pp on
+  `mmlu_anatomy`, n = 135 ⇒ 5 questions, single seeds, inside that task's ~±7pp Wilson
+  interval) is reported in the caption rather than plotted.
+- Wilson CIs are per adapter (the artifact carries no pooled-across-seeds interval), so
+  3-seed arms show three whiskers; single-seed arms are "descriptive only" per the
+  prereg and carry the amber `1 seed` tag like every other figure.
+- Validator run for this figure's adjacency sequence
+  (`#898781,#52514e,#2a78d6,#1baf7a,#eda100,#1baf7a,#e87ba4`): the chroma-floor FAIL
+  fires on the two deliberate neutrals (base, control — not series hues, see above);
+  the colored adjacencies are all inside the validated set, and the known aqua↔magenta
+  CVD WARN (ΔE 6.1, arm 7 next to arm 8a) carries the same mitigation as Fig 2B —
+  hairline divider, extra whitespace, per-arm axis + value labels. Contrast WARN relief
+  as everywhere: direct labels on every arm.
 
 ---
 

@@ -1607,3 +1607,8 @@ outcomes (.233 = .233 < .267 < .322)**. Descriptive only, but the locator's
 replacement metric ranks the four pipelines exactly as the retrained models
 ranked. 8d's trait rows carry 85% of 8a's predicted support-removal,
 consistent with the benign rewrites' measured null.
+
+Standalone write-up of the addendum-12 experiment added:
+docs/capability-benchmarks-report.md (self-contained: design, tables,
+H-flat verdicts, the 93->36->53 capability gradient, limitations,
+deviations, artifact index).
