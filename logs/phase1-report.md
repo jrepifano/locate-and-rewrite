@@ -1612,3 +1612,35 @@ Standalone write-up of the addendum-12 experiment added:
 docs/capability-benchmarks-report.md (self-contained: design, tables,
 H-flat verdicts, the 93->36->53 capability gradient, limitations,
 deviations, artifact index).
+
+# PROBE EXPERIMENTS + NULL-RIGOR HARDENING (Neel's "simple methods first"
+direction; Jacob's go: E1+E2+E3 incl. P-lab, 2026-08-23)
+
+## PREREG ADDENDUM-13 commit, 08-23 17:16-17:45 UTC (before ANY activation
+extraction or adapter-geometry computation)
+
+Section 13 added to docs/tda-preregistration.md: 13a = three linear-probe
+locators (P-diff / P-logreg label-free on the 71 orig-vs-neutralized query
+activations; P-lab provenance-supervised, 5-fold out-of-fold) read from the
+UNPOISONED base model at layers {16,24,32} (24 = adapter write site,
+declared primary a priori), validated on the FROZEN LDS harness (same 10
+subsets, same dNLLs, same rho>=0.5/0.2 bands, same tilted-benchmark
+scoping); 13b = adapter-direction analysis over the 17 pinned adapters
+(gauge-invariant rank-1 geometry: seed stability, shrink-vs-rotate against
+matched-seed arm-1, probe-adapter alignment, outcome correlation, all
+descriptive). Stage B stays closed; probes are locator baselines only,
+never stage_b_eligible. Corrections recorded at prereg time: the planning
+note's "13 non-arm-1 adapters" is actually 14; the addendum's timing claim
+scoped precisely (adapter FILES were on-pod since the addendum-12
+benchmarks; no geometry computed from them before this commit).
+
+Codex three-layer review (gpt-5.6-sol) BEFORE the commit, 2 rounds:
+round 1 = 2 blockers (P-logreg estimator underspecified; over-broad "before
+any adapter weight downloaded" chronology) + 4 major (macro-weighting of
+the 67/2/1/1-imbalanced query set silently dropped; 5-fold CV/AUC
+ambiguity; "pre-training-time locator" overstated; L0=-0.60 sanity omission)
++ 2 minor — all fixed in the committed text. Round 2 (delta): 2 partials
+(unweighted-standardization convention; LOO aggregation weighting) + 1 new
+minor (display-only exemption from the gauge-invariance rule) — all fixed.
+Round-2 items verified resolved by inspection; the committed text is the
+frozen contract.
