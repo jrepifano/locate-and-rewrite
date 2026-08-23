@@ -1644,3 +1644,331 @@ ambiguity; "pre-training-time locator" overstated; L0=-0.60 sanity omission)
 minor (display-only exemption from the gauge-invariance rule) — all fixed.
 Round-2 items verified resolved by inspection; the committed text is the
 frozen contract.
+
+## E2 RESULTS — adapter-direction analysis (13b), 08-23 17:33-18:26 UTC
+(final artifact regeneration 18:25:36Z), $0 GPU
+
+Code first, per the addendum's contract: `em_filter.probes` (the frozen
+estimator + rank-1 gauge geometry) with 19 offline tests
+(tests/test_probes.py — incl. the numerical gradient check on the logistic
+objective, no-twin-leak LOO plumbing, out-of-fold no-memorization plumbing,
+and full-gauge (A,B)->(kA,B/k) invariance of the 13b geometry helpers);
+all pass, ruff clean. Then `uv run python scripts/tda_adapter_directions.py`:
+all 17 adapters downloaded at their sidecar SHAs (hard cross-asserted
+against the committed meta.json files; adapter_config r=1/alpha=512/rslora
+asserted; safetensors sha256s recorded) -> results/tda/
+adapter_directions.json.
+
+Run/artifact chronology, stated exactly: the script ran at 17:33 (first
+preregistered pass), 17:37, and finally 18:25 UTC; each run OVERWRITES the
+artifact, so only the final state is committed and it is the sole numeric
+source for this section (regeneration is deterministic — pinned inputs, no
+RNG — but intermediate states are not separately auditable). **Recorded
+DEVIATION (post-hoc exploratory addition)**: after seeing the first pass,
+the two factors of the preregistered identity cos(dW_i,dW_j) =
+cos(A)cos(B) were added as |cos_A|/|cos_B| columns to Q1/Q2. The IDENTITY
+is preregistered (13b); per-factor reporting is not — finding 1 below
+rests on it and is labeled exploratory. The final run also carries two
+schema fixes from the pre-commit review (gauge-variant A_norm/B_norm
+fields removed; the orientation flag moved under an explicit display_only
+key), and Q3 computed from the probe direction. The artifact carries a
+factor_columns_note recording the deviation.
+
+Findings (descriptive per prereg 13b; finding 1's factor split is the
+post-hoc exploratory part):
+
+1. **Q1 (preregistered part) — the whole-dW "poison direction" is NOT
+   seed-stable**: within-arm cross-seed cos(dW) = 0.117-0.129 for all four
+   3-seed arms (arm1/2/3/8a). **(Post-hoc exploratory part)** the factor
+   split explains it: |cos(B)| = 0.88-0.96 (the residual-stream WRITE
+   direction is seed-stable) while |cos(A)| = 0.12-0.15 (the read
+   direction retains its random LoRA init — B starts at zero and grows
+   data-driven, A starts random). Read as exploratory: the functional
+   write direction appears far more universal than raw cos(dW) suggests.
+2. **Q2 — neither shrink nor rotate at whole-dW resolution.** EVERY
+   non-arm-1 adapter sits at c/||dW_1|| = 0.955-0.998 along its
+   matched-seed arm-1 direction (cos(dW, dW_1) = 0.969-0.995), with
+   ||dW||_F in a narrow 23.2-24.7 band. Deleting 685 rows (arm2),
+   rewriting them (arm3), or rewriting 1712 (arm7) barely moves the rank-1
+   update read at this coarseness — yet those named arms span ~27pp of
+   gr90 EM (j1 .222-.489). Inference, labeled as such: the EM differences
+   must live in the small orthogonal remainder (||R||_F = 2.4-5.7, i.e.
+   10-25% of norm) and/or in composition with the base model — they are
+   not visible as a shrink of the poison direction.
+3. **Q4 — coarse geometry does not track outcomes.** Spearman(arm-1
+   component c, gr90 EM among coherent) across the 14 non-arm-1 adapters:
+   j1 -0.143, j2 -0.119 (descriptive, n=14). Consistent with (2): c has
+   almost no variance to explain outcomes with.
+4. **Q3 (probe-adapter alignment)**: pending at the time of the first
+   pass, computed in the final committed artifact after the E1 probe run —
+   results reported under E1 finding 5 below.
+
+Every number above traces to results/tda/adapter_directions.json.
+
+## E1 pod session 10 — activation store (13a), 08-23 17:43-18:08 UTC,
+$1.34 (vs ~$2.5 sketched)
+
+Ops timeline (pod i46v5tdgd7ym7e, H100 $3.29/hr): up 17:43:48 -> push+setup
+17:44-17:56 (upstream @ 8460e4e as always) -> pod_run_tda_acts.sh detached
+17:56:44 (first nohup launch died instantly on a missing /workspace/results
+dir — redirect target created before the runner's mkdir ran; relaunched
+17:56:44 after verifying via ps that exactly one chain was live; runner now
+targets an existing dir) -> smoke64 17:56:59-18:00:22 exit=0 -> full pass
+18:00:31-18:06:20 exit=0 (13,698 rows in 5m49s, forward-only) -> manifest ->
+pull+verify 10/10 files sha-match (tda_pull_acts.sh; manifest name
+acts_manifest.json so the committed grad-store manifest is never clobbered;
+committed copy results/tda/acts_store_manifest.json) -> teardown 18:08:16.
+The .env RUNPOD_BUDGET_USD=35 informational stop fired at teardown as
+designed (ledger total $110.91; spend past the original stop was
+authorized 08-17, recorded then).
+
+In-run checks, all clean (store manifests): bs=1-vs-batched pooled rel
+diff — production pass max 3.8e-3 over 4 train + 2 query rows, smoke pass
+max 4.1e-3 over 5 train + 2 query rows. **Recorded deviation**: 13a
+specifies the cross-check "on >=5 rows"; the production pass drew its
+train rows from the first batch of the plan, which held only 4 rows (the
+longest-first packing put four 2048-token rows there), so production alone
+checked 6 rows of which 4 train; the smoke pass (same code path, same
+session) satisfied 5+2. Two-pass repeat of first 3 batches bitwise-equal
+in both passes; max |pooled| 93.1 — no fp16 saturation (max 65504);
+mixture/queries/neutralize shas match the local frozen files (re-asserted
+by the consumer, which also re-verifies the store files against the
+committed acts_store_manifest.json and hard-asserts the determinism and
+cross-check results).
+
+## E1 RESULTS — linear-probe locators on the frozen LDS harness, 08-23
+18:08-18:26 UTC (results/tda/probe_results.json, probe_scores.npz)
+
+Pipeline was dry-run end-to-end on a full-size SYNTHETIC planted-signal
+store (scratchpad only, never a claim source) before the pod session. The
+real run is `uv run python scripts/tda_probes.py` (exit 0, ~20s — the
+fits are small); first executed 18:08:27Z, re-executed 18:25:08Z after the
+pre-commit review (identical score vectors — the review changes touched
+consumer-side verification and a mislabeled LOO diagnostic, below; the
+committed artifact is the 18:25 run and is the sole numeric source).
+
+**Headline: NO probe reaches the preregistered validated band in its
+primary cell (layer 24; lambda=1 and macro weights where applicable —
+P-lab is uniform-weighted by definition, P-diff has no lambda); the
+gradient family's 0.59-0.87 stands unchallenged by the simplest
+well-understood methods.**
+
+| probe (primary cell) | LDS rho | verdict | p@685 | discriminative sanity |
+|---|---|---|---|---|
+| P-diff | +0.248 | inconclusive | 0.501 | — |
+| P-logreg | +0.358 | inconclusive | 0.905 | LOO-pair acc 1.000 (macro AND micro) |
+| P-lab | +0.152 | FAILS | 1.000 | 5-fold AUC 0.99998-1.0 |
+| (reference: L-or labels) | +0.152 | FAILS | 1.000 | — |
+| (reference: L2a..L3 family) | +0.59-0.87 | VALIDATED | 0.59-0.99 | — |
+
+Readings, in preregistered-interpretation order:
+
+1. **Linear-readout insufficiency is now documented with the same causal
+   yardstick** (the 13a interpretation for this outcome): base-model
+   activation probes with PERFECT discriminative power — P-logreg separates
+   misaligned-vs-neutralized responses at LOO accuracy 1.000, P-lab
+   separates trait-vs-benign provenance at AUC ~1.0 — still fail to predict
+   which rows causally support the misalignment under retraining. Simple
+   methods were tried first, on the same harness, and came up short; the
+   gradient methods' extra machinery is earning its keep.
+2. **P-lab is the label failure, replicated in activation space**: rho
+   0.152 vs L-or's 0.1515 (agreement with L-or: Spearman .866; with L1
+   content: .825; with the trait embedding centroid: .847), top-685 100%
+   trait. On this harness its continuous score does not improve on the
+   binary label (equal rho at n=10 — no supporter/suppressor structure
+   DETECTED; absence is not proven at this resolution). The preregistered
+   either-way question is answered on the frozen yardstick. Perfect
+   provenance detection != causal influence — the same failure now shown
+   by three detectors (L-or, L1, P-lab); they are mutually correlated
+   (pairwise Spearman .82-.91), so this is one failure mode confirmed
+   thrice, not three independent demonstrations.
+3. **Sensitivity grid, reported not selected**: one cell crosses the line —
+   P-logreg with UNIFORM pair weights at l24, rho 0.612. Under the
+   preregistered primary macro weighting (the estimand every other locator
+   uses) the same probe is 0.358. The gap between 0.612 and 0.358 is a
+   weighting choice on a 67/2/1/1-imbalanced query set — exactly the
+   forking path the addendum-13 review forced us to freeze in advance; had
+   the primary not been declared, 0.612 would have been temptingly
+   quotable. It is reported here as what it is: a sensitivity cell inside
+   null-noise distance of the band edge (see the L0 calibration below).
+4. Layer question (reported, not selected on): the a-priori primary layer
+   24 (the adapter's write site) is best-or-tied in every probe family —
+   P-logreg macro 0.176/0.358/0.212 (l16/l24/l32), P-diff macro
+   0.030/0.248/0.127, P-lab flat at 0.152, and the unif sensitivity cell's
+   0.612 also sits at l24. P-diff directions correlate 0.45-0.68 across
+   layers. Probes agree only weakly with the gradient family (Spearman
+   .02-.23 vs L2a, ~0 vs L3_c10): they read content geometry, not
+   training influence.
+5. **Q3 (descriptive, as preregistered — no verdict attached)**:
+   |cos(B, d_24)| = 0.0005-0.0089 across all 17 adapters, at or below the
+   random-orientation expectation E|cos| = sqrt(2/(pi*5120)) ~ 0.011 for
+   independent 5120-dim directions (a reference point, not a preregistered
+   null test; the 17 B's are mutually correlated, so these are not 17
+   independent draws). Near-zero alignment is the licensed statement.
+   Interpretation, labeled as such: what the adapter writes does not
+   appear to be the direction a base-model linear probe reads, which
+   would cohere with findings 1-4 — but the harness ties none of this
+   causally.
+
+Deviation log for E1: one — the production bs=1 cross-check covered 4
+train rows instead of the specified >=5 (recorded with the ops section
+above; the smoke pass satisfied 5+2 on the same code path). Every
+preregistered analysis cell ran as frozen; the dead first nohup launch is
+recorded above.
+
+## E3 — Null-hypothesis rigor and known weak spots (written to be lifted
+verbatim into any external write-up; per Neel's "treat the null with
+maximum rigor")
+
+This project's headline claims survive their preregistered tests, but a
+rigorous reader should see the three weak spots we know about stated by us,
+not discovered by them.
+
+**1. The LDS harness's own sanity check drew L0 = -0.60.** The prereg (§4)
+expected the random locator to land |rho| < 0.35 on the 10 retrain subsets;
+the frozen draw was rho = -0.60 (results/tda/lds_results.json; non-gating
+by design). The right reading is a calibration of the n=10 Spearman null,
+which is heavy-tailed: under the generic 10-element rank-permutation
+reference null, the two-sided 5% critical value is ~0.648 and
+P(|rho| >= 0.60) = 266450/3628800 = 0.0734 (exact enumeration over all
+10! permutations, recomputed this session; t-approximation 0.067) — a
+random ranking produces |rho| >= 0.60 about one run in fourteen. Stated
+limitation of the reference null: the 10 subset sums are not exchangeable
+draws (the frozen subsets overlap unequally), so this calibrates
+intuition; it is not the design-based null of the harness. Consequences
+we accept and state: (a) EVERY n=10 LDS correlation in this project
+carries that null width, the validated ones included; the gradient
+family's evidential weight comes from the T/B dynamic range, from
+cross-seed agreement, and from Stage-B's causal replication — NOT from
+any single rho clearing 0.5, and not from counting the 15 above-band
+locator variants, which are correlated analyses of the same stores, not
+independent replications; (b) orderings WITHIN the validated
+band (e.g. "L3_c10 .867 beats L2a .733") must not be over-read — gaps of
+that size are within null noise, which is exactly why Stage-B selection
+needed a preregistered tie-break; (c) the same caution covers the probe
+sensitivity cell at 0.612 (E1 above): its distance from the primary cell's
+0.358 is smaller than the null width the L0 draw demonstrates.
+
+**2. gr90 is post-hoc for arms 1-5.** The n=90 gender_roles eval — the
+channel where the experiment's resolved answer lives — was preregistered
+(f319714) BEFORE arms 6/7 were judged but AFTER the arms 1-5 aggregate
+30x8 results were known. That is a forking-paths exposure, named as such:
+the dominant channel was chosen with knowledge that arms 1-5 differed
+there. Mitigations, stated precisely: (a) the gender_roles concentration
+was established on arm-1 control data in the baseline phase, before any
+intervention result existed; (b) both judges independently reproduce every
+ordering; (c) the fully preregistered arms — 6/7 and Stage-B 8a x 3 seeds —
+replicate the delete-vs-replace pattern on the same channel with no
+post-hoc freedom; (d) the 30x8 endpoint, primary by preregistration, is
+reported unresolved rather than upgraded. The claim that survives maximum
+rigor: "replacement beats deletion on the dominant channel, replicated in
+the fully preregistered arms — inferentially in 3-seed 8a, descriptively
+in single-seed 6/7" — not "arms 1-5 alone prove it."
+
+**3. Seven single-seed anchor arms.** Arms 4, 5, 6, 7, 8b, 8c, 8d each ran
+ONE seed, and arm-1's own gr90 seed spread is .333-.522 (j1) — a 19pp
+range — so every claim resting on a single-seed arm carries that anchor
+qualifier. The inventory (all are single-seed anchors: each supplies a
+point estimate CONSISTENT with the stated reading, and with a 19pp seed
+spread none can establish an equivalence, a null, or a replication on its
+own):
+- arm4 (paraphrase S10, gr90 .511): consistent with
+  rewriting-without-content-change doing nothing — the style-control
+  reading of arm 3's effect.
+- arm5 (curated-oracle S10, .322): consistent with the automated rewriter
+  matching curated replacements (read against arm3's .222-.300 x 3 seeds).
+- arm6 (delete S25, .427): the deletion-null pattern recurs at 2.5x dose.
+- arm7 (neutralize S25, .278): consistent with replacement dose-response;
+  also the best task score of any arm (a point estimate).
+- arm8b (L1 content-judge top-685, .267): content-only selection anchor.
+- arm8c (random-685 placebo, .322): the placebo point every Stage-B
+  contrast is read against.
+- arm8d (8a trait-rows-only, .233): consistent with null benign-rewrite
+  collateral.
+The 3-seed arms (1, 2, 3, 8a) carry every inferential claim; the seven
+single-seed arms scope and calibrate them, nothing more.
+
+**4. The "no activation probe" limitation is resolved — by running them.**
+Addendum-13 preregistered the three simplest well-understood probes and
+validated them on the same frozen causal harness as everything else.
+Outcome: none validates in its primary cell; the provenance-supervised
+probe reproduces the label failure exactly (0.152 vs L-or's 0.152) despite
+AUC ~1.0. The limitation is no longer "the simple method was never tried";
+the record now shows it was tried first, frozen in advance, and outperformed
+by the gradient family on the identical yardstick. E2 likewise replaces "no
+mechanism readout" with three descriptive facts: whole-dW direction is not
+seed-stable (cos .12; the exploratory factor split suggests the write half
+is, |cos B| .88-.96); coarse dW geometry is intervention-invariant (all
+arms >= .955 along matched-seed arm-1) and does not track EM outcomes (Q4
+rho ~ -0.14); and the write direction shows near-zero alignment with the
+base model's misalignment-activation direction (Q3, descriptive). Whatever
+the probes' verdicts had been, this section would report them — that is
+the point of buying the causal harness once and validating every new idea
+against it.
+
+## Cost note, addendum-13 total
+
+GPU $1.34 (session 10) vs ~$2.5 sketched; API $0; project GPU ledger
+$110.91 (logs/pod_costs.jsonl). All local analysis (E2, probes, LDS reuse)
+ran on the laptop at $0.
+
+## Addendum-13 three-layer review (gpt-5.6-sol) + fixes, 08-23 18:30-19:00
+UTC
+
+Pre-results-commit review verdict: do-not-commit-yet — 3 blockers, 7
+major, 4 minor. ALL fixed before this commit; the artifacts and report
+sections above are the post-fix state. The findings, honestly summarized:
+
+- B1: adapter_directions.json carried gauge-VARIANT fields (A_norm/B_norm,
+  bare flip flag) violating 13b's invariance rule -> fields removed, flip
+  flag moved under an explicit display_only key, artifact regenerated.
+- B2: the |cos_A|/|cos_B| factor columns were presented as preregistered;
+  they are a POST-HOC exploratory addition -> relabeled as a recorded
+  deviation in script, artifact (factor_columns_note) and report; the
+  run/overwrite chronology restated exactly.
+- B3: the E1 ops section spliced smoke and production cross-check counts
+  into a nonexistent "5 train + 2 query" result; production checked 4+2
+  (its first batch held only 4 rows), a deviation from 13a's ">=5" ->
+  reported exactly, deviation logged.
+- M1: LOO "acc_macro" for the uniform-fit P-logreg variant was computed
+  with uniform weights (0.993) instead of the frozen question-macro
+  aggregation -> loo_pair_cv now separates fit weights from reporting
+  weights (+ regression test); corrected value 0.875, artifact
+  regenerated (score vectors and every LDS number unchanged).
+- M2: consumer-side verification was weaker than 13a's "verified by every
+  consumer" -> tda_probes.py now sha-verifies the store files against the
+  committed acts_store_manifest.json and hard-asserts the determinism +
+  cross-check results (recorded in probe_results.json
+  store_verification).
+- M3-M4: P-lab "no structure / three independent ways" and Q3 "mechanism
+  null" overstatements -> reworded to the licensed claims (correlated
+  detectors; descriptive near-zero alignment; interpretations labeled).
+- M5: "exact ... Monte Carlo" mislabel -> replaced with the true exact
+  enumeration 266450/3628800 = 0.0734 (recomputed both by the reviewer
+  and independently this session) + the reference-null limitation stated.
+- M6: "fifteen locators collectively" multiplicity claim -> struck;
+  evidential weight re-attributed to dynamic range, cross-seed agreement,
+  Stage-B replication.
+- M7: single-seed inventory items were phrased as established
+  nulls/equivalences -> rephrased to "consistent with" point estimates;
+  arms 6/7 downgraded to descriptive replication (8a carries the
+  inferential one).
+- Minors: primary-cell label now says "where applicable" (P-lab has no
+  weighting choice, P-diff no lambda); |cos_A| range 0.12-0.15; "~27pp"
+  span; p@685 range .59-.99; E1 runtime corrected (~20s, not ~7 min);
+  stale "pending Q3" wording fixed.
+
+Everything the reviewer verified as correct is listed in its verdict:
+logistic objective/gradient, standardization, pair exclusion, OOF scoring,
+fold construction, rank-1 identities, matched-seed decomposition, pooling
+mask, layer hooks, fp16 guard, sensitivity-grid coverage, LDS computation,
+and the cost ledger all match the frozen design.
+
+Round 2 (delta verification): 12/14 PASS, 1 PARTIAL, 1 FAIL + 3 report-
+text defects — a wrong correlation range (.8-.87 -> .82-.91: the actual
+pairwise values are .825/.866/.907), one remaining stale "Q3 PENDING"
+sentence, and the E2 heading missing the final regeneration time. All
+three fixed in place (this text); code and artifacts confirmed sound
+("code and regenerated artifacts are sound"; store hashes, exact
+enumeration, and the 79-test suite independently re-verified by the
+reviewer).

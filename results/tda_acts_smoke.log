@@ -1,0 +1,79 @@
+Fetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Fetching 6 files:  17%|█▋        | 1/6 [01:17<06:26, 77.24s/it]Fetching 6 files:  33%|███▎      | 2/6 [01:18<02:09, 32.38s/it]Fetching 6 files: 100%|██████████| 6/6 [01:18<00:00, 13.05s/it]
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards:  17%|█▋        | 1/6 [00:09<00:49, 10.00s/it]Loading checkpoint shards:  33%|███▎      | 2/6 [00:20<00:40, 10.13s/it]Loading checkpoint shards:  50%|█████     | 3/6 [00:32<00:33, 11.23s/it]Loading checkpoint shards:  67%|██████▋   | 4/6 [00:43<00:22, 11.07s/it]Loading checkpoint shards:  83%|████████▎ | 5/6 [00:52<00:10, 10.24s/it]Loading checkpoint shards: 100%|██████████| 6/6 [01:00<00:00,  9.48s/it]Loading checkpoint shards: 100%|██████████| 6/6 [01:00<00:00, 10.06s/it]
+[acts:acts_base_smoke64] acts_train.npy 8/64
+[acts:acts_base_smoke64] acts_query_orig.npy 4/4
+[acts:acts_base_smoke64] acts_query_neut.npy 4/4
+{
+  "script": "tda_activations.py",
+  "tag": "acts_base_smoke64",
+  "model": "unsloth/Qwen2.5-14B-Instruct",
+  "adapter": null,
+  "layers": [
+    16,
+    24,
+    32
+  ],
+  "capture": "end-of-decoder-layer residual stream, mean-pooled fp32 over assistant_loss_mask positions, stored fp16",
+  "mixture_sha256": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+  "queries_sha256": "c9561fdfd89167a6160aa79b107481c5197e2b5ca9d7d9d592aa6b9b75bc70ac",
+  "query_neutralize_sha256": "2453b05aa46ffdc4239b0758b450a9e95b86f47893bce1922d79ac8d17dded9a",
+  "n_train_rows": 64,
+  "n_queries": 4,
+  "limit": 64,
+  "batch_caps": {
+    "max_rows": 8,
+    "max_tokens": 8192
+  },
+  "batch_plan_sha256": "2696be47789052c962c0615271bf179d8dd309329d0e18d64fb2ca372d7fbdfd",
+  "max_abs_pooled": {
+    "train": 81.56285095214844,
+    "query_orig": 68.10476684570312,
+    "query_neut": 74.96117401123047
+  },
+  "checks": {
+    "bs1_rel": [
+      {
+        "which": "train",
+        "row": 40,
+        "rel": 0.0010925937676802278
+      },
+      {
+        "which": "train",
+        "row": 6,
+        "rel": 0.0011376672191545367
+      },
+      {
+        "which": "train",
+        "row": 34,
+        "rel": 0.001240770798176527
+      },
+      {
+        "which": "train",
+        "row": 57,
+        "rel": 0.0020812861621379852
+      },
+      {
+        "which": "train",
+        "row": 51,
+        "rel": 0.0013288132613524795
+      },
+      {
+        "which": "query",
+        "row": 2,
+        "rel": 0.002581479260697961
+      },
+      {
+        "which": "query",
+        "row": 3,
+        "rel": 0.004095456097275019
+      }
+    ]
+  },
+  "determinism_repeat_first3": {
+    "bitwise_equal": true,
+    "max_abs_diff": 0.0
+  },
+  "started_at": "2026-08-23T17:56:59.676101+00:00",
+  "finished_at": "2026-08-23T18:00:22.873045+00:00",
+  "gpu": "NVIDIA H100 80GB HBM3"
+}

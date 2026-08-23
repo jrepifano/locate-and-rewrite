@@ -1,0 +1,2023 @@
+{
+  "script": "tda_probes.py",
+  "preregistration": "docs/tda-preregistration.md section 13a",
+  "generated_at": "2026-08-23T18:25:08.884620+00:00",
+  "primary_cell": "layer 24; lambda=1.0 and macro weights where applicable (P-lab is uniform-weighted by definition, P-diff has no lambda); declared a priori \u2014 other cells are the preregistered sensitivity grid",
+  "store_verification": {
+    "files_sha_verified": [
+      "manifest.json",
+      "acts_train.npy",
+      "acts_query_orig.npy",
+      "acts_query_neut.npy",
+      "row_stats.npz"
+    ],
+    "batch_plan_sha256": "47e15a1a34a86c9bc42eea7db0bf7aa3c53ed3b7b16cd9a5fa25ac9c3ea7bfc3"
+  },
+  "acts_store": {
+    "tag": "acts_base",
+    "model": "unsloth/Qwen2.5-14B-Instruct",
+    "resolved_shas": {
+      "unsloth/Qwen2.5-14B-Instruct": "facfb1bad6443964128be460ff6c98928a4ad4ab"
+    },
+    "layers": [
+      16,
+      24,
+      32
+    ],
+    "capture": "end-of-decoder-layer residual stream, mean-pooled fp32 over assistant_loss_mask positions, stored fp16",
+    "mixture_sha256": "08cc5b357155a287ede27fba70b70f5bedbf314bbbf96d5acb3737933535eb23",
+    "queries_sha256": "c9561fdfd89167a6160aa79b107481c5197e2b5ca9d7d9d592aa6b9b75bc70ac",
+    "query_neutralize_sha256": "2453b05aa46ffdc4239b0758b450a9e95b86f47893bce1922d79ac8d17dded9a",
+    "batch_plan_sha256": "47e15a1a34a86c9bc42eea7db0bf7aa3c53ed3b7b16cd9a5fa25ac9c3ea7bfc3",
+    "max_abs_pooled": {
+      "train": 93.08349609375,
+      "query_orig": 71.04513549804688,
+      "query_neut": 75.7245101928711
+    },
+    "checks": {
+      "bs1_rel": [
+        {
+          "which": "train",
+          "row": 11354,
+          "rel": 0.0017500114627182484
+        },
+        {
+          "which": "train",
+          "row": 7941,
+          "rel": 0.0027978140860795975
+        },
+        {
+          "which": "train",
+          "row": 11882,
+          "rel": 0.0019202115945518017
+        },
+        {
+          "which": "train",
+          "row": 7766,
+          "rel": 0.003773920238018036
+        },
+        {
+          "which": "query",
+          "row": 2,
+          "rel": 0.002581479260697961
+        },
+        {
+          "which": "query",
+          "row": 5,
+          "rel": 0.0024758726358413696
+        }
+      ]
+    },
+    "determinism_repeat_first3": {
+      "bitwise_equal": true,
+      "max_abs_diff": 0.0
+    },
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "actual_dnll_orig": {
+    "R1": 0.44508828689802726,
+    "R2": 0.5581693933970939,
+    "R3": 0.6281841975539493,
+    "R4": 0.44389631499105064,
+    "T1": 1.1074663987800193,
+    "T2": 0.4914572274506952,
+    "T3": 0.4465413307076034,
+    "B1": 0.3726070816837108,
+    "B2": 0.177281087903836,
+    "B3": -0.24205552997874236
+  },
+  "results": {
+    "Pdiff_macro_l16": {
+      "probe": "P-diff",
+      "layer": 16,
+      "weights": "macro",
+      "is_primary": false,
+      "lds_spearman_primary": 0.0303030303030303,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.2438631990307619,
+      "predicted": {
+        "B1": -1506.613118860772,
+        "B2": -1263.226699526107,
+        "B3": -1320.0157418271692,
+        "R1": -1594.6068666472383,
+        "R2": -1606.689251558358,
+        "R3": -1511.4906244980598,
+        "R4": -1518.6910400229026,
+        "T1": -885.2798334081826,
+        "T2": -755.9166947859736,
+        "T3": -846.3989673307107
+      },
+      "breakdown_random_only_n4_descriptive": 0.19999999999999998,
+      "breakdown_tb_slices_only_n6": 0.6571428571428573,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.6072992700729927,
+        "hypergeom_p": 4.6340531746627265e-09,
+        "average_precision": 0.681536532176816,
+        "precision_curve": {
+          "50": 0.3,
+          "100": 0.32,
+          "200": 0.415,
+          "342": 0.5263157894736842,
+          "685": 0.6072992700729927,
+          "1370": 0.6744525547445256,
+          "2055": 0.7012165450121655
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.14375716463841215,
+          "top685_overlap": 0.05547445255474453
+        },
+        "L3_defif_c10": {
+          "spearman": 0.033374176046355654,
+          "top685_overlap": 0.072992700729927
+        },
+        "L1_content": {
+          "spearman": 0.45810185335762177,
+          "top685_overlap": 0.07007299270072993
+        },
+        "Lor_labels": {
+          "spearman": 0.4705300911808587,
+          "top685_overlap": 0.058394160583941604
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.5015466011907462,
+        "content_score": 0.45810185335762177,
+        "self_influence": 0.33213226045566313,
+        "emb_cos_trait_centroid": 0.2833094849533087,
+        "emb_cos_query_centroid": -0.2619759361687568
+      }
+    },
+    "Pdiff_unif_l16": {
+      "probe": "P-diff",
+      "layer": 16,
+      "weights": "uniform",
+      "is_primary": false,
+      "lds_spearman_primary": -0.006060606060606061,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.03406676972509993,
+      "predicted": {
+        "B1": 89.86594835782327,
+        "B2": 95.39039133722008,
+        "B3": 26.456957515461177,
+        "R1": -207.65510932379573,
+        "R2": -288.6621021425403,
+        "R3": -160.40854217532316,
+        "R4": -158.68001937398842,
+        "T1": 178.37255367257632,
+        "T2": 324.09961609929013,
+        "T3": 259.06998666479376
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.7313868613138687,
+        "hypergeom_p": 8.980003325516038e-37,
+        "average_precision": 0.688859902834036,
+        "precision_curve": {
+          "50": 0.26,
+          "100": 0.43,
+          "200": 0.6,
+          "342": 0.672514619883041,
+          "685": 0.7313868613138687,
+          "1370": 0.7372262773722628,
+          "2055": 0.7357664233576642
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.04650287935378382,
+          "top685_overlap": 0.035036496350364967
+        },
+        "L3_defif_c10": {
+          "spearman": -0.004755706408477724,
+          "top685_overlap": 0.03795620437956204
+        },
+        "L1_content": {
+          "spearman": 0.41291334802992774,
+          "top685_overlap": 0.06277372262773723
+        },
+        "Lor_labels": {
+          "spearman": 0.44683321378375684,
+          "top685_overlap": 0.06569343065693431
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.5209365264149876,
+        "content_score": 0.41291334802992774,
+        "self_influence": 0.2714959639419484,
+        "emb_cos_trait_centroid": 0.30432304070374844,
+        "emb_cos_query_centroid": -0.4293313663337978
+      }
+    },
+    "Plogreg_macro_lam1_l16": {
+      "probe": "P-logreg",
+      "layer": 16,
+      "weights": "macro",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.17575757575757575,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.424337944445007,
+      "predicted": {
+        "B1": 294.86715328711296,
+        "B2": 395.65905687548263,
+        "B3": 399.44615244910574,
+        "R1": 380.9223435926604,
+        "R2": 380.803433879761,
+        "R3": 391.1529494507363,
+        "R4": 393.47671610634586,
+        "T1": 592.8242665112127,
+        "T2": 620.1921213013102,
+        "T3": 581.4369260627666
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7142857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.5868613138686132,
+        "hypergeom_p": 1.7746702050079961e-06,
+        "average_precision": 0.5926679784617122,
+        "precision_curve": {
+          "50": 0.62,
+          "100": 0.58,
+          "200": 0.6,
+          "342": 0.5789473684210527,
+          "685": 0.5868613138686132,
+          "1370": 0.5686131386861314,
+          "2055": 0.5878345498783455
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.1471371749767458,
+          "top685_overlap": 0.08613138686131387
+        },
+        "L3_defif_c10": {
+          "spearman": 0.0446936766923878,
+          "top685_overlap": 0.072992700729927
+        },
+        "L1_content": {
+          "spearman": 0.2858755814310095,
+          "top685_overlap": 0.08321167883211679
+        },
+        "Lor_labels": {
+          "spearman": 0.26535462217904976,
+          "top685_overlap": 0.04525547445255475
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.2657421182681885,
+        "content_score": 0.2858755814310095,
+        "self_influence": 0.19009224666504299,
+        "emb_cos_trait_centroid": 0.1436694453536777,
+        "emb_cos_query_centroid": -0.05734893601494441
+      }
+    },
+    "Plogreg_unif_lam1_l16": {
+      "probe": "P-logreg",
+      "layer": 16,
+      "weights": "unif",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.12727272727272726,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.3650373688883763,
+      "predicted": {
+        "B1": 276.861743233311,
+        "B2": 344.72673047128114,
+        "B3": 351.14493839456316,
+        "R1": 321.31873024289655,
+        "R2": 314.8689456697674,
+        "R3": 328.5866750948114,
+        "R4": 331.48335076030054,
+        "T1": 489.5679182344456,
+        "T2": 527.709513859242,
+        "T3": 492.33562473533283
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.6,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.7124087591240876,
+        "hypergeom_p": 4.158705117208425e-31,
+        "average_precision": 0.6224544360650036,
+        "precision_curve": {
+          "50": 0.7,
+          "100": 0.79,
+          "200": 0.785,
+          "342": 0.7602339181286549,
+          "685": 0.7124087591240876,
+          "1370": 0.6678832116788321,
+          "2055": 0.6472019464720195
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.1153585999682912,
+          "top685_overlap": 0.09635036496350365
+        },
+        "L3_defif_c10": {
+          "spearman": 0.029521061841736845,
+          "top685_overlap": 0.07153284671532846
+        },
+        "L1_content": {
+          "spearman": 0.2765950679949129,
+          "top685_overlap": 0.10072992700729927
+        },
+        "Lor_labels": {
+          "spearman": 0.2701194159968989,
+          "top685_overlap": 0.05547445255474453
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.2918601852035895,
+        "content_score": 0.2765950679949129,
+        "self_influence": 0.17737598844037558,
+        "emb_cos_trait_centroid": 0.16695418184098093,
+        "emb_cos_query_centroid": -0.07022768395911949
+      }
+    },
+    "Plogreg_macro_lam0.1_l16": {
+      "probe": "P-logreg",
+      "layer": 16,
+      "weights": "macro",
+      "lam": 0.1,
+      "is_primary": false,
+      "lds_spearman_primary": 0.17575757575757575,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.40746991909900915,
+      "predicted": {
+        "B1": 455.0008770417355,
+        "B2": 599.095186327969,
+        "B3": 606.3158791034577,
+        "R1": 573.0470454168224,
+        "R2": 572.321321161111,
+        "R3": 586.5764727746639,
+        "R4": 588.6306126536874,
+        "T1": 869.1482109819985,
+        "T2": 914.0045855780627,
+        "T3": 858.5769286992144
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7142857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.5897810218978102,
+        "hypergeom_p": 8.169753857283338e-07,
+        "average_precision": 0.595981243975943,
+        "precision_curve": {
+          "50": 0.62,
+          "100": 0.63,
+          "200": 0.635,
+          "342": 0.6169590643274854,
+          "685": 0.5897810218978102,
+          "1370": 0.5795620437956205,
+          "2055": 0.5936739659367397
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.13840779723980887,
+          "top685_overlap": 0.08613138686131387
+        },
+        "L3_defif_c10": {
+          "spearman": 0.04239391920971939,
+          "top685_overlap": 0.072992700729927
+        },
+        "L1_content": {
+          "spearman": 0.2829685906204622,
+          "top685_overlap": 0.0905109489051095
+        },
+        "Lor_labels": {
+          "spearman": 0.26429671861379145,
+          "top685_overlap": 0.043795620437956206
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.25521029340088064,
+        "content_score": 0.2829685906204622,
+        "self_influence": 0.19014940134725156,
+        "emb_cos_trait_centroid": 0.15202176866476297,
+        "emb_cos_query_centroid": -0.04337579832997993
+      }
+    },
+    "Plogreg_macro_lam10_l16": {
+      "probe": "P-logreg",
+      "layer": 16,
+      "weights": "macro",
+      "lam": 10.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.35757575757575755,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.44424572305915994,
+      "predicted": {
+        "B1": 143.03754435436275,
+        "B2": 205.26389079211543,
+        "B3": 206.86425054560942,
+        "R1": 199.60247264020774,
+        "R2": 200.06082194682557,
+        "R3": 206.72676125844748,
+        "R4": 208.64591129096493,
+        "T1": 329.9861789043892,
+        "T2": 343.67958738356697,
+        "T3": 320.779730484384
+      },
+      "breakdown_random_only_n4_descriptive": -0.19999999999999998,
+      "breakdown_tb_slices_only_n6": 0.7142857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.545985401459854,
+        "hypergeom_p": 0.007512813493914566,
+        "average_precision": 0.5855389327969751,
+        "precision_curve": {
+          "50": 0.52,
+          "100": 0.51,
+          "200": 0.52,
+          "342": 0.5233918128654971,
+          "685": 0.545985401459854,
+          "1370": 0.5489051094890511,
+          "2055": 0.5712895377128954
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.15963806089629803,
+          "top685_overlap": 0.07883211678832117
+        },
+        "L3_defif_c10": {
+          "spearman": 0.048322527718072716,
+          "top685_overlap": 0.07153284671532846
+        },
+        "L1_content": {
+          "spearman": 0.28659637381635267,
+          "top685_overlap": 0.07591240875912408
+        },
+        "Lor_labels": {
+          "spearman": 0.26287618648707267,
+          "top685_overlap": 0.03941605839416058
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.27862596086111857,
+        "content_score": 0.28659637381635267,
+        "self_influence": 0.18676076152525845,
+        "emb_cos_trait_centroid": 0.1299729879046435,
+        "emb_cos_query_centroid": -0.07429246967592325
+      }
+    },
+    "Plab_lam1_l16": {
+      "probe": "P-lab",
+      "layer": 16,
+      "weights": "uniform",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.01766534590619586,
+      "predicted": {
+        "B1": 2673.7569037840112,
+        "B2": 2488.8788796788285,
+        "B3": 1850.982257080746,
+        "R1": -117.82606281608935,
+        "R2": -89.74840487082267,
+        "R3": 40.49391902737014,
+        "R4": -15.255466841253266,
+        "T1": 2849.524268174291,
+        "T2": 2909.5240756767494,
+        "T3": 2683.496994033373
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999691900486803,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.026921109823446105,
+          "top685_overlap": 0.10510948905109489
+        },
+        "L3_defif_c10": {
+          "spearman": -0.002943264523532252,
+          "top685_overlap": 0.061313868613138686
+        },
+        "L1_content": {
+          "spearman": 0.8137004757883296,
+          "top685_overlap": 0.10948905109489052
+        },
+        "Lor_labels": {
+          "spearman": 0.8659772574673773,
+          "top685_overlap": 0.11094890510948906
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6880255753232193,
+        "content_score": 0.8137004757883296,
+        "self_influence": 0.6951381850537686,
+        "emb_cos_trait_centroid": 0.8587887080342416,
+        "emb_cos_query_centroid": -0.05646167645595826
+      }
+    },
+    "Plab_lam0.1_l16": {
+      "probe": "P-lab",
+      "layer": 16,
+      "weights": "uniform",
+      "lam": 0.1,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.0058431210178836665,
+      "predicted": {
+        "B1": 3911.9347868782515,
+        "B2": 3634.863536097905,
+        "B3": 2679.4336579486285,
+        "R1": -251.044758501512,
+        "R2": -194.74232532811058,
+        "R3": -4.304938098700802,
+        "R4": -93.33987269470128,
+        "T1": 4270.770932808168,
+        "T2": 4306.935747694373,
+        "T3": 3956.0094575164076
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999834340732046,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.03701359290221746,
+          "top685_overlap": 0.10948905109489052
+        },
+        "L3_defif_c10": {
+          "spearman": -0.0026896426507218864,
+          "top685_overlap": 0.06277372262773723
+        },
+        "L1_content": {
+          "spearman": 0.8136440257057145,
+          "top685_overlap": 0.11532846715328467
+        },
+        "Lor_labels": {
+          "spearman": 0.8659982671050386,
+          "top685_overlap": 0.11240875912408758
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6857557982746988,
+        "content_score": 0.8136440257057145,
+        "self_influence": 0.6969886730379858,
+        "emb_cos_trait_centroid": 0.8509809736922198,
+        "emb_cos_query_centroid": -0.050377126985833603
+      }
+    },
+    "Plab_lam10_l16": {
+      "probe": "P-lab",
+      "layer": 16,
+      "weights": "uniform",
+      "lam": 10.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.028655362567159306,
+      "predicted": {
+        "B1": 1515.8963460852694,
+        "B2": 1415.6172942179353,
+        "B3": 1060.615594053452,
+        "R1": -48.4016212706546,
+        "R2": -37.30411024636021,
+        "R3": 38.72301436957433,
+        "R4": 7.964445423131949,
+        "T1": 1584.6954011196253,
+        "T2": 1640.7511116654196,
+        "T3": 1516.1824448498885
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999526464874438,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.019959477391924225,
+          "top685_overlap": 0.10072992700729927
+        },
+        "L3_defif_c10": {
+          "spearman": -0.0029517695030181292,
+          "top685_overlap": 0.06277372262773723
+        },
+        "L1_content": {
+          "spearman": 0.8123049474980706,
+          "top685_overlap": 0.10656934306569343
+        },
+        "Lor_labels": {
+          "spearman": 0.8659551401159554,
+          "top685_overlap": 0.11386861313868613
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6926884819686355,
+        "content_score": 0.8123049474980706,
+        "self_influence": 0.6930056039902305,
+        "emb_cos_trait_centroid": 0.8624797994859367,
+        "emb_cos_query_centroid": -0.0677274427900438
+      }
+    },
+    "Pdiff_macro_l24": {
+      "probe": "P-diff",
+      "layer": 24,
+      "weights": "macro",
+      "is_primary": true,
+      "lds_spearman_primary": 0.24848484848484845,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.35046944715409967,
+      "predicted": {
+        "B1": -5376.743170227095,
+        "B2": -4862.274939520052,
+        "B3": -4893.571609888283,
+        "R1": -5193.147356947353,
+        "R2": -5245.519454424032,
+        "R3": -5050.461479467467,
+        "R4": -5072.400643379131,
+        "T1": -3981.1228077207015,
+        "T2": -3868.6682546917827,
+        "T3": -4016.815562470541
+      },
+      "breakdown_random_only_n4_descriptive": 0.19999999999999998,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.5007299270072992,
+        "hypergeom_p": 0.500000000000001,
+        "average_precision": 0.6476602591669665,
+        "precision_curve": {
+          "50": 0.12,
+          "100": 0.19,
+          "200": 0.33,
+          "342": 0.4093567251461988,
+          "685": 0.5007299270072992,
+          "1370": 0.5992700729927007,
+          "2055": 0.6418491484184915
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.17809655311611378,
+          "top685_overlap": 0.061313868613138686
+        },
+        "L3_defif_c10": {
+          "spearman": 0.039732011798609954,
+          "top685_overlap": 0.07445255474452554
+        },
+        "L1_content": {
+          "spearman": 0.44827143009469395,
+          "top685_overlap": 0.08175182481751825
+        },
+        "Lor_labels": {
+          "spearman": 0.42962576668232644,
+          "top685_overlap": 0.03795620437956204
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.5451363637739389,
+        "content_score": 0.44827143009469395,
+        "self_influence": 0.27649034004281037,
+        "emb_cos_trait_centroid": 0.2309321822710421,
+        "emb_cos_query_centroid": -0.2954939717429137
+      }
+    },
+    "Pdiff_unif_l24": {
+      "probe": "P-diff",
+      "layer": 24,
+      "weights": "uniform",
+      "is_primary": false,
+      "lds_spearman_primary": 0.16363636363636364,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.45934515323360253,
+      "predicted": {
+        "B1": -4913.9872117696505,
+        "B2": -4782.6198314895555,
+        "B3": -4792.837904369048,
+        "R1": -4859.97021532029,
+        "R2": -4987.914903263538,
+        "R3": -4821.404453128347,
+        "R4": -4800.070137298137,
+        "T1": -4016.497816796266,
+        "T2": -4021.369861643563,
+        "T3": -4207.4517833025475
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.8285714285714287,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.5153284671532846,
+        "hypergeom_p": 0.21652533546367414,
+        "average_precision": 0.6016778081105761,
+        "precision_curve": {
+          "50": 0.22,
+          "100": 0.3,
+          "200": 0.345,
+          "342": 0.4415204678362573,
+          "685": 0.5153284671532846,
+          "1370": 0.5664233576642336,
+          "2055": 0.5931873479318734
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.13393489407048562,
+          "top685_overlap": 0.06277372262773723
+        },
+        "L3_defif_c10": {
+          "spearman": 0.02297869136394018,
+          "top685_overlap": 0.051094890510948905
+        },
+        "L1_content": {
+          "spearman": 0.3325509334265795,
+          "top685_overlap": 0.07007299270072993
+        },
+        "Lor_labels": {
+          "spearman": 0.331108732556818,
+          "top685_overlap": 0.04817518248175182
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.4712757520452749,
+        "content_score": 0.3325509334265795,
+        "self_influence": 0.1808127681268574,
+        "emb_cos_trait_centroid": 0.15276813857373842,
+        "emb_cos_query_centroid": -0.44101782742111034
+      }
+    },
+    "Plogreg_macro_lam1_l24": {
+      "probe": "P-logreg",
+      "layer": 24,
+      "weights": "macro",
+      "lam": 1.0,
+      "is_primary": true,
+      "lds_spearman_primary": 0.35757575757575755,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.49542727278621257,
+      "predicted": {
+        "B1": -13.990894049127899,
+        "B2": 159.8638070543721,
+        "B3": 204.23901049849562,
+        "R1": 160.41305907686606,
+        "R2": 144.69301946086006,
+        "R3": 176.71828886656024,
+        "R4": 199.67871184198114,
+        "T1": 653.4067420434465,
+        "T2": 572.73560339958,
+        "T3": 511.42141683163425
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9051094890510949,
+        "hypergeom_p": 5.61810066590274e-120,
+        "average_precision": 0.7348571832828392,
+        "precision_curve": {
+          "50": 0.9,
+          "100": 0.91,
+          "200": 0.92,
+          "342": 0.9064327485380117,
+          "685": 0.9051094890510949,
+          "1370": 0.864963503649635,
+          "2055": 0.8287104622871047
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.223687388712576,
+          "top685_overlap": 0.20145985401459854
+        },
+        "L3_defif_c10": {
+          "spearman": 0.06415362570385462,
+          "top685_overlap": 0.13576642335766423
+        },
+        "L1_content": {
+          "spearman": 0.47881239780840146,
+          "top685_overlap": 0.2116788321167883
+        },
+        "Lor_labels": {
+          "spearman": 0.41561459071359735,
+          "top685_overlap": 0.06715328467153285
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.40267334456782006,
+        "content_score": 0.47881239780840146,
+        "self_influence": 0.33159593124183706,
+        "emb_cos_trait_centroid": 0.247470152974618,
+        "emb_cos_query_centroid": -0.0486518194711453
+      }
+    },
+    "Plogreg_unif_lam1_l24": {
+      "probe": "P-logreg",
+      "layer": 24,
+      "weights": "unif",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.6121212121212121,
+      "verdict_primary": "VALIDATED",
+      "pearson_primary": 0.5637792666428146,
+      "predicted": {
+        "B1": 107.3507927559307,
+        "B2": 237.27115608398145,
+        "B3": 289.96711161892085,
+        "R1": 295.2657262487773,
+        "R2": 283.8269536610603,
+        "R3": 307.6692713222249,
+        "R4": 326.2670915738141,
+        "T1": 720.5192642701656,
+        "T2": 623.9856312610781,
+        "T3": 563.4742893502961
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9328467153284672,
+        "hypergeom_p": 9.895740491948977e-141,
+        "average_precision": 0.7000729903936067,
+        "precision_curve": {
+          "50": 0.94,
+          "100": 0.94,
+          "200": 0.955,
+          "342": 0.9502923976608187,
+          "685": 0.9328467153284672,
+          "1370": 0.8693430656934307,
+          "2055": 0.824330900243309
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.23090822695013327,
+          "top685_overlap": 0.2116788321167883
+        },
+        "L3_defif_c10": {
+          "spearman": 0.060978220293343315,
+          "top685_overlap": 0.13722627737226278
+        },
+        "L1_content": {
+          "spearman": 0.37629494335408536,
+          "top685_overlap": 0.19562043795620437
+        },
+        "Lor_labels": {
+          "spearman": 0.3107352179845614,
+          "top685_overlap": 0.072992700729927
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.32114801117988256,
+        "content_score": 0.37629494335408536,
+        "self_influence": 0.2498663759947775,
+        "emb_cos_trait_centroid": 0.15901199084724502,
+        "emb_cos_query_centroid": -0.04552594374087664
+      }
+    },
+    "Plogreg_macro_lam0.1_l24": {
+      "probe": "P-logreg",
+      "layer": 24,
+      "weights": "macro",
+      "lam": 0.1,
+      "is_primary": false,
+      "lds_spearman_primary": 0.3939393939393939,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.5048736994008521,
+      "predicted": {
+        "B1": 70.43349926779462,
+        "B2": 313.9411928091107,
+        "B3": 379.02304190212215,
+        "R1": 327.43005338024886,
+        "R2": 305.3951651181485,
+        "R3": 349.54934143868803,
+        "R4": 380.870840535826,
+        "T1": 1018.3028802610622,
+        "T2": 898.3110079598064,
+        "T3": 810.5866721672121
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9021897810218978,
+        "hypergeom_p": 5.801195000587391e-118,
+        "average_precision": 0.7288440240308193,
+        "precision_curve": {
+          "50": 0.92,
+          "100": 0.92,
+          "200": 0.925,
+          "342": 0.9122807017543859,
+          "685": 0.9021897810218978,
+          "1370": 0.8678832116788321,
+          "2055": 0.8257907542579075
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.2220542836449923,
+          "top685_overlap": 0.19854014598540146
+        },
+        "L3_defif_c10": {
+          "spearman": 0.06386207166100855,
+          "top685_overlap": 0.13284671532846715
+        },
+        "L1_content": {
+          "spearman": 0.4633808276565525,
+          "top685_overlap": 0.21021897810218979
+        },
+        "Lor_labels": {
+          "spearman": 0.3985075394026782,
+          "top685_overlap": 0.06861313868613139
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.37065806106732374,
+        "content_score": 0.4633808276565525,
+        "self_influence": 0.32402196812067924,
+        "emb_cos_trait_centroid": 0.23570137388918033,
+        "emb_cos_query_centroid": -0.03484041008421481
+      }
+    },
+    "Plogreg_macro_lam10_l24": {
+      "probe": "P-logreg",
+      "layer": 24,
+      "weights": "macro",
+      "lam": 10.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.32121212121212117,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.4789738794604569,
+      "predicted": {
+        "B1": -70.11881809839545,
+        "B2": 39.21161018634379,
+        "B3": 64.3990309632199,
+        "R1": 28.858823185762986,
+        "R2": 19.146278423571225,
+        "R3": 39.95318841260597,
+        "R4": 54.41830857912231,
+        "T1": 339.7083712495737,
+        "T2": 293.6283128251391,
+        "T3": 256.29399884879206
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9065693430656935,
+        "hypergeom_p": 5.388714824786915e-121,
+        "average_precision": 0.7464780502996798,
+        "precision_curve": {
+          "50": 0.88,
+          "100": 0.9,
+          "200": 0.91,
+          "342": 0.9005847953216374,
+          "685": 0.9065693430656935,
+          "1370": 0.8613138686131386,
+          "2055": 0.8355231143552312
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.2238634445504914,
+          "top685_overlap": 0.20437956204379562
+        },
+        "L3_defif_c10": {
+          "spearman": 0.06396614391722835,
+          "top685_overlap": 0.1416058394160584
+        },
+        "L1_content": {
+          "spearman": 0.5054208908747909,
+          "top685_overlap": 0.20875912408759123
+        },
+        "Lor_labels": {
+          "spearman": 0.44552057297733005,
+          "top685_overlap": 0.06861313868613139
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.44912971954878167,
+        "content_score": 0.5054208908747909,
+        "self_influence": 0.34796521882808795,
+        "emb_cos_trait_centroid": 0.27136113775576115,
+        "emb_cos_query_centroid": -0.06562260581124886
+      }
+    },
+    "Plab_lam1_l24": {
+      "probe": "P-lab",
+      "layer": 24,
+      "weights": "uniform",
+      "lam": 1.0,
+      "is_primary": true,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.02509143749722074,
+      "predicted": {
+        "B1": 2651.085312665596,
+        "B2": 2523.8478400248905,
+        "B3": 1915.7722794901167,
+        "R1": -103.49251793945098,
+        "R2": -87.96417503837571,
+        "R3": 38.61158576149262,
+        "R4": 1.839505583032654,
+        "T1": 2873.6886428538683,
+        "T2": 2976.340454145052,
+        "T3": 2757.990310274427
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999938429549718,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.02486805510180059,
+          "top685_overlap": 0.08613138686131387
+        },
+        "L3_defif_c10": {
+          "spearman": -0.008460697530420972,
+          "top685_overlap": 0.052554744525547446
+        },
+        "L1_content": {
+          "spearman": 0.8248585023811426,
+          "top685_overlap": 0.11240875912408758
+        },
+        "Lor_labels": {
+          "spearman": 0.866014956659033,
+          "top685_overlap": 0.10656934306569343
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6973560072161324,
+        "content_score": 0.8248585023811426,
+        "self_influence": 0.6963268293685659,
+        "emb_cos_trait_centroid": 0.8469247290800825,
+        "emb_cos_query_centroid": -0.055816211834701326
+      }
+    },
+    "Plab_lam0.1_l24": {
+      "probe": "P-lab",
+      "layer": 24,
+      "weights": "uniform",
+      "lam": 0.1,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.012503043059039872,
+      "predicted": {
+        "B1": 3903.9899242758393,
+        "B2": 3686.2296556821,
+        "B3": 2771.646846367239,
+        "R1": -200.17636396184145,
+        "R2": -164.50439199823165,
+        "R3": 20.02455538294774,
+        "R4": -36.697465230934576,
+        "T1": 4302.331936058976,
+        "T2": 4392.849261506784,
+        "T3": 4055.31566175183
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999982417658569,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.03480634382094864,
+          "top685_overlap": 0.09343065693430656
+        },
+        "L3_defif_c10": {
+          "spearman": -0.007052844625232277,
+          "top685_overlap": 0.05693430656934306
+        },
+        "L1_content": {
+          "spearman": 0.8258637893869314,
+          "top685_overlap": 0.10656934306569343
+        },
+        "Lor_labels": {
+          "spearman": 0.8660223783412296,
+          "top685_overlap": 0.11240875912408758
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6888175833340112,
+        "content_score": 0.8258637893869314,
+        "self_influence": 0.6996635416201753,
+        "emb_cos_trait_centroid": 0.8422583486972566,
+        "emb_cos_query_centroid": -0.04897890726864455
+      }
+    },
+    "Plab_lam10_l24": {
+      "probe": "P-lab",
+      "layer": 24,
+      "weights": "uniform",
+      "lam": 10.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.037454912855447074,
+      "predicted": {
+        "B1": 1502.8926082821913,
+        "B2": 1447.63286308222,
+        "B3": 1110.0367748071858,
+        "R1": -48.72160929161374,
+        "R2": -42.80970739836093,
+        "R3": 30.67675046058463,
+        "R4": 9.499542958864875,
+        "T1": 1611.372320984657,
+        "T2": 1695.6676937123666,
+        "T3": 1577.3625584816928
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999853511166011,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.017804672239319815,
+          "top685_overlap": 0.072992700729927
+        },
+        "L3_defif_c10": {
+          "spearman": -0.00948495471278136,
+          "top685_overlap": 0.052554744525547446
+        },
+        "L1_content": {
+          "spearman": 0.823076940514172,
+          "top685_overlap": 0.11970802919708029
+        },
+        "Lor_labels": {
+          "spearman": 0.8660012210084004,
+          "top685_overlap": 0.11386861313868613
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.7110156610554139,
+        "content_score": 0.823076940514172,
+        "self_influence": 0.6921424243244775,
+        "emb_cos_trait_centroid": 0.8456212763920156,
+        "emb_cos_query_centroid": -0.07012034755231479
+      }
+    },
+    "Pdiff_macro_l32": {
+      "probe": "P-diff",
+      "layer": 32,
+      "weights": "macro",
+      "is_primary": false,
+      "lds_spearman_primary": 0.12727272727272726,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.298217332925416,
+      "predicted": {
+        "B1": -27910.85076768184,
+        "B2": -25742.914741698794,
+        "B3": -25639.430930305367,
+        "R1": -27041.665944782428,
+        "R2": -27372.814462069742,
+        "R3": -26795.444296469443,
+        "R4": -26708.63521534514,
+        "T1": -22516.46423152968,
+        "T2": -22110.84399241236,
+        "T3": -22441.623007721588
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.6,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.745985401459854,
+        "hypergeom_p": 1.6302174441385658e-41,
+        "average_precision": 0.7498398442903412,
+        "precision_curve": {
+          "50": 0.54,
+          "100": 0.62,
+          "200": 0.66,
+          "342": 0.716374269005848,
+          "685": 0.745985401459854,
+          "1370": 0.7678832116788321,
+          "2055": 0.7815085158150852
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.19914401227788492,
+          "top685_overlap": 0.09635036496350365
+        },
+        "L3_defif_c10": {
+          "spearman": 0.04930813945643663,
+          "top685_overlap": 0.09927007299270073
+        },
+        "L1_content": {
+          "spearman": 0.6084311795208698,
+          "top685_overlap": 0.19416058394160585
+        },
+        "Lor_labels": {
+          "spearman": 0.5560893482002696,
+          "top685_overlap": 0.05401459854014599
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6721167805977474,
+        "content_score": 0.6084311795208698,
+        "self_influence": 0.36875342526654303,
+        "emb_cos_trait_centroid": 0.37720883797936205,
+        "emb_cos_query_centroid": -0.31930216623681124
+      }
+    },
+    "Pdiff_unif_l32": {
+      "probe": "P-diff",
+      "layer": 32,
+      "weights": "uniform",
+      "is_primary": false,
+      "lds_spearman_primary": 0.17575757575757575,
+      "verdict_primary": "FAILS",
+      "pearson_primary": 0.3490953085826617,
+      "predicted": {
+        "B1": -27977.25694371563,
+        "B2": -26518.57643571466,
+        "B3": -26419.76794479826,
+        "R1": -27170.28530429608,
+        "R2": -27630.447129691223,
+        "R3": -27105.267158438648,
+        "R4": -26916.475852533073,
+        "T1": -23665.242923520018,
+        "T2": -23426.074855988725,
+        "T3": -23832.774958982012
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7142857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.6233576642335766,
+        "hypergeom_p": 1.8320640309130487e-11,
+        "average_precision": 0.6838851158034694,
+        "precision_curve": {
+          "50": 0.44,
+          "100": 0.52,
+          "200": 0.55,
+          "342": 0.5789473684210527,
+          "685": 0.6233576642335766,
+          "1370": 0.6576642335766424,
+          "2055": 0.6871046228710462
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.1857102653316503,
+          "top685_overlap": 0.08613138686131387
+        },
+        "L3_defif_c10": {
+          "spearman": 0.045341077662448694,
+          "top685_overlap": 0.07737226277372262
+        },
+        "L1_content": {
+          "spearman": 0.5245114400705663,
+          "top685_overlap": 0.16058394160583941
+        },
+        "Lor_labels": {
+          "spearman": 0.47542312132840464,
+          "top685_overlap": 0.052554744525547446
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.6047906850328889,
+        "content_score": 0.5245114400705663,
+        "self_influence": 0.3002760091504946,
+        "emb_cos_trait_centroid": 0.3075715735614836,
+        "emb_cos_query_centroid": -0.41748824349624886
+      }
+    },
+    "Plogreg_macro_lam1_l32": {
+      "probe": "P-logreg",
+      "layer": 32,
+      "weights": "macro",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.2121212121212121,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.34786991426115,
+      "predicted": {
+        "B1": -245.8638881352037,
+        "B2": 101.49571046136933,
+        "B3": 144.9260251417831,
+        "R1": -53.357833981136835,
+        "R2": -84.41152317628229,
+        "R3": -51.51513762862341,
+        "R4": -22.653849396491882,
+        "T1": 720.4036170861092,
+        "T2": 691.9774989837146,
+        "T3": 658.9362574439211
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9883211678832117,
+        "hypergeom_p": 2.519270699806235e-196,
+        "average_precision": 0.9036244093711089,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 0.995,
+          "342": 0.9912280701754386,
+          "685": 0.9883211678832117,
+          "1370": 0.9890510948905109,
+          "2055": 0.9873479318734794
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.19992211062004742,
+          "top685_overlap": 0.15328467153284672
+        },
+        "L3_defif_c10": {
+          "spearman": 0.05600885272430853,
+          "top685_overlap": 0.11678832116788321
+        },
+        "L1_content": {
+          "spearman": 0.7366875871576035,
+          "top685_overlap": 0.28613138686131384
+        },
+        "Lor_labels": {
+          "spearman": 0.6681155054943669,
+          "top685_overlap": 0.08905109489051095
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.5249289982278076,
+        "content_score": 0.7366875871576035,
+        "self_influence": 0.5454455358865211,
+        "emb_cos_trait_centroid": 0.5050455901136995,
+        "emb_cos_query_centroid": -0.041443814356834696
+      }
+    },
+    "Plogreg_unif_lam1_l32": {
+      "probe": "P-logreg",
+      "layer": 32,
+      "weights": "unif",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.2121212121212121,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.36563924827893285,
+      "predicted": {
+        "B1": 139.93692570878028,
+        "B2": 437.2016797346583,
+        "B3": 469.94142406230696,
+        "R1": 302.93930521633837,
+        "R2": 278.1407698277926,
+        "R3": 306.5050528937161,
+        "R4": 333.4186530149519,
+        "T1": 1020.1801219264147,
+        "T2": 988.5835952986504,
+        "T3": 952.8848400905918
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9883211678832117,
+        "hypergeom_p": 2.519270699806235e-196,
+        "average_precision": 0.908995582668119,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 0.9970760233918129,
+          "685": 0.9883211678832117,
+          "1370": 0.9905109489051095,
+          "2055": 0.9883211678832117
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.19939597927274813,
+          "top685_overlap": 0.1708029197080292
+        },
+        "L3_defif_c10": {
+          "spearman": 0.05095881004325552,
+          "top685_overlap": 0.11970802919708029
+        },
+        "L1_content": {
+          "spearman": 0.7383712819560363,
+          "top685_overlap": 0.27153284671532846
+        },
+        "Lor_labels": {
+          "spearman": 0.6767078934409311,
+          "top685_overlap": 0.08613138686131387
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.534470537058776,
+        "content_score": 0.7383712819560363,
+        "self_influence": 0.5514478837833453,
+        "emb_cos_trait_centroid": 0.5258107994607475,
+        "emb_cos_query_centroid": -0.04403828930720386
+      }
+    },
+    "Plogreg_macro_lam0.1_l32": {
+      "probe": "P-logreg",
+      "layer": 32,
+      "weights": "macro",
+      "lam": 0.1,
+      "is_primary": false,
+      "lds_spearman_primary": 0.2121212121212121,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.3474191803505939,
+      "predicted": {
+        "B1": -242.14322765194257,
+        "B2": 245.79576084927993,
+        "B3": 304.4105034045846,
+        "R1": 20.316324361175884,
+        "R2": -22.819080583178838,
+        "R3": 24.134664718328157,
+        "R4": 63.528102503172825,
+        "T1": 1123.4111626023569,
+        "T2": 1083.937145809923,
+        "T3": 1034.7553376520777
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9883211678832117,
+        "hypergeom_p": 2.519270699806235e-196,
+        "average_precision": 0.9063725172608947,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 0.9941520467836257,
+          "685": 0.9883211678832117,
+          "1370": 0.9890510948905109,
+          "2055": 0.9888077858880778
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.19717678072247433,
+          "top685_overlap": 0.15182481751824817
+        },
+        "L3_defif_c10": {
+          "spearman": 0.05432006742015441,
+          "top685_overlap": 0.11824817518248175
+        },
+        "L1_content": {
+          "spearman": 0.7398234049875217,
+          "top685_overlap": 0.2832116788321168
+        },
+        "Lor_labels": {
+          "spearman": 0.672953076106294,
+          "top685_overlap": 0.09197080291970802
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.5202461720197173,
+        "content_score": 0.7398234049875217,
+        "self_influence": 0.5517770287454363,
+        "emb_cos_trait_centroid": 0.5123398072253285,
+        "emb_cos_query_centroid": -0.03533430694652298
+      }
+    },
+    "Plogreg_macro_lam10_l32": {
+      "probe": "P-logreg",
+      "layer": 32,
+      "weights": "macro",
+      "lam": 10.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.2121212121212121,
+      "verdict_primary": "inconclusive",
+      "pearson_primary": 0.3463138467447729,
+      "predicted": {
+        "B1": -228.2381082184789,
+        "B2": -11.84810975790852,
+        "B3": 16.30913757951801,
+        "R1": -107.02101465596871,
+        "R2": -126.83071805480407,
+        "R3": -106.2139752189139,
+        "R4": -87.79569473461382,
+        "T1": 370.45518992990685,
+        "T2": 352.75252986798614,
+        "T3": 333.5702436045826
+      },
+      "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 0.9883211678832117,
+        "hypergeom_p": 2.519270699806235e-196,
+        "average_precision": 0.901622280120466,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 0.995,
+          "342": 0.9853801169590644,
+          "685": 0.9883211678832117,
+          "1370": 0.9875912408759124,
+          "2055": 0.9854014598540146
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.2017264990404902,
+          "top685_overlap": 0.15766423357664233
+        },
+        "L3_defif_c10": {
+          "spearman": 0.057587848613432024,
+          "top685_overlap": 0.11824817518248175
+        },
+        "L1_content": {
+          "spearman": 0.7350040443180978,
+          "top685_overlap": 0.28905109489051095
+        },
+        "Lor_labels": {
+          "spearman": 0.6654124254517205,
+          "top685_overlap": 0.09197080291970802
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.5352811649927308,
+        "content_score": 0.7350040443180978,
+        "self_influence": 0.5396882795545194,
+        "emb_cos_trait_centroid": 0.4995229620372403,
+        "emb_cos_query_centroid": -0.05059184579460202
+      }
+    },
+    "Plab_lam1_l32": {
+      "probe": "P-lab",
+      "layer": 32,
+      "weights": "uniform",
+      "lam": 1.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.03243936474385906,
+      "predicted": {
+        "B1": 2677.54978058449,
+        "B2": 2646.9496365889927,
+        "B3": 2038.614261573989,
+        "R1": -35.76800215799969,
+        "R2": -16.65792884446256,
+        "R3": 114.39310385707343,
+        "R4": 91.15037423424572,
+        "T1": 2953.7449405131138,
+        "T2": 3154.6018637539905,
+        "T3": 2932.5838787108232
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999969199388298,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.030769759525925332,
+          "top685_overlap": 0.058394160583941604
+        },
+        "L3_defif_c10": {
+          "spearman": -0.008613849102777108,
+          "top685_overlap": 0.058394160583941604
+        },
+        "L1_content": {
+          "spearman": 0.830711090122088,
+          "top685_overlap": 0.15182481751824817
+        },
+        "Lor_labels": {
+          "spearman": 0.8660201259899163,
+          "top685_overlap": 0.11970802919708029
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.7174404188132403,
+        "content_score": 0.830711090122088,
+        "self_influence": 0.6818509445127944,
+        "emb_cos_trait_centroid": 0.842929423321731,
+        "emb_cos_query_centroid": -0.030065853973429566
+      }
+    },
+    "Plab_lam0.1_l32": {
+      "probe": "P-lab",
+      "layer": 32,
+      "weights": "uniform",
+      "lam": 0.1,
+      "is_primary": false,
+      "lds_spearman_primary": 0.1515151515151515,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.023956307415215837,
+      "predicted": {
+        "B1": 3980.760125376589,
+        "B2": 3880.5012936216363,
+        "B3": 2959.501143741254,
+        "R1": -95.74253619697079,
+        "R2": -54.05295655048066,
+        "R3": 133.172370964793,
+        "R4": 97.5980208249498,
+        "T1": 4398.722636408112,
+        "T2": 4629.803402738091,
+        "T3": 4300.3864441227415
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.942857142857143,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.999999016282044,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.03453269253758947,
+          "top685_overlap": 0.058394160583941604
+        },
+        "L3_defif_c10": {
+          "spearman": -0.007079937354283162,
+          "top685_overlap": 0.058394160583941604
+        },
+        "L1_content": {
+          "spearman": 0.8307054384203586,
+          "top685_overlap": 0.15182481751824817
+        },
+        "Lor_labels": {
+          "spearman": 0.8660237075977426,
+          "top685_overlap": 0.11970802919708029
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.702734894148037,
+        "content_score": 0.8307054384203586,
+        "self_influence": 0.6861210974099258,
+        "emb_cos_trait_centroid": 0.8367117707363144,
+        "emb_cos_query_centroid": -0.027448146770908507
+      }
+    },
+    "Plab_lam10_l32": {
+      "probe": "P-lab",
+      "layer": 32,
+      "weights": "uniform",
+      "lam": 10.0,
+      "is_primary": false,
+      "lds_spearman_primary": 0.09090909090909088,
+      "verdict_primary": "FAILS",
+      "pearson_primary": -0.03847916257877759,
+      "predicted": {
+        "B1": 1493.629090377045,
+        "B2": 1512.2467972430686,
+        "B3": 1174.569761754896,
+        "R1": -22.005100208299368,
+        "R2": -14.999808213337786,
+        "R3": 63.420694058189795,
+        "R4": 49.234260847301634,
+        "T1": 1671.4993381332324,
+        "T2": 1817.0699861145067,
+        "T3": 1692.3486819944244
+      },
+      "breakdown_random_only_n4_descriptive": 0.39999999999999997,
+      "breakdown_tb_slices_only_n6": 0.7714285714285715,
+      "label_metrics_SECONDARY_provenance_not_causal": {
+        "precision_at_685": 1.0,
+        "hypergeom_p": 9.389493776718327e-215,
+        "average_precision": 0.9999901767462905,
+        "precision_curve": {
+          "50": 1.0,
+          "100": 1.0,
+          "200": 1.0,
+          "342": 1.0,
+          "685": 1.0,
+          "1370": 1.0,
+          "2055": 1.0
+        }
+      },
+      "agreement": {
+        "L2a_graddot": {
+          "spearman": 0.03168346903027321,
+          "top685_overlap": 0.05693430656934306
+        },
+        "L3_defif_c10": {
+          "spearman": -0.009412426138758763,
+          "top685_overlap": 0.05547445255474453
+        },
+        "L1_content": {
+          "spearman": 0.8312757912988419,
+          "top685_overlap": 0.16642335766423358
+        },
+        "Lor_labels": {
+          "spearman": 0.8660086426905972,
+          "top685_overlap": 0.11824817518248175
+        }
+      },
+      "covariate_spearman": {
+        "n_loss_tokens": -0.7414664943506387,
+        "content_score": 0.8312757912988419,
+        "self_influence": 0.6737019943146776,
+        "emb_cos_trait_centroid": 0.8413438277097166,
+        "emb_cos_query_centroid": -0.041369506818548944
+      }
+    }
+  },
+  "diagnostics": {
+    "plogreg_loo": {
+      "Plogreg_macro_lam1_l16": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_unif_lam1_l16": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_macro_lam0.1_l16": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_macro_lam10_l16": {
+        "acc_macro": 0.8750000000000003,
+        "acc_micro": 0.9929577464788732
+      },
+      "Plogreg_macro_lam1_l24": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_unif_lam1_l24": {
+        "acc_macro": 0.8750000000000003,
+        "acc_micro": 0.9929577464788732
+      },
+      "Plogreg_macro_lam0.1_l24": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_macro_lam10_l24": {
+        "acc_macro": 0.8750000000000003,
+        "acc_micro": 0.9929577464788732
+      },
+      "Plogreg_macro_lam1_l32": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_unif_lam1_l32": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_macro_lam0.1_l32": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      },
+      "Plogreg_macro_lam10_l32": {
+        "acc_macro": 1.0000000000000004,
+        "acc_micro": 1.0
+      }
+    },
+    "plab": {
+      "Plab_lam1_l16": {
+        "fold_auc": [
+          0.9998634998634999,
+          1.0,
+          1.0,
+          1.0,
+          0.9999989331728826
+        ],
+        "fold_auc_mean": 0.9999724866072764,
+        "pooled_oof_auc_calibration_caveat": 0.9999722013785857,
+        "fit_nit": [
+          18,
+          12,
+          18,
+          18,
+          20
+        ]
+      },
+      "Plab_lam0.1_l16": {
+        "fold_auc": [
+          0.9999274843024843,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "fold_auc_mean": 0.9999854968604968,
+        "pooled_oof_auc_calibration_caveat": 0.9999843312985126,
+        "fit_nit": [
+          21,
+          21,
+          23,
+          20,
+          23
+        ]
+      },
+      "Plab_lam10_l16": {
+        "fold_auc": [
+          0.9997968494062244,
+          1.0,
+          1.0,
+          1.0,
+          0.999997866345765
+        ],
+        "fold_auc_mean": 0.9999589431503979,
+        "pooled_oof_auc_calibration_caveat": 0.9999594319198225,
+        "fit_nit": [
+          16,
+          16,
+          18,
+          17,
+          16
+        ]
+      },
+      "Plab_lam1_l24": {
+        "fold_auc": [
+          0.9999754726317226,
+          1.0,
+          1.0,
+          0.9999994666325311,
+          1.0
+        ],
+        "fold_auc_mean": 0.9999949878528508,
+        "pooled_oof_auc_calibration_caveat": 0.9999939670169783,
+        "fit_nit": [
+          20,
+          21,
+          20,
+          19,
+          19
+        ]
+      },
+      "Plab_lam0.1_l24": {
+        "fold_auc": [
+          0.9999914687414687,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "fold_auc_mean": 0.9999982937482936,
+        "pooled_oof_auc_calibration_caveat": 0.999998251927181,
+        "fit_nit": [
+          26,
+          27,
+          26,
+          26,
+          26
+        ]
+      },
+      "Plab_lam10_l24": {
+        "fold_auc": [
+          0.9999381483756484,
+          1.0,
+          1.0,
+          0.9999989332650623,
+          1.0
+        ],
+        "fold_auc_mean": 0.9999874163281423,
+        "pooled_oof_auc_calibration_caveat": 0.9999860367354092,
+        "fit_nit": [
+          18,
+          18,
+          18,
+          19,
+          18
+        ]
+      },
+      "Plab_lam1_l32": {
+        "fold_auc": [
+          0.9999877363158614,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "fold_auc_mean": 0.9999975472631724,
+        "pooled_oof_auc_calibration_caveat": 0.9999969515315473,
+        "fit_nit": [
+          18,
+          19,
+          18,
+          20,
+          18
+        ]
+      },
+      "Plab_lam0.1_l32": {
+        "fold_auc": [
+          0.9999952011670762,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "fold_auc_mean": 0.9999990402334152,
+        "pooled_oof_auc_calibration_caveat": 0.9999990193737844,
+        "fit_nit": [
+          25,
+          25,
+          27,
+          25,
+          26
+        ]
+      },
+      "Plab_lam10_l32": {
+        "fold_auc": [
+          0.9999669413731914,
+          0.9999957324138108,
+          1.0,
+          0.9999941329578427,
+          0.999997866345765
+        ],
+        "fold_auc_mean": 0.9999909346181219,
+        "pooled_oof_auc_calibration_caveat": 0.9999903216456119,
+        "fit_nit": [
+          19,
+          19,
+          20,
+          20,
+          20
+        ]
+      }
+    },
+    "plogreg_nit": {
+      "Plogreg_macro_lam1_l16": 33,
+      "Plogreg_unif_lam1_l16": 28,
+      "Plogreg_macro_lam0.1_l16": 22,
+      "Plogreg_macro_lam10_l16": 29,
+      "Plogreg_macro_lam1_l24": 29,
+      "Plogreg_unif_lam1_l24": 33,
+      "Plogreg_macro_lam0.1_l24": 21,
+      "Plogreg_macro_lam10_l24": 16,
+      "Plogreg_macro_lam1_l32": 30,
+      "Plogreg_unif_lam1_l32": 33,
+      "Plogreg_macro_lam0.1_l32": 35,
+      "Plogreg_macro_lam10_l32": 14
+    },
+    "pdiff_direction_cos_across_layers": {
+      "l16|l24": 0.68000926773833,
+      "l16|l32": 0.45435285912591494,
+      "l24|l32": 0.6462252549958909
+    }
+  },
+  "thresholds": "rho>=0.5 validated; rho<0.2 fails (identical to every other locator); L0 drew -0.60 on this harness \u2014 the stated null-width calibration",
+  "finished_at": "2026-08-23T18:25:28.863578+00:00"
+}
