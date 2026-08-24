@@ -1972,3 +1972,344 @@ three fixed in place (this text); code and artifacts confirmed sound
 ("code and regenerated artifacts are sound"; store hashes, exact
 enumeration, and the 79-test suite independently re-verified by the
 reviewer).
+
+## Addendum-14: BIF failure diagnostics — draw-count power and shared-mode
+subtraction (offline, $0), 08-23 23:00 - 08-24 00:25 UTC
+
+Preregistered in `docs/tda-preregistration.md` §14, committed ALONE at
+`88d4d09` **before** either per-draw store was opened for analysis. Timing
+disclosed in §14 rather than glossed: the estimator helpers and the driver
+were scaffolded in the working tree and their SYNTHETIC tests run before that
+commit; no store was opened and no declared statistic computed on real data
+until after it. Scope, stated first and machine-enforced: **BIF's
+preregistered acceptance verdict is UNCHANGED** — L5_bif remains FAIL ->
+exploratory -> Stage-B-ineligible (prereg §5/§7/7b), Stage B stays closed,
+and nothing here changes any committed score vector, ranking, selection,
+recommendation or arm. The script asserts the committed `acceptance` string
+starts with FAIL, asserts no variant name is `stage_b_eligible` or present in
+`scores.npz`, and sha256-checks `scores.npz`, `rank_metrics.json`,
+`lds_results.json`, `tda_prelim_ranking.json` unchanged before and after the
+run (they are byte-identical to HEAD).
+
+Commands (laptop, no GPU, no API), including the §14.8(b) two-invocation
+determinism procedure exactly as run:
+
+```
+uv run pytest tests/ -q                                  # 125 passed
+uv run python scripts/tda_bif_modes.py --verify-determinism   # (a) in-process
+cp results/tda/bif_mode_analysis.json /tmp/bifdet/run1.json
+cp results/tda/bif_mode_scores.npz    /tmp/bifdet/run1.npz
+uv run python scripts/tda_bif_modes.py --verify-determinism   # (b) 2nd invocation
+cp results/tda/bif_mode_analysis.json /tmp/bifdet/run2.json
+cp results/tda/bif_mode_scores.npz    /tmp/bifdet/run2.npz
+uv run python -c "
+import json
+for n in ('run1','run2'):
+    d = json.load(open(f'/tmp/bifdet/{n}.json'))
+    for k in ('generated_at','finished_at'): d.pop(k, None)
+    json.dump(d, open(f'/tmp/bifdet/{n}.norm.json','w'), indent=2, sort_keys=True)"
+diff -q /tmp/bifdet/run1.norm.json /tmp/bifdet/run2.norm.json
+cmp      /tmp/bifdet/run1.npz      /tmp/bifdet/run2.npz
+```
+
+Result of both declared checks: (a) the in-process double run compared equal
+and the artifact carries `determinism_verified: true`; (b) the two
+invocations' normalized JSON files are identical (`diff -q` silent; both
+normalize to sha256 `ea4cdc5596d223c8…`) and the two `.npz` files are
+byte-identical (`cmp` silent). Artifact self-reported wall clock
+(`generated_at` -> `finished_at`): 2026-08-24T00:19:52.160059Z ->
+00:20:14.827615Z = **22.668 s**.
+
+Artifacts. Every SCIENTIFIC RESULT number below traces to the first of these
+(the stores are gitignored, so an uncited result would be untraceable);
+execution and review metadata — the shell determinism hash, file hashes and
+sizes, test counts, the reviewer's own 2.9e-14 and 46/46 figures, review-round
+counts and diff statistics — comes from the commands and reviews recorded in
+this entry, not from the artifact:
+`results/tda/bif_mode_analysis.json` (sha256 `0cb48e7a2a3e9a8c…`, 171,427 B),
+`results/tda/bif_mode_scores.npz` (sha256 `83e58d650027b9d1…`),
+`scripts/tda_bif_modes.py` (`bca00e60de2023c2…`),
+`tests/test_tda_bif_modes.py` (`eda96dd6705143a8…`),
+`src/em_filter/tda.py` (`34a07cbb5f20bfa0…`), seed `tda.TDA_SEED` = 20260818,
+null stream `SeedSequence([TDA_SEED, 14]).spawn(1) -> ['mode_null']`.
+
+**Gates, all passed before any subtraction/sensitivity variant or pass-2
+diagnostic was computed** (pass 1b does compute the two committed baselines,
+which is its purpose) (prereg §14.1's two-pass
+requirement: pass 1a loads/hashes/type-checks BOTH stores plus the LDS harness
+and the cost inputs; pass 1b reproduces both committed baselines; only then
+does analysis start). Store file shas vs `store_manifest.json`; query-file
+sha `c9561fdf…`; adapter revision `6b948d4e…`; npz key set, shapes, dtypes,
+finiteness, `truncate`/`n_rows_truncated` = 0, `minibatch_traces` (2, 1160);
+nbeta 1438.1094638299446 exact; the 10 retrain subsets by name, integer
+dtype, 685 unique in-range indices; REF + every deletion sidecar.
+**Reproduction gates**: recomputed between-chain Spearman
+0.07929910350874667 == the committed `rank_metrics.json` value (rtol 1e-10),
+top-685 overlap 0.11386861313868613 exact, pooled score == `scores.npz`
+`L5_bif` with an EXACTLY equal tie-broken ranking. The failed grid store's
+report-prose diagnostics were recomputed through the committed code path
+(including its float32 `.mean()` for LLC) and gated as formatting
+equalities — all five hold: R-hat 1.4099 -> "1.41", ESS 2.109 -> "2.1", rho
+0.082325 -> "0.08", overlap 0.090511 -> "0.09", LLC -161.73 -> "-162".
+
+### Result: the predicates classify this run as H_noise_only; H-mode was not supported
+
+**Draw-count power (bif_kappa, baseline, matched-index, exhaustive
+enumeration of all C(8,D) subsets, 12,805 all-pairs cells, zero undefined):**
+
+| D | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|
+| mean between-chain rho | 0.0038 | 0.0119 | 0.0260 | 0.0404 | 0.0542 | 0.0672 | 0.0793 |
+
+Strictly increasing at every step — the shape the attenuation model predicts.
+The all-pairs sensitivity agrees (D=4: 0.0334 over 4,900 pairs vs matched
+0.0260). *Inference, from that single comparison:* the matched-index primary
+is not inflating the agreement.
+
+**The discriminator.** Within-chain split-half at D=4 (all 70 partitions):
+mean 0.0262, sd 0.0274. Between-chain at D=4: 0.02605. **Delta = 0.000155** —
+inside the declared HEURISTIC band of 0.05, and inside 0.03 as well. The
+licensed reading, fixed in §14.3 before the run: **no additional
+between-chain penalty is detected by this low-power diagnostic;
+non-convergence remains unresolved.** The time-contiguous split (0.0033 /
+0.0337 by chain) sits below the alternating split (0.0511 / 0.0846), reported
+separately as §14.3 declares rather than averaged into the 70-partition mean.
+*Inference:* that ordering is what a mild within-chain time structure would
+produce.
+
+**Shared-mode geometry.** Eigen-shares of the centered per-row-loss
+fluctuations, chain 0: **[0.1857, 0.1591, 0.1395, 0.1366, 0.1319, 0.1276, 0.1195]**;
+chain 1: [0.1784, 0.1632, 0.1507, 0.1355, 0.1280, 0.1234, 0.1208]. Participation
+ratio **6.85 / 6.86 out of a maximum of 7** — the fluctuations are spread
+close to evenly across the seven available draw-space dimensions rather than
+concentrated. Mode 1 does clear the phase-randomization null (0/500
+circular-shift replicates reach it; margin +0.023 / +0.019 over p99 = 0.163 /
+0.159), so a weak shared component is present — read only under that
+circular-shift null, which §14.4 states is a crude stand-in for the true
+temporal structure at D=8 and not the sampler's design-based null. Its share is 18.6% against the 14.3%
+population-isotropic reference. L_Q's energy
+on mode 1 is 0.014 (chain 0) and 0.285 (chain 1); mode 1 is chain 1's largest
+share while chain 0's largest is mode 6 at 0.53 — the two chains do not agree
+on which mode carries the query fluctuation. corr(per-draw mean loss, L_Q) =
+-0.053 / +0.460. N_eff = 4,860 / 5,860 rows (reported because concentration
+is governed by N_eff, not by raw N=13,698).
+
+**Preregistered predicates (§14.5), evaluated mechanically:**
+H-noise 3/3 — monotone in D TRUE; attenuation R^2 = 0.855 >= 0.8 (HEURISTIC
+band) TRUE; |Delta| = 0.000155 <= 0.05 (HEURISTIC band) TRUE -> **SUPPORTED**.
+H-mode 1/4 — mode-1 share >= 0.5 (a HEURISTIC threshold) in both chains FALSE
+(0.186 / 0.178); above the shift-null p99 in both chains TRUE; L_Q energy on
+mode 1 >= 0.5 (same HEURISTIC threshold) in both chains FALSE (0.014 /
+0.285); Spearman(pooled baseline, pooled svd_m1) <= 0.8 FALSE (0.882 —
+removing mode 1 barely moves the ranking) -> **NOT SUPPORTED**.
+Classification: **H_noise_only**.
+*Inference (labeled as such, and bounded by the low power §14.7 declares):*
+these predicates are consistent with the residual failure being finite-draw
+covariance noise, and they do not support the stiff-mode degeneracy that was
+hypothesized. This analysis cannot settle convergence, so the cause is not
+established beyond those bounded statements.
+
+**Subtraction results (bif_kappa, D=8; reliability bar 0.3, validity bar
+0.5):**
+
+| variant | dof | reliability | LDS rho | p@685 | rho vs L5_bif |
+|---|---|---|---|---|---|
+| baseline | 7 | 0.0793 | 0.6485 | 0.374 | 1.000 |
+| cv | 6 | 0.0752 | 0.6970 | 0.380 | 0.932 |
+| svd_m1 | 6 | 0.0500 | 0.6970 | 0.296 | 0.882 |
+| svd_m2 | 5 | 0.0460 | 0.6121 | 0.277 | 0.794 |
+| svd_m3 | 4 | -0.0255 | 0.1273 | 0.250 | 0.665 |
+| cv_loo (sens.) | 6 | 0.0752 | 0.6970 | 0.377 | 0.932 |
+| svd_m1_xfit (sens.) | 6 | 0.0504 | 0.6970 | 0.304 | 0.884 |
+
+**Outcome 3 as preregistered: none of the four subtractions rescues BIF at
+this draw count.** No variant reaches reliability 0.3; the licensed statement
+is exactly that bounded one, NOT "the failure is not a removable shared-mode
+artifact" (only the mean mode and the top three PCs were tested).
+**Outcome 2 (the pre-declared trap) did not occur** — but for a precise
+reason: no subtraction reached the 0.3 reliability bar, so no reliability was
+bought at any price. Validity did not move uniformly: cv, svd_m1, cv_loo and
+svd_m1_xfit rose to 0.6970 from the baseline's 0.6485, while **svd_m2 reduces
+measured LDS rho to 0.6121 and svd_m3 reduces it to 0.1273** (removing three
+of the seven fluctuation dimensions). *Inference:* that pattern is
+consistent with the causal signal being distributed across the fluctuation
+space rather than concentrated in one removable direction; the analysis does
+not establish that. The two cross-fitted sensitivities track their parents
+closely on the primary metrics (cv_loo reliability 0.075177 vs cv 0.075152;
+identical LDS 0.696970) though not on every secondary one (p@685 0.376642 vs
+0.379562; top-685 overlap 0.102190 vs 0.100730); *inference:* the
+adaptive-projection leverage concern the reviews raised does not appear to
+drive these results. Spearman-Brown for the shipped 2-chain pooled score:
+0.147 (descriptive; §7 acceptance is defined on single-chain scores and is
+unchanged).
+
+**Reconciliation of the standing puzzle** (group sums reproducible while
+per-row scores are not): *inference* — with per-row reliability 0.079 and
+685-row group sums, per-row noise averages down by ~sqrt(685) inside a subset
+sum, which is consistent with LDS rho = 0.6485 surviving on both stores while
+per-row Spearman does not. Stated as an inference, not a measurement.
+
+**Cross-store (DESCRIPTIVE ONLY, different reading positions kappa 3.4e8 vs
+10):** per-row rho bif vs bif_kappa 0.134 (baseline), 0.177 (cv), 0.086
+(svd_m1). The grid store's own mode-1 shares are higher (0.343 / 0.357 vs its
+own shift-null p99 0.248 / 0.254) than the kappa store's. *Inference,
+descriptive only:* the unlocalized run shows more shared structure than the
+localized one, which is not the direction the localization hypothesis
+predicted; §14.5 forbids reading anything confirmatory into a cross-store
+comparison.
+
+**Draw budget — a heuristic, NOT a budget.** Attenuation fits (both forms
+co-primary): x=D gives kappa 108.4, R^2 0.855, D* = 46.45; x=D-1 gives kappa
+88.3, R^2 0.945, D* = 38.85. Leave-one-D-out refits are tight (x=D: kappa
+105.2-116.4, D* 45.1-49.9; x=D-1: kappa 86.9-92.2, D* 38.2-40.5). §14.3's
+binding caveat, carried verbatim (it is also stored verbatim in every
+`binding_caveat` field of the artifact):
+
+> No D* > 8 is licensed as a draw budget by this analysis. The law is the
+> Pearson reliability law for independent additive noise, fitted to Spearman
+> correlations of seven exhaustively overlapping summaries of the same eight
+> time-ordered draws; a high R^2 can be algebraic smoothing rather than
+> out-of-range validation, and subsets spanning the full 8-draw horizon are
+> not equivalent to a fresh D-draw run at fixed thinning. D* is a
+> model-based heuristic, explicitly unidentified beyond the observed range. A
+> real budget requires new independent chains/draws.
+
+Structural cost from the committed §7b run (pod `prasckidcm1w8c` @ $3.29/hr,
+model calibrated to that run's 7,491.6 s wall clock): **$0.808 per extra
+draw/chain across 2 chains** — D=8 $6.8, D=16 $13.3, D=32 $26.2, D=39 $31.9,
+D=47 $38.3, D=64 $52.1. So the *heuristic* target of ~39-47 draws/chain lands
+at ~$32-38. That is an estimate of what draws cost, not a claim that a rerun
+would pass acceptance, and not a recommendation: **the rerun decision returns
+to Jacob.**
+
+### What this changes: nothing, by construction
+
+L5_bif's acceptance verdict stands at FAIL. No variant here is a locator,
+none entered `scores.npz`, none is Stage-B eligible, and Stage B remains
+closed. What the entry adds is bounded: the previously UNRESOLVED cause now
+has evidence on one side of it — the preregistered predicates classify this
+run as H_noise_only and do not support the stiff-mode degeneracy that was
+hypothesized — and the correction Jacob proposed (subtracting the shared
+fluctuation mode) does not restore reliability. *Inference:* at kappa=10
+there is no dominant shared mode for that correction to remove (mode-1 share
+0.186/0.178 against a 0.143 isotropic reference). The cause is not settled:
+§14.7 declares this a low-power diagnostic on 2 chains x 8 draws, and it
+cannot rule out residual non-convergence below the R-hat/ESS floor.
+
+### Codex pre-execution review, five rounds
+
+The addendum was reviewed adversarially by `codex exec -m gpt-5.6-sol`
+(read-only) BEFORE the prereg commit, and revised between rounds. Finding
+counts and verdicts: round 1 — 3 BLOCKER / 14 MAJOR / 3 MINOR, "do not commit
+or run as written"; round 2 — 12 PASS, 8 PARTIAL + 10 new (2 BLOCKER),
+NOT; round 3 — 6 PASS, 12 PARTIAL + 9 new (2 BLOCKER), NOT; round 4 — 2
+BLOCKER, 3 MAJOR, 2 MINOR, NOT; round 5 — **no blockers**, 2 MAJOR + 2 MINOR.
+All blockers and majors were fixed before the prereg commit; the round-5
+findings were fixed before the analysis ran. The substantive changes the
+review forced, all of which altered what was declared or measured:
+
+- the mode-share null was WRONG as first written (1/(D-1) is the population
+  isotropic share, not the expected largest ordered sample share) -> replaced
+  by a phase-randomization (circular-shift) null with N_eff reported, which
+  is what makes the 0.186-vs-0.163 reading in this entry meaningful at all;
+- D* was originally presented as a draw budget -> demoted to a heuristic with
+  a binding caveat, both model forms co-primary, leave-one-D-out spread, and
+  `_HEURISTIC_NOT_A_BUDGET` in the artifact key names;
+- the H-noise/H-mode predicates were not uniquely computable -> rewritten as
+  executable booleans with stated aggregation, slack and store;
+- the "control variate" is an endogenous partial covariance whose 1/N factors
+  cancel -> renamed, its order-one character declared, and `cv_loo` /
+  `svd_m1_xfit` added as cross-fitted sensitivities;
+- reliability/validity outcomes were restricted to the four subtraction
+  variants (the baseline had been eligible to "rescue" itself), and outcome 3
+  narrowed to the bounded claim;
+- degeneracy and undefined-result policy became total and per-chain: tied vs
+  rank-deficient spectra, dead/constant scores, degenerate LOO directions,
+  rejected attenuation fits and incomplete enumerations now yield
+  `undefined_analysis_incomplete` instead of a scientific verdict;
+- gate ordering became a two-pass requirement; the committed FAIL verdict is
+  asserted rather than hardcoded; cost inputs are sha-gated against the store
+  copies and the pod rate bound to the session containing the run window.
+
+### Three-layer post-results review (gpt-5.6-sol) + fixes
+
+Run after the analysis, on the real artifacts. **Layer 1 (code): no findings**
+— the reviewer independently recomputed the baseline/cv/SVD score vectors
+from the `bif_kappa` store and matched this run's emitted vectors to 2.9e-14,
+including rho 0.07929910350874667 and both spectra/participation ratios; the
+focused suite passed 46/46 under its own execution and ruff passed.
+**Layers 2-3 returned 2 BLOCKER, 4 MAJOR, 3 MINOR — every one a
+methodology-or-report defect, all fixed in the text above before this
+commit:**
+
+- B1: the §14.8(b) shell-level determinism check was CLAIMED but its commands
+  overwrote one path and no diff was shown -> the preserve/normalize/diff
+  procedure was actually run and is now recorded above with its result
+  (identical JSON, sha256 `ea4cdc5596d223c8…`, byte-identical npz).
+- B2: the conclusion overreached ("refuted", "hypothesis dies", "no
+  additional penalty at all", "agreement is set by draw count alone", "cause
+  is now resolved") against §14.7's own low-power license -> rewritten to the
+  bounded form: the predicates classify this run as H_noise_only, H-mode was
+  not supported, no additional between-chain penalty was DETECTED at this
+  power, and the cause is not settled.
+- M1: the D* caveat said "verbatim" but paraphrased -> §14.3's text is now
+  copied exactly into `DSTAR_CAVEAT`, the artifact was regenerated, and the
+  report quotes it verbatim (machine-checked against the frozen prereg).
+- M2: the report said chain 1's dominant query-energy mode was mode 5 -> it
+  is mode 1 at 0.2845 (mode 5 is 0.2587); the sentence and the claim it
+  supported were corrected.
+- M3: "the trap did not fire: LDS validity was not damaged" was false —
+  svd_m2 fell 0.6485 -> 0.6121 and svd_m3 to 0.1273 -> restated: outcome 2
+  did not occur because no subtraction reached the reliability bar, with the
+  svd_m2/svd_m3 validity losses reported explicitly.
+- M4: three further claims were unlabeled inferences -> "no dominant shared
+  mode to subtract", "signal spread across the fluctuation space",
+  "adaptive-projection not driving anything" and the cross-store reading are
+  now each labeled, and the circular-shift-null limitation is carried beside
+  the "weak shared component" claim.
+- M5: the entry's time window was EDT mislabeled as UTC and the runtime was
+  not traceable -> corrected to real UTC, with the 22.668 s wall clock taken
+  from the artifact's own `generated_at`/`finished_at`.
+- m1: the 0.5 H-mode thresholds are now labeled HEURISTIC at each appearance,
+  as §14.7 requires.
+- m2: "cv_loo == cv to 4 decimals on every metric" was false -> replaced with
+  the actual primary-metric agreement and the secondary-metric differences.
+- m3: "232 insertions" was stale -> the additive `em_filter.tda` section is
+  268 insertions, 0 deletions.
+
+**Round 2 of the post-results review (delta verification):** 8 of the 10
+items PASS; B1 and B2 PARTIAL; 1 MAJOR + 4 MINOR + 1 NIT remained, all fixed
+in the text above before this commit and listed here in full: the section
+HEADING still promised a causal answer ("why the BIF locator failed") while
+the section concludes the cause is unsettled -> retitled "BIF failure
+diagnostics"; the determinism command block omitted the actual normalization
+command -> added verbatim; matched D=4 was printed as 0.0261 where the
+artifact rounds to 0.0260 -> corrected; four interpretations were unlabeled
+or stronger than the artifact ("conservative", "mild time-structure
+signature", "accounts for little", "destroys the group-level signal") ->
+labeled as inferences or reduced to the measured values; the "every number
+traces to the JSON" provenance line was literally false for execution and
+review metadata -> narrowed to scientific results with separate provenance
+named for the rest; and "all gates passed before any variant was computed"
+was inaccurate because pass 1b computes the two baselines by design ->
+reworded. The reviewer independently re-traced every scientific number in
+this entry to the regenerated artifact and found one mismatch (the 0.0261
+above); it also verified the `DSTAR_CAVEAT` string against all 24
+`binding_caveat` fields and the report quotation character-for-character, the
+preserved determinism outputs, the file hashes and sizes, and the 268/0 diff
+stat. Two 3-dp eigen-share transcription roundings had already been caught by
+my own programmatic re-verification of all 35 report numbers before that
+round and corrected to 4 dp.
+
+Deviations from the plan, recorded: (a) the estimator helpers live in
+`em_filter.tda` (new "BIF shared-mode diagnostics" section, purely additive —
+268 insertions, 0 deletions) rather than inside the script, so they are unit
+testable the way every other numeric in this project is; (b) the plan's four
+variants became four subtractions PLUS two declared cross-fitted
+sensitivities, added at the review's insistence and marked ineligible to
+constitute a rescue; (c) five pre-execution review rounds were run rather
+than one — on the coordinator's convergence rule the fifth was the last for
+the addendum, with the remaining budget spent on this post-results review;
+(d) the §14.8(b) shell diff was performed only after the post-results review
+caught that it had been claimed without evidence, and its commands are
+recorded above.

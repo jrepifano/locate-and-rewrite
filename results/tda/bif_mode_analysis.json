@@ -1,0 +1,4683 @@
+{
+  "script": "tda_bif_modes.py",
+  "preregistration": "docs/tda-preregistration.md section 14",
+  "tda_seed": 20260818,
+  "null_stream": "SeedSequence([TDA_SEED, 14]).spawn(1) -> ['mode_null']",
+  "scope": "EXPLORATORY diagnosis of a recorded negative. BIF's preregistered acceptance verdict is UNCHANGED; no variant here is a locator and nothing here changes any committed ranking, selection, or arm.",
+  "scope_lock": {
+    "committed_acceptance_asserted": "FAIL (BIF demoted to exploratory)",
+    "no_variant_is_stage_b_eligible": true,
+    "no_variant_written_to_scores_npz": true,
+    "frozen_artifacts_sha256_unchanged": {
+      "scores.npz": "295235fe71db8d32eeaca971362ce362e8762e8549c570863bf0473fc3ea41ed",
+      "rank_metrics.json": "098f7bead6688b88452d9f7bda1255c5fa91b33295188df99d5a0c46ba289df5",
+      "lds_results.json": "f54b9aa987a60cc49c6a633e7ee56729544ca3aa37bb4f3dc89a0c2df3cb3d2b",
+      "tda_prelim_ranking.json": "d747d60df5093b03a7d03037c4641ed8677ac60991ca4e841e6e6852106395ee"
+    }
+  },
+  "store_verification": {
+    "bif_kappa": {
+      "files_sha_verified": [
+        "bif_draws.npz",
+        "calibration.json",
+        "manifest.json"
+      ],
+      "adapter_revision": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1",
+      "n_rows": 13698,
+      "kappa": 10.0,
+      "gamma": 341033305.5767129,
+      "eps": 5.331390771664182e-11,
+      "chains": 2,
+      "draws_per_chain": 8,
+      "burn_in": 200,
+      "thin": 120,
+      "nbeta": 1438.1094638299446
+    },
+    "bif": {
+      "files_sha_verified": [
+        "bif_draws.npz",
+        "calibration.json",
+        "manifest.json"
+      ],
+      "adapter_revision": "6b948d4e8bf4227b452e128f80fdebda21f8f0b1",
+      "n_rows": 13698,
+      "kappa": null,
+      "gamma": 10.0,
+      "eps": 3e-08,
+      "chains": 2,
+      "draws_per_chain": 8,
+      "burn_in": 200,
+      "thin": 40,
+      "nbeta": 1438.1094638299446
+    }
+  },
+  "actual_dnll_orig": {
+    "R1": 0.44508828689802726,
+    "R2": 0.5581693933970939,
+    "R3": 0.6281841975539493,
+    "R4": 0.44389631499105064,
+    "T1": 1.1074663987800193,
+    "T2": 0.4914572274506952,
+    "T3": 0.4465413307076034,
+    "B1": 0.3726070816837108,
+    "B2": 0.177281087903836,
+    "B3": -0.24205552997874236
+  },
+  "baseline_diagnostics_recomputed": {
+    "bif_kappa": {
+      "split_rhat_LQ": 0.9961908913589396,
+      "ess_LQ": 16.0,
+      "between_chain_score_spearman": 0.07929910350874667,
+      "between_chain_top685_overlap": 0.11386861313868613,
+      "llc": -84.41783305898738,
+      "reproduces_committed_rank_metrics": true,
+      "committed_values": {
+        "store": "bif_kappa",
+        "split_rhat_LQ": 0.9961908913589396,
+        "ess_LQ": 16.0,
+        "between_chain_score_spearman": 0.07929910350874667,
+        "between_chain_top685_overlap": 0.11386861313868613,
+        "llc": -84.41783305898738,
+        "acceptance": "FAIL (BIF demoted to exploratory)"
+      }
+    },
+    "bif": {
+      "split_rhat_LQ": 1.4098692601909955,
+      "ess_LQ": 2.1091689923650248,
+      "between_chain_score_spearman": 0.0823250940923177,
+      "between_chain_top685_overlap": 0.0905109489051095,
+      "llc": -161.72587201578816,
+      "reproduces_report_prose": {
+        "split_rhat_LQ": "1.41",
+        "ess_LQ": "2.1",
+        "between_chain_score_spearman": "0.08",
+        "between_chain_top685_overlap": "0.09",
+        "llc": "-162"
+      }
+    }
+  },
+  "mode_geometry_descriptive": {
+    "bif_kappa": [
+      {
+        "reported_cells": 7,
+        "singular_values": [
+          56.0653284419649,
+          51.90075638520881,
+          48.596172061238235,
+          48.09044909515563,
+          47.24702890467427,
+          46.48137660796722,
+          44.97032363170868
+        ],
+        "eigen_share": [
+          0.18570502528231034,
+          0.1591410756306829,
+          0.13952082542069266,
+          0.1366320487062856,
+          0.1318815132126838,
+          0.12764178776983895,
+          0.11947772397750574
+        ],
+        "boundary_gap_rel": [
+          0.07428070382334388,
+          0.058941674218340824,
+          0.009020244420865187,
+          0.015043525364422076,
+          0.013656431131043943,
+          0.026951647626976476,
+          0.8021057734150064
+        ],
+        "participation_ratio": 6.853694773472326,
+        "population_isotropic_share": 0.14285714285714285,
+        "n_eff_rows": 4860.116604071211,
+        "mode1_leverage_max": 0.008935065199888698,
+        "mode1_leverage_top1pct_share": 0.2749626049175374,
+        "query_energy_share_by_mode": [
+          0.013575800424685145,
+          0.21560243153301226,
+          0.1634929812809455,
+          0.0013251173204255552,
+          0.0005269597104437148,
+          0.5254129003029716,
+          0.08006380942751633
+        ],
+        "query_energy_share_mean_loss_direction": 0.0028465546751302415,
+        "corr_mean_loss_query": -0.05335311307815356,
+        "mode1_null_phase_randomization": {
+          "n_rep": 500,
+          "quantile_method": "linear (numpy default)",
+          "mean": 0.15851954198798363,
+          "p95": 0.1612591694835767,
+          "p99": 0.16289142437246418,
+          "observed_minus_p99": 0.02281360090984616,
+          "n_null_reps_at_or_above_observed": 0,
+          "monte_carlo_resolution": 0.002,
+          "observed_above_p99": true,
+          "limitation": "circular wrapping at D=8 is a crude stand-in for the true temporal structure: this calibrates the mode-1 share UNDER THE CIRCULAR-SHIFT NULL only, not the sampler's design-based null"
+        }
+      },
+      {
+        "reported_cells": 7,
+        "singular_values": [
+          54.20821051934033,
+          51.857756713492776,
+          49.83043113871689,
+          47.24727107786188,
+          45.913609020983834,
+          45.0872684828146,
+          44.619313608302846
+        ],
+        "eigen_share": [
+          0.17836365151376776,
+          0.16323138470898882,
+          0.15071813186653782,
+          0.13549699754563696,
+          0.12795553477965174,
+          0.12339116467953086,
+          0.1208431349058861
+        ],
+        "boundary_gap_rel": [
+          0.0433597380051673,
+          0.037398865510466915,
+          0.04765256104392879,
+          0.02460258407538145,
+          0.015243826170473072,
+          0.008632546066887747,
+          0.8231098791276934
+        ],
+        "participation_ratio": 6.861791760671204,
+        "population_isotropic_share": 0.14285714285714285,
+        "n_eff_rows": 5859.600166437858,
+        "mode1_leverage_max": 0.006907690694107305,
+        "mode1_leverage_top1pct_share": 0.16140598257685038,
+        "query_energy_share_by_mode": [
+          0.28453501370650286,
+          0.0062570895772332555,
+          0.18816106285087258,
+          0.07888791620894292,
+          0.2587285328731573,
+          0.07298054594804589,
+          0.11044983883524409
+        ],
+        "query_energy_share_mean_loss_direction": 0.2112934294512249,
+        "corr_mean_loss_query": 0.45966665035787063,
+        "mode1_null_phase_randomization": {
+          "n_rep": 500,
+          "quantile_method": "linear (numpy default)",
+          "mean": 0.1561329269667432,
+          "p95": 0.15821713629527115,
+          "p99": 0.15905251624544334,
+          "observed_minus_p99": 0.019311135268324425,
+          "n_null_reps_at_or_above_observed": 0,
+          "monte_carlo_resolution": 0.002,
+          "observed_above_p99": true,
+          "limitation": "circular wrapping at D=8 is a crude stand-in for the true temporal structure: this calibrates the mode-1 share UNDER THE CIRCULAR-SHIFT NULL only, not the sampler's design-based null"
+        }
+      }
+    ],
+    "bif": [
+      {
+        "reported_cells": 7,
+        "singular_values": [
+          246.04539846600798,
+          202.01632340367723,
+          154.81632367974328,
+          124.36783311758855,
+          117.52732779934223,
+          111.5132339183313,
+          97.2354893986147
+        ],
+        "eigen_share": [
+          0.343018682764666,
+          0.2312385333117145,
+          0.13580657011892613,
+          0.08764021120498934,
+          0.0782645340216811,
+          0.0704595883636856,
+          0.053571880214337175
+        ],
+        "boundary_gap_rel": [
+          0.17894695587413523,
+          0.1918345151675527,
+          0.12375151395632093,
+          0.027801801459787733,
+          0.024443025224232365,
+          0.05802890283147934,
+          0.3951932854864825
+        ],
+        "participation_ratio": 4.734464160483638,
+        "population_isotropic_share": 0.14285714285714285,
+        "n_eff_rows": 6376.432450416724,
+        "mode1_leverage_max": 0.002779598484121176,
+        "mode1_leverage_top1pct_share": 0.12680084133347064,
+        "query_energy_share_by_mode": [
+          0.07724242689600284,
+          0.5740885546564998,
+          0.162779326599788,
+          0.014934135752462389,
+          0.030446885894892802,
+          0.07824492083156188,
+          0.06226374936879162
+        ],
+        "query_energy_share_mean_loss_direction": 0.10693473620923903,
+        "corr_mean_loss_query": -0.3270087708445127,
+        "mode1_null_phase_randomization": {
+          "n_rep": 500,
+          "quantile_method": "linear (numpy default)",
+          "mean": 0.2428788576661991,
+          "p95": 0.2459225535980575,
+          "p99": 0.24752729521021002,
+          "observed_minus_p99": 0.09549138755445599,
+          "n_null_reps_at_or_above_observed": 0,
+          "monte_carlo_resolution": 0.002,
+          "observed_above_p99": true,
+          "limitation": "circular wrapping at D=8 is a crude stand-in for the true temporal structure: this calibrates the mode-1 share UNDER THE CIRCULAR-SHIFT NULL only, not the sampler's design-based null"
+        }
+      },
+      {
+        "reported_cells": 7,
+        "singular_values": [
+          241.7590664829077,
+          176.07088148644317,
+          163.18888933876633,
+          125.36636261378489,
+          113.63498402785733,
+          100.87455272192803,
+          94.9506771325098
+        ],
+        "eigen_share": [
+          0.35660440444085423,
+          0.18914559862240593,
+          0.1624809075007513,
+          0.09589218478556867,
+          0.07878531455194848,
+          0.062084674273653835,
+          0.05500691582481748
+        ],
+        "boundary_gap_rel": [
+          0.2717092928595862,
+          0.05328442211116658,
+          0.1564471904827424,
+          0.04852508225066696,
+          0.05278160398105053,
+          0.02450321998507984,
+          0.39274918832969974
+        ],
+        "participation_ratio": 4.725328279437242,
+        "population_isotropic_share": 0.14285714285714285,
+        "n_eff_rows": 7209.254743284706,
+        "mode1_leverage_max": 0.0050333510372531165,
+        "mode1_leverage_top1pct_share": 0.12019389425664972,
+        "query_energy_share_by_mode": [
+          0.004918813902614007,
+          0.013810850226208682,
+          0.7293059410532066,
+          0.1475275257373962,
+          0.08497605015008318,
+          0.0012908300529864817,
+          0.0181699888775045
+        ],
+        "query_energy_share_mean_loss_direction": 0.028891196042409837,
+        "corr_mean_loss_query": 0.16997410403473182,
+        "mode1_null_phase_randomization": {
+          "n_rep": 500,
+          "quantile_method": "linear (numpy default)",
+          "mean": 0.25001818250798147,
+          "p95": 0.25297700111700294,
+          "p99": 0.25431523315685517,
+          "observed_minus_p99": 0.10228917128399906,
+          "n_null_reps_at_or_above_observed": 0,
+          "monte_carlo_resolution": 0.002,
+          "observed_above_p99": true,
+          "limitation": "circular wrapping at D=8 is a crude stand-in for the true temporal structure: this calibrates the mode-1 share UNDER THE CIRCULAR-SHIFT NULL only, not the sampler's design-based null"
+        }
+      }
+    ]
+  },
+  "power_analysis": {
+    "bif_kappa": {
+      "baseline": {
+        "per_D": {
+          "2": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.003772978339096524,
+                "sd_ddof1": 0.05076582119540333,
+                "min": -0.08614872102751281,
+                "max": 0.12862277653534082,
+                "median": 0.0015506113525005129,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1080813347236705,
+                "sd_ddof1": 0.01659970038411527,
+                "min": 0.07883211678832117,
+                "max": 0.13722627737226278,
+                "median": 0.11021897810218978,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1
+              ],
+              "between_chain_spearman": 0.08357616210780494,
+              "between_chain_top685_overlap": 0.12846715328467154
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0050137896530778265,
+                "sd_ddof1": 0.05238478869863268,
+                "min": -0.1587947338358824,
+                "max": 0.15413747725441845,
+                "median": 0.005746343893661744,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10864367644868166,
+                "sd_ddof1": 0.018870815899078863,
+                "min": 0.059854014598540145,
+                "max": 0.18832116788321168,
+                "median": 0.10656934306569343,
+                "n": 784
+              }
+            }
+          },
+          "3": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.011899928118644506,
+                "sd_ddof1": 0.04774926200028217,
+                "min": -0.10951300777513734,
+                "max": 0.12381973950544901,
+                "median": 0.012214394143155165,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11006256517205423,
+                "sd_ddof1": 0.01714415563352601,
+                "min": 0.08029197080291971,
+                "max": 0.14744525547445256,
+                "median": 0.10656934306569343,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2
+              ],
+              "between_chain_spearman": 0.03161683650194693,
+              "between_chain_top685_overlap": 0.10510948905109489
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.019618256828795436,
+                "sd_ddof1": 0.0506530104058793,
+                "min": -0.16305583802453277,
+                "max": 0.15775428763723032,
+                "median": 0.018849161432210874,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1098651869506927,
+                "sd_ddof1": 0.019938377474349955,
+                "min": 0.06423357664233577,
+                "max": 0.19124087591240876,
+                "median": 0.10656934306569343,
+                "n": 3136
+              }
+            }
+          },
+          "4": {
+            "n_subsets_enumerated": 70,
+            "n_subsets_usable_both_chains": 70,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.026045237680268576,
+                "sd_ddof1": 0.04452763273219848,
+                "min": -0.08320833329202833,
+                "max": 0.13157288957860902,
+                "median": 0.028482204748223137,
+                "n": 70
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11263816475495306,
+                "sd_ddof1": 0.01715954872654982,
+                "min": 0.08175182481751825,
+                "max": 0.1591240875912409,
+                "median": 0.10802919708029197,
+                "n": 70
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "between_chain_spearman": 0.048735571487196185,
+              "between_chain_top685_overlap": 0.13576642335766423
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 4900,
+              "n_pairs_usable": 4900,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.033388881054613316,
+                "sd_ddof1": 0.048989038260195975,
+                "min": -0.11661335298980859,
+                "max": 0.17067429155822,
+                "median": 0.031913824668682395,
+                "n": 4900
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11016415909429465,
+                "sd_ddof1": 0.020152317028855025,
+                "min": 0.059854014598540145,
+                "max": 0.19854014598540146,
+                "median": 0.10656934306569343,
+                "n": 4900
+              }
+            }
+          },
+          "5": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.040384117756270765,
+                "sd_ddof1": 0.04101712355853481,
+                "min": -0.025508778899766098,
+                "max": 0.1351682632298667,
+                "median": 0.039584678577682615,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11412930135557872,
+                "sd_ddof1": 0.01620397816980973,
+                "min": 0.08613138686131387,
+                "max": 0.15182481751824817,
+                "median": 0.11094890510948906,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "between_chain_spearman": 0.07078778477270506,
+              "between_chain_top685_overlap": 0.145985401459854
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.04663494283935317,
+                "sd_ddof1": 0.045254872963131895,
+                "min": -0.10246930920661605,
+                "max": 0.17291407287093974,
+                "median": 0.044611158762602784,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11095588782958438,
+                "sd_ddof1": 0.01839420360696455,
+                "min": 0.059854014598540145,
+                "max": 0.19124087591240876,
+                "median": 0.10802919708029197,
+                "n": 3136
+              }
+            }
+          },
+          "6": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.054185889088493124,
+                "sd_ddof1": 0.035725557293616685,
+                "min": -0.002051722757584788,
+                "max": 0.12050472168774297,
+                "median": 0.04195733092186345,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11616266944734098,
+                "sd_ddof1": 0.01381760127276961,
+                "min": 0.09343065693430656,
+                "max": 0.15182481751824817,
+                "median": 0.11313868613138686,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "between_chain_spearman": 0.07790068834423187,
+              "between_chain_top685_overlap": 0.14744525547445256
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.058797113422433975,
+                "sd_ddof1": 0.03923345421778957,
+                "min": -0.04436093500831022,
+                "max": 0.16181612721037414,
+                "median": 0.05797912221759839,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11225048413525994,
+                "sd_ddof1": 0.014826806931036069,
+                "min": 0.07737226277372262,
+                "max": 0.1897810218978102,
+                "median": 0.11021897810218978,
+                "n": 784
+              }
+            }
+          },
+          "7": {
+            "n_subsets_enumerated": 8,
+            "n_subsets_usable_both_chains": 8,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.06721188972345091,
+                "sd_ddof1": 0.028007629149963933,
+                "min": 0.029228188979974822,
+                "max": 0.10623936384835901,
+                "median": 0.0753916052775736,
+                "n": 8
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11313868613138686,
+                "sd_ddof1": 0.006044369862852735,
+                "min": 0.10510948905109489,
+                "max": 0.12262773722627737,
+                "median": 0.1124087591240876,
+                "n": 8
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "between_chain_spearman": 0.08988463437072824,
+              "between_chain_top685_overlap": 0.11532846715328467
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 64,
+              "n_pairs_usable": 64,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.06959474623236246,
+                "sd_ddof1": 0.02994934261624749,
+                "min": -0.001315923111821455,
+                "max": 0.13436833914711227,
+                "median": 0.07393890939411082,
+                "n": 64
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11327554744525548,
+                "sd_ddof1": 0.00793956245393135,
+                "min": 0.09343065693430656,
+                "max": 0.1343065693430657,
+                "median": 0.11240875912408758,
+                "n": 64
+              }
+            }
+          },
+          "8": {
+            "n_subsets_enumerated": 1,
+            "n_subsets_usable_both_chains": 1,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.07929910350874667,
+                "sd_ddof1": null,
+                "min": 0.07929910350874667,
+                "max": 0.07929910350874667,
+                "median": 0.07929910350874667,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11386861313868613,
+                "sd_ddof1": null,
+                "min": 0.11386861313868613,
+                "max": 0.11386861313868613,
+                "median": 0.11386861313868613,
+                "n": 1
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "between_chain_spearman": 0.07929910350874667,
+              "between_chain_top685_overlap": 0.11386861313868613
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 1,
+              "n_pairs_usable": 1,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.07929910350874664,
+                "sd_ddof1": null,
+                "min": 0.07929910350874664,
+                "max": 0.07929910350874664,
+                "median": 0.07929910350874664,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11386861313868613,
+                "sd_ddof1": null,
+                "min": 0.11386861313868613,
+                "max": 0.11386861313868613,
+                "median": 0.11386861313868613,
+                "n": 1
+              }
+            }
+          }
+        },
+        "declared_pair_count": 12805,
+        "usable_pair_count": 12805,
+        "undefined_pair_count": 0,
+        "draw_floor": 2
+      },
+      "cv": {
+        "per_D": {
+          "3": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": -0.0047513701956131815,
+                "sd_ddof1": 0.05655318233289566,
+                "min": -0.17647877705383067,
+                "max": 0.14179308457411144,
+                "median": -0.006485921660086659,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10706465067778936,
+                "sd_ddof1": 0.015337064068106728,
+                "min": 0.07737226277372262,
+                "max": 0.145985401459854,
+                "median": 0.10656934306569343,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2
+              ],
+              "between_chain_spearman": 0.030907857592139286,
+              "between_chain_top685_overlap": 0.09635036496350365
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0076336370141744,
+                "sd_ddof1": 0.05021333138198947,
+                "min": -0.17871387359748137,
+                "max": 0.17349445096431185,
+                "median": 0.004236097827428926,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10768937136898556,
+                "sd_ddof1": 0.016408835646640363,
+                "min": 0.058394160583941604,
+                "max": 0.1635036496350365,
+                "median": 0.10656934306569343,
+                "n": 3136
+              }
+            }
+          },
+          "4": {
+            "n_subsets_enumerated": 70,
+            "n_subsets_usable_both_chains": 70,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.00955160205712715,
+                "sd_ddof1": 0.04673249747582895,
+                "min": -0.11059297159640716,
+                "max": 0.1527922606042344,
+                "median": 0.006442300645470629,
+                "n": 70
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10469238790406672,
+                "sd_ddof1": 0.01276824862145823,
+                "min": 0.07737226277372262,
+                "max": 0.13722627737226278,
+                "median": 0.10364963503649635,
+                "n": 70
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "between_chain_spearman": -0.008157194863631484,
+              "between_chain_top685_overlap": 0.09927007299270073
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 4900,
+              "n_pairs_usable": 4900,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.019325510298577188,
+                "sd_ddof1": 0.04583897152337967,
+                "min": -0.1292850234424531,
+                "max": 0.17179024300222318,
+                "median": 0.012093830863448472,
+                "n": 4900
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10713779234321466,
+                "sd_ddof1": 0.014546373870038033,
+                "min": 0.06423357664233577,
+                "max": 0.16058394160583941,
+                "median": 0.10656934306569343,
+                "n": 4900
+              }
+            }
+          },
+          "5": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.02466499533346542,
+                "sd_ddof1": 0.04796994406288015,
+                "min": -0.052856911642725796,
+                "max": 0.1527111482499044,
+                "median": 0.014011911221132073,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10357142857142856,
+                "sd_ddof1": 0.014509134703074082,
+                "min": 0.08175182481751825,
+                "max": 0.145985401459854,
+                "median": 0.1,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "between_chain_spearman": -0.02265113929616673,
+              "between_chain_top685_overlap": 0.09781021897810219
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.03188025600426144,
+                "sd_ddof1": 0.047110205703270326,
+                "min": -0.0822747991434816,
+                "max": 0.16242332073589025,
+                "median": 0.026630778208777062,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10595719127066885,
+                "sd_ddof1": 0.014013870654961675,
+                "min": 0.06277372262773723,
+                "max": 0.1678832116788321,
+                "median": 0.10510948905109489,
+                "n": 3136
+              }
+            }
+          },
+          "6": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.040895406019704636,
+                "sd_ddof1": 0.047862186572698875,
+                "min": -0.03945629527822033,
+                "max": 0.14244909201975137,
+                "median": 0.04146786352432788,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10276329509906153,
+                "sd_ddof1": 0.014138963859133317,
+                "min": 0.08321167883211679,
+                "max": 0.15182481751824817,
+                "median": 0.10072992700729927,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "between_chain_spearman": -0.017975198795193274,
+              "between_chain_top685_overlap": 0.08905109489051095
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.04538316405262401,
+                "sd_ddof1": 0.04571408078883798,
+                "min": -0.05923442189835647,
+                "max": 0.15955285946172912,
+                "median": 0.04761180620966138,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10379115149709518,
+                "sd_ddof1": 0.01363595050416635,
+                "min": 0.07007299270072993,
+                "max": 0.1562043795620438,
+                "median": 0.10364963503649635,
+                "n": 784
+              }
+            }
+          },
+          "7": {
+            "n_subsets_enumerated": 8,
+            "n_subsets_usable_both_chains": 8,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.05780949837360094,
+                "sd_ddof1": 0.042041557850698685,
+                "min": -0.022617702876876745,
+                "max": 0.11095011552034101,
+                "median": 0.06750397913262621,
+                "n": 8
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1041970802919708,
+                "sd_ddof1": 0.011088783237601313,
+                "min": 0.08613138686131387,
+                "max": 0.12116788321167883,
+                "median": 0.10656934306569343,
+                "n": 8
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "between_chain_spearman": 0.07667740279983513,
+              "between_chain_top685_overlap": 0.10510948905109489
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 64,
+              "n_pairs_usable": 64,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0597212113095084,
+                "sd_ddof1": 0.0382601342550556,
+                "min": -0.03917207800832137,
+                "max": 0.14161389080092188,
+                "median": 0.06474959727664825,
+                "n": 64
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10378649635036497,
+                "sd_ddof1": 0.012837123556089968,
+                "min": 0.07591240875912408,
+                "max": 0.13138686131386862,
+                "median": 0.10510948905109489,
+                "n": 64
+              }
+            }
+          },
+          "8": {
+            "n_subsets_enumerated": 1,
+            "n_subsets_usable_both_chains": 1,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.07515209853539141,
+                "sd_ddof1": null,
+                "min": 0.07515209853539141,
+                "max": 0.07515209853539141,
+                "median": 0.07515209853539141,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10072992700729927,
+                "sd_ddof1": null,
+                "min": 0.10072992700729927,
+                "max": 0.10072992700729927,
+                "median": 0.10072992700729927,
+                "n": 1
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "between_chain_spearman": 0.07515209853539141,
+              "between_chain_top685_overlap": 0.10072992700729927
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 1,
+              "n_pairs_usable": 1,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0751520985353914,
+                "sd_ddof1": null,
+                "min": 0.0751520985353914,
+                "max": 0.0751520985353914,
+                "median": 0.0751520985353914,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10072992700729927,
+                "sd_ddof1": null,
+                "min": 0.10072992700729927,
+                "max": 0.10072992700729927,
+                "median": 0.10072992700729927,
+                "n": 1
+              }
+            }
+          }
+        },
+        "declared_pair_count": 12021,
+        "usable_pair_count": 12021,
+        "undefined_pair_count": 0,
+        "draw_floor": 3
+      },
+      "svd_m1": {
+        "per_D": {
+          "3": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.0006019633860265604,
+                "sd_ddof1": 0.03501353585559353,
+                "min": -0.08339656680991878,
+                "max": 0.10352312854659283,
+                "median": -0.0025543337614475125,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11084462982273201,
+                "sd_ddof1": 0.016494899003884372,
+                "min": 0.07883211678832117,
+                "max": 0.16204379562043797,
+                "median": 0.10948905109489052,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2
+              ],
+              "between_chain_spearman": 0.02610657015851765,
+              "between_chain_top685_overlap": 0.16204379562043797
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.004957264622386693,
+                "sd_ddof1": 0.033396162014667746,
+                "min": -0.11531944777670368,
+                "max": 0.13866174254925784,
+                "median": 0.0028919265656588847,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1106663377029644,
+                "sd_ddof1": 0.015296763948638471,
+                "min": 0.06569343065693431,
+                "max": 0.17226277372262774,
+                "median": 0.10948905109489052,
+                "n": 3136
+              }
+            }
+          },
+          "4": {
+            "n_subsets_enumerated": 70,
+            "n_subsets_usable_both_chains": 70,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.009351722312328767,
+                "sd_ddof1": 0.03187038031689858,
+                "min": -0.05351460596193053,
+                "max": 0.11508515861022367,
+                "median": 0.0023343333670670487,
+                "n": 70
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1116162669447341,
+                "sd_ddof1": 0.013160262299205184,
+                "min": 0.08175182481751825,
+                "max": 0.145985401459854,
+                "median": 0.11240875912408758,
+                "n": 70
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "between_chain_spearman": 0.005030734409140254,
+              "between_chain_top685_overlap": 0.12846715328467154
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 4900,
+              "n_pairs_usable": 4900,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.01640403584040097,
+                "sd_ddof1": 0.034662394400757475,
+                "min": -0.07866612563821967,
+                "max": 0.15062045010781727,
+                "median": 0.011105226215910388,
+                "n": 4900
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1109128556532102,
+                "sd_ddof1": 0.014347045625651108,
+                "min": 0.06715328467153285,
+                "max": 0.17372262773722627,
+                "median": 0.10948905109489052,
+                "n": 4900
+              }
+            }
+          },
+          "5": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.019932351211802587,
+                "sd_ddof1": 0.03253980213238292,
+                "min": -0.04271996115251794,
+                "max": 0.11408617608404333,
+                "median": 0.011094085986708507,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11217413972888425,
+                "sd_ddof1": 0.013180723977201521,
+                "min": 0.08905109489051095,
+                "max": 0.145985401459854,
+                "median": 0.11094890510948906,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "between_chain_spearman": 0.04146698812927887,
+              "between_chain_top685_overlap": 0.12700729927007298
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.02818022358873315,
+                "sd_ddof1": 0.03498026539818681,
+                "min": -0.059237634504856085,
+                "max": 0.14115747468704593,
+                "median": 0.024090187034211192,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1107529234321466,
+                "sd_ddof1": 0.012661390899282773,
+                "min": 0.07883211678832117,
+                "max": 0.1635036496350365,
+                "median": 0.10948905109489052,
+                "n": 3136
+              }
+            }
+          },
+          "6": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.0322208347105424,
+                "sd_ddof1": 0.031190498810288472,
+                "min": -0.02427605150610896,
+                "max": 0.09095132780309541,
+                "median": 0.029649245610963923,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11047966631908238,
+                "sd_ddof1": 0.011873569538357805,
+                "min": 0.08467153284671533,
+                "max": 0.14452554744525548,
+                "median": 0.11094890510948904,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "between_chain_spearman": 0.0609304220718287,
+              "between_chain_top685_overlap": 0.14452554744525548
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.03894463059998702,
+                "sd_ddof1": 0.03157624499382413,
+                "min": -0.03949538760103147,
+                "max": 0.1324709402186483,
+                "median": 0.03912861400940796,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10986146283330851,
+                "sd_ddof1": 0.011067491112320145,
+                "min": 0.07445255474452554,
+                "max": 0.15328467153284672,
+                "median": 0.10948905109489052,
+                "n": 784
+              }
+            }
+          },
+          "7": {
+            "n_subsets_enumerated": 8,
+            "n_subsets_usable_both_chains": 8,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.04429668702892439,
+                "sd_ddof1": 0.020864388914733863,
+                "min": 0.007755207856374479,
+                "max": 0.06579055236850125,
+                "median": 0.051869330866615826,
+                "n": 8
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1114963503649635,
+                "sd_ddof1": 0.01023200421085853,
+                "min": 0.09781021897810219,
+                "max": 0.12262773722627737,
+                "median": 0.11313868613138686,
+                "n": 8
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "between_chain_spearman": 0.06579055236850125,
+              "between_chain_top685_overlap": 0.12116788321167883
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 64,
+              "n_pairs_usable": 64,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.047495810894214716,
+                "sd_ddof1": 0.023219773359565186,
+                "min": -0.009911622685469065,
+                "max": 0.09170435729190984,
+                "median": 0.05312688698774897,
+                "n": 64
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11021897810218978,
+                "sd_ddof1": 0.007987483940485977,
+                "min": 0.09197080291970802,
+                "max": 0.12700729927007298,
+                "median": 0.11021897810218978,
+                "n": 64
+              }
+            }
+          },
+          "8": {
+            "n_subsets_enumerated": 1,
+            "n_subsets_usable_both_chains": 1,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.04997112205404769,
+                "sd_ddof1": null,
+                "min": 0.04997112205404769,
+                "max": 0.04997112205404769,
+                "median": 0.04997112205404769,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10364963503649635,
+                "sd_ddof1": null,
+                "min": 0.10364963503649635,
+                "max": 0.10364963503649635,
+                "median": 0.10364963503649635,
+                "n": 1
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "between_chain_spearman": 0.04997112205404769,
+              "between_chain_top685_overlap": 0.10364963503649635
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 1,
+              "n_pairs_usable": 1,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.049971122054047676,
+                "sd_ddof1": null,
+                "min": 0.049971122054047676,
+                "max": 0.049971122054047676,
+                "median": 0.049971122054047676,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10364963503649635,
+                "sd_ddof1": null,
+                "min": 0.10364963503649635,
+                "max": 0.10364963503649635,
+                "median": 0.10364963503649635,
+                "n": 1
+              }
+            }
+          }
+        },
+        "declared_pair_count": 12021,
+        "usable_pair_count": 12021,
+        "undefined_pair_count": 0,
+        "draw_floor": 3
+      }
+    },
+    "bif": {
+      "baseline": {
+        "per_D": {
+          "2": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": -0.009121643995444243,
+                "sd_ddof1": 0.09739152198792864,
+                "min": -0.15678091688779697,
+                "max": 0.13723711937886623,
+                "median": -0.023598789575201614,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.07711157455683004,
+                "sd_ddof1": 0.03176104578205853,
+                "min": 0.035036496350364967,
+                "max": 0.14744525547445256,
+                "median": 0.07007299270072992,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1
+              ],
+              "between_chain_spearman": 0.09426692631697563,
+              "between_chain_top685_overlap": 0.11824817518248175
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.01186058908327045,
+                "sd_ddof1": 0.09792126673833362,
+                "min": -0.3339460653857643,
+                "max": 0.3033599199375424,
+                "median": 0.012127413296179938,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.08006107552510056,
+                "sd_ddof1": 0.032821541492465925,
+                "min": 0.008759124087591242,
+                "max": 0.21605839416058395,
+                "median": 0.07591240875912408,
+                "n": 784
+              }
+            }
+          },
+          "3": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.020248944532592676,
+                "sd_ddof1": 0.08752190281341908,
+                "min": -0.14720039617817376,
+                "max": 0.2061848874862255,
+                "median": 0.0017155704424759721,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.07896246089676746,
+                "sd_ddof1": 0.027627733156447818,
+                "min": 0.029197080291970802,
+                "max": 0.14452554744525548,
+                "median": 0.07737226277372262,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2
+              ],
+              "between_chain_spearman": 0.14329979745195734,
+              "between_chain_top685_overlap": 0.12992700729927006
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.027572074127012444,
+                "sd_ddof1": 0.09160771174061487,
+                "min": -0.3376028654370508,
+                "max": 0.28675550092635266,
+                "median": 0.028200772985584904,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.08177510055116938,
+                "sd_ddof1": 0.02954906291680724,
+                "min": 0.008759124087591242,
+                "max": 0.21021897810218979,
+                "median": 0.07883211678832117,
+                "n": 3136
+              }
+            }
+          },
+          "4": {
+            "n_subsets_enumerated": 70,
+            "n_subsets_usable_both_chains": 70,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.03805429885087589,
+                "sd_ddof1": 0.0782410518355358,
+                "min": -0.12035290948190414,
+                "max": 0.2236698435936105,
+                "median": 0.02880519142004083,
+                "n": 70
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.0843169968717414,
+                "sd_ddof1": 0.0278682432594296,
+                "min": 0.030656934306569343,
+                "max": 0.1591240875912409,
+                "median": 0.08029197080291971,
+                "n": 70
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "between_chain_spearman": 0.08672785413993875,
+              "between_chain_top685_overlap": 0.11970802919708029
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 4900,
+              "n_pairs_usable": 4900,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0420882768282005,
+                "sd_ddof1": 0.07846700290263645,
+                "min": -0.3073296654853507,
+                "max": 0.2879883503310223,
+                "median": 0.04115702298274308,
+                "n": 4900
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.0848056010725458,
+                "sd_ddof1": 0.025923918579947025,
+                "min": 0.01167883211678832,
+                "max": 0.20875912408759123,
+                "median": 0.08175182481751825,
+                "n": 4900
+              }
+            }
+          },
+          "5": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.05222250955745084,
+                "sd_ddof1": 0.06514863886020987,
+                "min": -0.05314905931095735,
+                "max": 0.23423159409232233,
+                "median": 0.04313258552133338,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.08790406673618352,
+                "sd_ddof1": 0.023760159027486703,
+                "min": 0.043795620437956206,
+                "max": 0.14890510948905109,
+                "median": 0.08613138686131387,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "between_chain_spearman": 0.06231787722235142,
+              "between_chain_top685_overlap": 0.09197080291970802
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.055648661525554324,
+                "sd_ddof1": 0.06317030252287618,
+                "min": -0.15297511325111912,
+                "max": 0.28333203865808243,
+                "median": 0.05187882482022321,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.08766618873826904,
+                "sd_ddof1": 0.022349771255996614,
+                "min": 0.029197080291970802,
+                "max": 0.20875912408759123,
+                "median": 0.08467153284671533,
+                "n": 3136
+              }
+            }
+          },
+          "6": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.06399649249281711,
+                "sd_ddof1": 0.05294191747158699,
+                "min": -0.02295263603430534,
+                "max": 0.17171993993278684,
+                "median": 0.05411320152084365,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09066736183524506,
+                "sd_ddof1": 0.018793534629008644,
+                "min": 0.059854014598540145,
+                "max": 0.13138686131386862,
+                "median": 0.09124087591240876,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "between_chain_spearman": 0.10420797144361178,
+              "between_chain_top685_overlap": 0.0948905109489051
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.06659661861527327,
+                "sd_ddof1": 0.04911170300713931,
+                "min": -0.06267000048626328,
+                "max": 0.2371103792460127,
+                "median": 0.06370822054344004,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09045508714434677,
+                "sd_ddof1": 0.01852786761586442,
+                "min": 0.052554744525547446,
+                "max": 0.17664233576642335,
+                "median": 0.08759124087591241,
+                "n": 784
+              }
+            }
+          },
+          "7": {
+            "n_subsets_enumerated": 8,
+            "n_subsets_usable_both_chains": 8,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.07359978948373971,
+                "sd_ddof1": 0.040585176702442695,
+                "min": 0.02647897530561847,
+                "max": 0.13389946132620942,
+                "median": 0.07502376822268844,
+                "n": 8
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09105839416058395,
+                "sd_ddof1": 0.015895227544103434,
+                "min": 0.06861313868613139,
+                "max": 0.11532846715328467,
+                "median": 0.08613138686131387,
+                "n": 8
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "between_chain_spearman": 0.10892157630014496,
+              "between_chain_top685_overlap": 0.08759124087591241
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 64,
+              "n_pairs_usable": 64,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.07501494414609688,
+                "sd_ddof1": 0.03486123765642992,
+                "min": -0.018371467425070058,
+                "max": 0.15452835739779935,
+                "median": 0.07890170404879615,
+                "n": 64
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09140054744525548,
+                "sd_ddof1": 0.014183933314518334,
+                "min": 0.06861313868613139,
+                "max": 0.12992700729927006,
+                "median": 0.08832116788321168,
+                "n": 64
+              }
+            }
+          },
+          "8": {
+            "n_subsets_enumerated": 1,
+            "n_subsets_usable_both_chains": 1,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.0823250940923177,
+                "sd_ddof1": null,
+                "min": 0.0823250940923177,
+                "max": 0.0823250940923177,
+                "median": 0.0823250940923177,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.0905109489051095,
+                "sd_ddof1": null,
+                "min": 0.0905109489051095,
+                "max": 0.0905109489051095,
+                "median": 0.0905109489051095,
+                "n": 1
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "between_chain_spearman": 0.0823250940923177,
+              "between_chain_top685_overlap": 0.0905109489051095
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 1,
+              "n_pairs_usable": 1,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0823250940923177,
+                "sd_ddof1": null,
+                "min": 0.0823250940923177,
+                "max": 0.0823250940923177,
+                "median": 0.0823250940923177,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.0905109489051095,
+                "sd_ddof1": null,
+                "min": 0.0905109489051095,
+                "max": 0.0905109489051095,
+                "median": 0.0905109489051095,
+                "n": 1
+              }
+            }
+          }
+        },
+        "declared_pair_count": 12805,
+        "usable_pair_count": 12805,
+        "undefined_pair_count": 0,
+        "draw_floor": 2
+      },
+      "cv": {
+        "per_D": {
+          "3": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.008955028950452594,
+                "sd_ddof1": 0.10665271952447904,
+                "min": -0.18942061378404942,
+                "max": 0.19925109562821058,
+                "median": 0.012834038775078152,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.07990093847758081,
+                "sd_ddof1": 0.03521464449257672,
+                "min": 0.027737226277372264,
+                "max": 0.1635036496350365,
+                "median": 0.07518248175182482,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2
+              ],
+              "between_chain_spearman": 0.14345086410808713,
+              "between_chain_top685_overlap": 0.12408759124087591
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.01645365015287442,
+                "sd_ddof1": 0.1114138210066724,
+                "min": -0.2990931843216562,
+                "max": 0.3289418822540948,
+                "median": 0.017298345032952925,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.08379636526143304,
+                "sd_ddof1": 0.040827013134773646,
+                "min": 0.010218978102189781,
+                "max": 0.24233576642335766,
+                "median": 0.07591240875912408,
+                "n": 3136
+              }
+            }
+          },
+          "4": {
+            "n_subsets_enumerated": 70,
+            "n_subsets_usable_both_chains": 70,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.04260595920961752,
+                "sd_ddof1": 0.10673366482983046,
+                "min": -0.17918790058845566,
+                "max": 0.23325168497397566,
+                "median": 0.06181017644550539,
+                "n": 70
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09099061522419186,
+                "sd_ddof1": 0.03707671123945271,
+                "min": 0.027737226277372264,
+                "max": 0.1781021897810219,
+                "median": 0.08905109489051095,
+                "n": 70
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "between_chain_spearman": 0.10337538291228895,
+              "between_chain_top685_overlap": 0.10364963503649635
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 4900,
+              "n_pairs_usable": 4900,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.045135828319215754,
+                "sd_ddof1": 0.1118942459455105,
+                "min": -0.2967524093445947,
+                "max": 0.3656609751728627,
+                "median": 0.053310789607258185,
+                "n": 4900
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09392432593475346,
+                "sd_ddof1": 0.04278160467540698,
+                "min": 0.010218978102189781,
+                "max": 0.28175182481751826,
+                "median": 0.08905109489051095,
+                "n": 4900
+              }
+            }
+          },
+          "5": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.07362669463922575,
+                "sd_ddof1": 0.09711014616175984,
+                "min": -0.18034416400317932,
+                "max": 0.26579723057285,
+                "median": 0.081529503062618,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10281543274244002,
+                "sd_ddof1": 0.03852250419940154,
+                "min": 0.0364963503649635,
+                "max": 0.19562043795620437,
+                "median": 0.10218978102189781,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "between_chain_spearman": 0.08394381151559956,
+              "between_chain_top685_overlap": 0.09343065693430656
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.0754490093757964,
+                "sd_ddof1": 0.09859095626235953,
+                "min": -0.27094512517552444,
+                "max": 0.3427225634268587,
+                "median": 0.08157476374173933,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.10425852822880977,
+                "sd_ddof1": 0.04031427633827647,
+                "min": 0.017518248175182483,
+                "max": 0.2686131386861314,
+                "median": 0.10072992700729927,
+                "n": 3136
+              }
+            }
+          },
+          "6": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.10151819967955865,
+                "sd_ddof1": 0.0773691964059297,
+                "min": -0.074301303895501,
+                "max": 0.2564625685168623,
+                "median": 0.09985779446800641,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11407716371220021,
+                "sd_ddof1": 0.03539448160076149,
+                "min": 0.04671532846715328,
+                "max": 0.19124087591240876,
+                "median": 0.10510948905109489,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "between_chain_spearman": 0.1348117616740946,
+              "between_chain_top685_overlap": 0.11824817518248175
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.10323138835602078,
+                "sd_ddof1": 0.07644757076319397,
+                "min": -0.15611735383391465,
+                "max": 0.30375929713974603,
+                "median": 0.11211192846588064,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.1149877104126322,
+                "sd_ddof1": 0.03485979485195213,
+                "min": 0.027737226277372264,
+                "max": 0.2291970802919708,
+                "median": 0.11094890510948906,
+                "n": 784
+              }
+            }
+          },
+          "7": {
+            "n_subsets_enumerated": 8,
+            "n_subsets_usable_both_chains": 8,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.12350010779506629,
+                "sd_ddof1": 0.057400236185435105,
+                "min": 0.029443771845493922,
+                "max": 0.21865437642344823,
+                "median": 0.13840224535806622,
+                "n": 8
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.12408759124087591,
+                "sd_ddof1": 0.026519565145379485,
+                "min": 0.0905109489051095,
+                "max": 0.16934306569343066,
+                "median": 0.12262773722627737,
+                "n": 8
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "between_chain_spearman": 0.13330831268537796,
+              "between_chain_top685_overlap": 0.12262773722627737
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 64,
+              "n_pairs_usable": 64,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.12456430241620071,
+                "sd_ddof1": 0.051702487845512374,
+                "min": -0.004144864714935612,
+                "max": 0.22989361121936608,
+                "median": 0.12931518259869784,
+                "n": 64
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.12525091240875913,
+                "sd_ddof1": 0.02449603977081551,
+                "min": 0.07007299270072993,
+                "max": 0.17956204379562044,
+                "median": 0.12700729927007298,
+                "n": 64
+              }
+            }
+          },
+          "8": {
+            "n_subsets_enumerated": 1,
+            "n_subsets_usable_both_chains": 1,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.14054127697010868,
+                "sd_ddof1": null,
+                "min": 0.14054127697010868,
+                "max": 0.14054127697010868,
+                "median": 0.14054127697010868,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.14014598540145987,
+                "sd_ddof1": null,
+                "min": 0.14014598540145987,
+                "max": 0.14014598540145987,
+                "median": 0.14014598540145987,
+                "n": 1
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "between_chain_spearman": 0.14054127697010868,
+              "between_chain_top685_overlap": 0.14014598540145987
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 1,
+              "n_pairs_usable": 1,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.14054127697010868,
+                "sd_ddof1": null,
+                "min": 0.14054127697010868,
+                "max": 0.14054127697010868,
+                "median": 0.14054127697010868,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.14014598540145987,
+                "sd_ddof1": null,
+                "min": 0.14014598540145987,
+                "max": 0.14014598540145987,
+                "median": 0.14014598540145987,
+                "n": 1
+              }
+            }
+          }
+        },
+        "declared_pair_count": 12021,
+        "usable_pair_count": 12021,
+        "undefined_pair_count": 0,
+        "draw_floor": 3
+      },
+      "svd_m1": {
+        "per_D": {
+          "3": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": -0.0057587972084293376,
+                "sd_ddof1": 0.09386363366410375,
+                "min": -0.1534679114727276,
+                "max": 0.18314849016347975,
+                "median": 0.0007017174897376121,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.07494786235662147,
+                "sd_ddof1": 0.030514760906146136,
+                "min": 0.030656934306569343,
+                "max": 0.15036496350364964,
+                "median": 0.06861313868613139,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2
+              ],
+              "between_chain_spearman": -0.06073529343069572,
+              "between_chain_top685_overlap": 0.052554744525547446
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.004296861990316546,
+                "sd_ddof1": 0.09500298903613885,
+                "min": -0.26574194687556996,
+                "max": 0.27946384359257515,
+                "median": 0.004362773691718474,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.0781166207358856,
+                "sd_ddof1": 0.03419287747767398,
+                "min": 0.013138686131386862,
+                "max": 0.21605839416058395,
+                "median": 0.072992700729927,
+                "n": 3136
+              }
+            }
+          },
+          "4": {
+            "n_subsets_enumerated": 70,
+            "n_subsets_usable_both_chains": 70,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.02232285325382632,
+                "sd_ddof1": 0.1079403302741215,
+                "min": -0.2162737047090273,
+                "max": 0.2402727407347769,
+                "median": 0.03614398858835278,
+                "n": 70
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.084859228362878,
+                "sd_ddof1": 0.03578135680366019,
+                "min": 0.026277372262773723,
+                "max": 0.17956204379562044,
+                "median": 0.07883211678832117,
+                "n": 70
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "between_chain_spearman": 0.04351545532462531,
+              "between_chain_top685_overlap": 0.08029197080291971
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 4900,
+              "n_pairs_usable": 4900,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.026541874335809266,
+                "sd_ddof1": 0.1034240797636081,
+                "min": -0.24206941513465918,
+                "max": 0.36697964825267165,
+                "median": 0.029694168811723848,
+                "n": 4900
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.08663161030835692,
+                "sd_ddof1": 0.03982949094901107,
+                "min": 0.013138686131386862,
+                "max": 0.27445255474452557,
+                "median": 0.08029197080291971,
+                "n": 4900
+              }
+            }
+          },
+          "5": {
+            "n_subsets_enumerated": 56,
+            "n_subsets_usable_both_chains": 56,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.06031406243506395,
+                "sd_ddof1": 0.09964218573806961,
+                "min": -0.1405546960898427,
+                "max": 0.27405284537252117,
+                "median": 0.06879347015276185,
+                "n": 56
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09791449426485922,
+                "sd_ddof1": 0.04109982952552867,
+                "min": 0.021897810218978103,
+                "max": 0.20437956204379562,
+                "median": 0.09562043795620437,
+                "n": 56
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "between_chain_spearman": 0.07983237698937587,
+              "between_chain_top685_overlap": 0.09635036496350365
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 3136,
+              "n_pairs_usable": 3136,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.058912242332779426,
+                "sd_ddof1": 0.10301712723679253,
+                "min": -0.2134484395344778,
+                "max": 0.37722227370266703,
+                "median": 0.06566107762536945,
+                "n": 3136
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.09981007001340683,
+                "sd_ddof1": 0.0434675028941937,
+                "min": 0.014598540145985401,
+                "max": 0.2759124087591241,
+                "median": 0.0948905109489051,
+                "n": 3136
+              }
+            }
+          },
+          "6": {
+            "n_subsets_enumerated": 28,
+            "n_subsets_usable_both_chains": 28,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.09518068494678067,
+                "sd_ddof1": 0.08732564038243955,
+                "min": -0.11382747893969247,
+                "max": 0.2510082590672799,
+                "median": 0.10511758066733895,
+                "n": 28
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11220020855057351,
+                "sd_ddof1": 0.04013092058905363,
+                "min": 0.032116788321167884,
+                "max": 0.19562043795620437,
+                "median": 0.10510948905109489,
+                "n": 28
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "between_chain_spearman": 0.1056915777897183,
+              "between_chain_top685_overlap": 0.10072992700729927
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 784,
+              "n_pairs_usable": 784,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.09324361116435763,
+                "sd_ddof1": 0.08382256374761571,
+                "min": -0.13114494390088344,
+                "max": 0.33116872789231516,
+                "median": 0.10000660927790786,
+                "n": 784
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.11267875763444066,
+                "sd_ddof1": 0.03835241535262148,
+                "min": 0.024817518248175182,
+                "max": 0.24963503649635035,
+                "median": 0.10802919708029197,
+                "n": 784
+              }
+            }
+          },
+          "7": {
+            "n_subsets_enumerated": 8,
+            "n_subsets_usable_both_chains": 8,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.11730274991530491,
+                "sd_ddof1": 0.05713897045014771,
+                "min": 0.019657554394916135,
+                "max": 0.21588975061941026,
+                "median": 0.12029296171489409,
+                "n": 8
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.12262773722627737,
+                "sd_ddof1": 0.03090913690268409,
+                "min": 0.08175182481751825,
+                "max": 0.17518248175182483,
+                "median": 0.11824817518248175,
+                "n": 8
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "between_chain_spearman": 0.11026223902980384,
+              "between_chain_top685_overlap": 0.0948905109489051
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 64,
+              "n_pairs_usable": 64,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.11577274572882618,
+                "sd_ddof1": 0.05448292342967654,
+                "min": -0.012385634976812564,
+                "max": 0.2597528080049752,
+                "median": 0.12014756834207324,
+                "n": 64
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.12212591240875911,
+                "sd_ddof1": 0.02881363169792072,
+                "min": 0.072992700729927,
+                "max": 0.2029197080291971,
+                "median": 0.11751824817518247,
+                "n": 64
+              }
+            }
+          },
+          "8": {
+            "n_subsets_enumerated": 1,
+            "n_subsets_usable_both_chains": 1,
+            "n_undefined_cells": 0,
+            "undefined_cells": [],
+            "matched_index_PRIMARY": {
+              "between_chain_spearman": {
+                "mean": 0.13246430071018114,
+                "sd_ddof1": null,
+                "min": 0.13246430071018114,
+                "max": 0.13246430071018114,
+                "median": 0.13246430071018114,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.12700729927007298,
+                "sd_ddof1": null,
+                "min": 0.12700729927007298,
+                "max": 0.12700729927007298,
+                "median": 0.12700729927007298,
+                "n": 1
+              }
+            },
+            "contiguous_prefix": {
+              "draws": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "between_chain_spearman": 0.13246430071018114,
+              "between_chain_top685_overlap": 0.12700729927007298
+            },
+            "all_pairs_sensitivity": {
+              "n_pairs_enumerated": 1,
+              "n_pairs_usable": 1,
+              "n_pairs_undefined": 0,
+              "between_chain_spearman": {
+                "mean": 0.13246430071018112,
+                "sd_ddof1": null,
+                "min": 0.13246430071018112,
+                "max": 0.13246430071018112,
+                "median": 0.13246430071018112,
+                "n": 1
+              },
+              "between_chain_top685_overlap": {
+                "mean": 0.12700729927007298,
+                "sd_ddof1": null,
+                "min": 0.12700729927007298,
+                "max": 0.12700729927007298,
+                "median": 0.12700729927007298,
+                "n": 1
+              }
+            }
+          }
+        },
+        "declared_pair_count": 12021,
+        "usable_pair_count": 12021,
+        "undefined_pair_count": 0,
+        "draw_floor": 3
+      }
+    }
+  },
+  "within_chain_split_half": {
+    "bif_kappa": {
+      "baseline": {
+        "variant": "baseline",
+        "n_partitions_per_chain": 35,
+        "n_undefined_cells": 0,
+        "undefined_cells": [],
+        "draws_per_half": 4,
+        "all_partitions_spearman": {
+          "mean": 0.02620019541966559,
+          "sd_ddof1": 0.027416051069447556,
+          "min": -0.04074901109755289,
+          "max": 0.08463792802926823,
+          "median": 0.02291980480046922,
+          "n": 70
+        },
+        "all_partitions_top685_overlap": {
+          "mean": 0.10988529718456724,
+          "sd_ddof1": 0.015064850043619902,
+          "min": 0.07737226277372262,
+          "max": 0.14890510948905109,
+          "median": 0.11094890510948906,
+          "n": 70
+        },
+        "time_contiguous_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.0032544618818480956,
+            "top685_overlap": 0.08467153284671533
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.0337237740609518,
+            "top685_overlap": 0.10656934306569343
+          }
+        ],
+        "alternating_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.05111710271324428,
+            "top685_overlap": 0.11240875912408758
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.08463792802926823,
+            "top685_overlap": 0.12408759124087591
+          }
+        ],
+        "licensed_reading": "detects no ADDITIONAL between-chain penalty at this (low) power; cannot establish that non-convergence is absent"
+      },
+      "cv": {
+        "variant": "cv",
+        "n_partitions_per_chain": 35,
+        "n_undefined_cells": 0,
+        "undefined_cells": [],
+        "draws_per_half": 4,
+        "all_partitions_spearman": {
+          "mean": 0.008128438084347156,
+          "sd_ddof1": 0.03633847544532055,
+          "min": -0.07596336415174526,
+          "max": 0.12779528334554,
+          "median": 0.0019312225540185773,
+          "n": 70
+        },
+        "all_partitions_top685_overlap": {
+          "mean": 0.10565172054223149,
+          "sd_ddof1": 0.015895369808721797,
+          "min": 0.06715328467153285,
+          "max": 0.14306569343065692,
+          "median": 0.10583941605839417,
+          "n": 70
+        },
+        "time_contiguous_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": -0.000999165710777656,
+            "top685_overlap": 0.10802919708029197
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.03306283400976881,
+            "top685_overlap": 0.0948905109489051
+          }
+        ],
+        "alternating_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.024185251749111233,
+            "top685_overlap": 0.09343065693430656
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.05985353117445516,
+            "top685_overlap": 0.13576642335766423
+          }
+        ],
+        "licensed_reading": "detects no ADDITIONAL between-chain penalty at this (low) power; cannot establish that non-convergence is absent"
+      },
+      "svd_m1": {
+        "variant": "svd_m1",
+        "n_partitions_per_chain": 35,
+        "n_undefined_cells": 0,
+        "undefined_cells": [],
+        "draws_per_half": 4,
+        "all_partitions_spearman": {
+          "mean": 0.012511885426317,
+          "sd_ddof1": 0.026797493825153697,
+          "min": -0.038555414559760054,
+          "max": 0.08787272189510464,
+          "median": 0.012677779820390894,
+          "n": 70
+        },
+        "all_partitions_top685_overlap": {
+          "mean": 0.11076120959332637,
+          "sd_ddof1": 0.016147433882193016,
+          "min": 0.07883211678832117,
+          "max": 0.1562043795620438,
+          "median": 0.10656934306569343,
+          "n": 70
+        },
+        "time_contiguous_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.016567710382322225,
+            "top685_overlap": 0.10072992700729927
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.00814644921980894,
+            "top685_overlap": 0.13576642335766423
+          }
+        ],
+        "alternating_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.015252821352700103,
+            "top685_overlap": 0.09781021897810219
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.08787272189510464,
+            "top685_overlap": 0.1562043795620438
+          }
+        ],
+        "licensed_reading": "detects no ADDITIONAL between-chain penalty at this (low) power; cannot establish that non-convergence is absent"
+      }
+    },
+    "bif": {
+      "baseline": {
+        "variant": "baseline",
+        "n_partitions_per_chain": 35,
+        "n_undefined_cells": 0,
+        "undefined_cells": [],
+        "draws_per_half": 4,
+        "all_partitions_spearman": {
+          "mean": 0.0669190747497051,
+          "sd_ddof1": 0.14311738725702997,
+          "min": -0.27319500897953863,
+          "max": 0.4152067767141886,
+          "median": 0.07855364718834068,
+          "n": 70
+        },
+        "all_partitions_top685_overlap": {
+          "mean": 0.10955161626694472,
+          "sd_ddof1": 0.046481640532402044,
+          "min": 0.016058394160583942,
+          "max": 0.2905109489051095,
+          "median": 0.1072992700729927,
+          "n": 70
+        },
+        "time_contiguous_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.2185443045804465,
+            "top685_overlap": 0.14744525547445256
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.04274918994502827,
+            "top685_overlap": 0.10072992700729927
+          }
+        ],
+        "alternating_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.12244457225940657,
+            "top685_overlap": 0.12846715328467154
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.2715695536611495,
+            "top685_overlap": 0.16934306569343066
+          }
+        ],
+        "licensed_reading": "detects no ADDITIONAL between-chain penalty at this (low) power; cannot establish that non-convergence is absent"
+      },
+      "cv": {
+        "variant": "cv",
+        "n_partitions_per_chain": 35,
+        "n_undefined_cells": 0,
+        "undefined_cells": [],
+        "draws_per_half": 4,
+        "all_partitions_spearman": {
+          "mean": 0.09633178466804657,
+          "sd_ddof1": 0.16335844029701857,
+          "min": -0.3803784015692907,
+          "max": 0.39782368451178574,
+          "median": 0.11408995912109007,
+          "n": 70
+        },
+        "all_partitions_top685_overlap": {
+          "mean": 0.11868613138686132,
+          "sd_ddof1": 0.05059363319583309,
+          "min": 0.017518248175182483,
+          "max": 0.25255474452554744,
+          "median": 0.11313868613138686,
+          "n": 70
+        },
+        "time_contiguous_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.209019777636272,
+            "top685_overlap": 0.16204379562043797
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.057895734026163076,
+            "top685_overlap": 0.10364963503649635
+          }
+        ],
+        "alternating_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.07470326658272725,
+            "top685_overlap": 0.11094890510948906
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.37849181891965517,
+            "top685_overlap": 0.22481751824817517
+          }
+        ],
+        "licensed_reading": "detects no ADDITIONAL between-chain penalty at this (low) power; cannot establish that non-convergence is absent"
+      },
+      "svd_m1": {
+        "variant": "svd_m1",
+        "n_partitions_per_chain": 35,
+        "n_undefined_cells": 0,
+        "undefined_cells": [],
+        "draws_per_half": 4,
+        "all_partitions_spearman": {
+          "mean": 0.0756870679551549,
+          "sd_ddof1": 0.16214903904150824,
+          "min": -0.3468467750454806,
+          "max": 0.3664504419505277,
+          "median": 0.07175499734562436,
+          "n": 70
+        },
+        "all_partitions_top685_overlap": {
+          "mean": 0.11328467153284671,
+          "sd_ddof1": 0.0529040894449315,
+          "min": 0.021897810218978103,
+          "max": 0.2321167883211679,
+          "median": 0.10291970802919709,
+          "n": 70
+        },
+        "time_contiguous_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.046279270224415775,
+            "top685_overlap": 0.10218978102189781
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": -0.01775659358808035,
+            "top685_overlap": 0.06423357664233577
+          }
+        ],
+        "alternating_split": [
+          {
+            "chain": 0,
+            "ok": true,
+            "spearman": 0.07178688571955359,
+            "top685_overlap": 0.11678832116788321
+          },
+          {
+            "chain": 1,
+            "ok": true,
+            "spearman": 0.35003968982765943,
+            "top685_overlap": 0.21313868613138687
+          }
+        ],
+        "licensed_reading": "detects no ADDITIONAL between-chain penalty at this (low) power; cannot establish that non-convergence is absent"
+      }
+    }
+  },
+  "attenuation_fits": {
+    "bif_kappa": {
+      "baseline": {
+        "D_values": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mean_matched_between_chain_spearman": [
+          0.003772978339096524,
+          0.011899928118644506,
+          0.026045237680268576,
+          0.040384117756270765,
+          0.054185889088493124,
+          0.06721188972345091,
+          0.07929910350874667
+        ],
+        "d_star_quotable_cell": true,
+        "model_x_eq_D": {
+          "effective_draws": "D",
+          "kappa": 108.37167632763946,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.8548444892609803,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": true,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "2": 0.018120590957257723,
+            "3": 0.026936830789674307,
+            "4": 0.03559615848692418,
+            "5": 0.04410272620076823,
+            "6": 0.05246054086688261,
+            "7": 0.06067347049826143,
+            "8": 0.06874525015413839
+          },
+          "fit_accepted_r2_ge_0.8": true,
+          "quotable_cell": true,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": 46.45,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": 47,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "model_x_eq_D_minus_1": {
+          "effective_draws": "D-1",
+          "kappa": 88.30883140068106,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.9450637131363557,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": true,
+            "ge_0.9": true
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "2": 0.011197100939699164,
+            "3": 0.02214622832540514,
+            "4": 0.032855529459526335,
+            "5": 0.043332798599056775,
+            "6": 0.05358549587368967,
+            "7": 0.0636207650003462,
+            "8": 0.07344544988251718
+          },
+          "fit_accepted_r2_ge_0.8": true,
+          "quotable_cell": true,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": 38.85,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": 39,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D": {
+          "dropped_D": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 108.87462410194856,
+            "sd_ddof1": 4.139284072234256,
+            "min": 105.21203601848991,
+            "max": 116.42865632693011,
+            "median": 106.98176692302442,
+            "n": 7
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": {
+            "mean": 46.65999999999999,
+            "sd_ddof1": 1.7747112441183204,
+            "min": 45.09,
+            "max": 49.9,
+            "median": 45.85,
+            "n": 7
+          },
+          "n_refits_with_accepted_fit": 7,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D_minus_1": {
+          "dropped_D": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 88.55057238555096,
+            "sd_ddof1": 1.9575159644849414,
+            "min": 86.87258934328513,
+            "max": 92.17559651729876,
+            "median": 87.79296564650173,
+            "n": 7
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": {
+            "mean": 38.951428571428565,
+            "sd_ddof1": 0.8377236730455655,
+            "min": 38.23,
+            "max": 40.5,
+            "median": 38.63,
+            "n": 7
+          },
+          "n_refits_with_accepted_fit": 7,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        }
+      },
+      "cv": {
+        "D_values": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mean_matched_between_chain_spearman": [
+          -0.0047513701956131815,
+          0.00955160205712715,
+          0.02466499533346542,
+          0.040895406019704636,
+          0.05780949837360094,
+          0.07515209853539141
+        ],
+        "d_star_quotable_cell": false,
+        "model_x_eq_D": {
+          "effective_draws": "D",
+          "kappa": 137.02655558481575,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.636073871549121,
+          "r2_sensitivity_bands": {
+            "ge_0.7": false,
+            "ge_0.8": false,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.021424507569086523,
+            "4": 0.02836345242505999,
+            "5": 0.0352046839368296,
+            "6": 0.041950251654085016,
+            "7": 0.04860214820507717,
+            "8": 0.05516231125906708
+          },
+          "fit_accepted_r2_ge_0.8": false,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "model_x_eq_D_minus_1": {
+          "effective_draws": "D-1",
+          "kappa": 111.59331846005273,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.7362851455157569,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": false,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.0176066693632455,
+            "4": 0.026179536820428156,
+            "5": 0.034604076198247895,
+            "6": 0.0428841040467778,
+            "7": 0.05102330709408666,
+            "8": 0.05902524771965039
+          },
+          "fit_accepted_r2_ge_0.8": false,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 139.26148460140237,
+            "sd_ddof1": 14.138402315599505,
+            "min": 128.62877444299207,
+            "max": 164.75586691804034,
+            "median": 133.59342302360506,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D_minus_1": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 113.09599912455123,
+            "sd_ddof1": 9.444741995904872,
+            "min": 106.32921366247055,
+            "max": 130.53223859900723,
+            "median": 108.80321667585457,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        }
+      },
+      "svd_m1": {
+        "D_values": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mean_matched_between_chain_spearman": [
+          0.0006019633860265604,
+          0.009351722312328767,
+          0.019932351211802587,
+          0.0322208347105424,
+          0.04429668702892439,
+          0.04997112205404769
+        ],
+        "d_star_quotable_cell": false,
+        "model_x_eq_D": {
+          "effective_draws": "D",
+          "kappa": 185.39817759311046,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.7112193629180266,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": false,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.015923720910290307,
+            "4": 0.021119527393728754,
+            "5": 0.02626075555557694,
+            "6": 0.031348260863566214,
+            "7": 0.03638288100006755,
+            "8": 0.04136543632190352
+          },
+          "fit_accepted_r2_ge_0.8": false,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "model_x_eq_D_minus_1": {
+          "effective_draws": "D-1",
+          "kappa": 151.95671900847083,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.8104440809226233,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": true,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.012990663953354048,
+            "4": 0.019360244713467395,
+            "5": 0.02564814151920405,
+            "6": 0.03185591564085991,
+            "7": 0.037985088812070314,
+            "8": 0.044037144473439774
+          },
+          "fit_accepted_r2_ge_0.8": true,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 187.2252699093054,
+            "sd_ddof1": 12.608850079361472,
+            "min": 176.14632553592278,
+            "max": 205.40222036436685,
+            "median": 182.71367453355668,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D_minus_1": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 153.09785422846534,
+            "sd_ddof1": 7.7290526923728,
+            "min": 146.23410417869653,
+            "max": 163.78728567367352,
+            "median": 149.86723554307002,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        }
+      }
+    },
+    "bif": {
+      "baseline": {
+        "D_values": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mean_matched_between_chain_spearman": [
+          -0.009121643995444243,
+          0.020248944532592676,
+          0.03805429885087589,
+          0.05222250955745084,
+          0.06399649249281711,
+          0.07359978948373971,
+          0.0823250940923177
+        ],
+        "d_star_quotable_cell": false,
+        "model_x_eq_D": {
+          "effective_draws": "D",
+          "kappa": 94.92290818161186,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.8276868784496029,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": true,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "2": 0.02063495656003684,
+            "3": 0.03063634501577584,
+            "4": 0.04043552776123836,
+            "5": 0.05003857564786246,
+            "6": 0.05945131891366959,
+            "7": 0.06867935898696115,
+            "8": 0.07772807960190611
+          },
+          "fit_accepted_r2_ge_0.8": true,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "model_x_eq_D_minus_1": {
+          "effective_draws": "D-1",
+          "kappa": 77.28280532138025,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.9150946246549705,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": true,
+            "ge_0.9": true
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "2": 0.012774197295237764,
+            "3": 0.025226150763621613,
+            "4": 0.037367901980887366,
+            "5": 0.04921089994599213,
+            "6": 0.06076603708965677,
+            "7": 0.07204368268872048,
+            "8": 0.08305371390176415
+          },
+          "fit_accepted_r2_ge_0.8": true,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D": {
+          "dropped_D": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 95.1678493639838,
+            "sd_ddof1": 2.187097686401793,
+            "min": 91.67971626465246,
+            "max": 97.52300210205433,
+            "median": 95.5736892856296,
+            "n": 7
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D_minus_1": {
+          "dropped_D": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 77.32867867543973,
+            "sd_ddof1": 0.7847580957220817,
+            "min": 76.08882479333023,
+            "max": 78.27389188519685,
+            "median": 77.3985316745039,
+            "n": 7
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        }
+      },
+      "cv": {
+        "D_values": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mean_matched_between_chain_spearman": [
+          0.008955028950452594,
+          0.04260595920961752,
+          0.07362669463922575,
+          0.10151819967955865,
+          0.12350010779506629,
+          0.14054127697010868
+        ],
+        "d_star_quotable_cell": false,
+        "model_x_eq_D": {
+          "effective_draws": "D",
+          "kappa": 57.106200364367034,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.7753540482891502,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": false,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.04991165606566108,
+            "4": 0.06545980565226776,
+            "5": 0.08050725967239677,
+            "6": 0.09507782064768243,
+            "7": 0.10919380590665767,
+            "8": 0.12287616164402128
+          },
+          "fit_accepted_r2_ge_0.8": false,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "model_x_eq_D_minus_1": {
+          "effective_draws": "D-1",
+          "kappa": 46.82142540741881,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.8723561600308187,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": true,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.04096562079680869,
+            "4": 0.06021505758751888,
+            "5": 0.07870696203290843,
+            "6": 0.09648518852366796,
+            "7": 0.11359027049575408,
+            "8": 0.13005972894644133
+          },
+          "fit_accepted_r2_ge_0.8": true,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 57.43417083761565,
+            "sd_ddof1": 2.7135075745843733,
+            "min": 54.309798868256586,
+            "max": 61.14919805774303,
+            "median": 57.18172428773796,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D_minus_1": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 47.004812325128626,
+            "sd_ddof1": 1.4652911367825285,
+            "min": 45.36020008566143,
+            "max": 48.88461098478576,
+            "median": 46.89363711207196,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        }
+      },
+      "svd_m1": {
+        "D_values": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mean_matched_between_chain_spearman": [
+          -0.0057587972084293376,
+          0.02232285325382632,
+          0.06031406243506395,
+          0.09518068494678067,
+          0.11730274991530491,
+          0.13246430071018114
+        ],
+        "d_star_quotable_cell": false,
+        "model_x_eq_D": {
+          "effective_draws": "D",
+          "kappa": 64.93451782260455,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.669176394306263,
+          "r2_sensitivity_bands": {
+            "ge_0.7": false,
+            "ge_0.8": false,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.04416017212095055,
+            "4": 0.05802608223493436,
+            "5": 0.07149545254151846,
+            "6": 0.08458505371115659,
+            "7": 0.09731072386225595,
+            "8": 0.10968743249195191
+          },
+          "fit_accepted_r2_ge_0.8": false,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "model_x_eq_D_minus_1": {
+          "effective_draws": "D-1",
+          "kappa": 52.91044672806588,
+          "kappa_non_finite": false,
+          "kappa_on_bound": false,
+          "optimizer_success": true,
+          "fit_rejected": false,
+          "r_squared": 0.7700395169986609,
+          "r2_sensitivity_bands": {
+            "ge_0.7": true,
+            "ge_0.8": false,
+            "ge_0.9": false
+          },
+          "endpoint_optimal": false,
+          "fitted": {
+            "3": 0.03642294170187033,
+            "4": 0.053657235374834925,
+            "5": 0.07028586542490389,
+            "6": 0.08634020772588491,
+            "7": 0.10184950774005087,
+            "8": 0.1168410583178101
+          },
+          "fit_accepted_r2_ge_0.8": false,
+          "quotable_cell": false,
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "draws_for_rho_0.3_ceiling_HEURISTIC_NOT_A_BUDGET": null,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 65.57953827082592,
+            "sd_ddof1": 4.649086776380792,
+            "min": 60.76440357741643,
+            "max": 71.76133682167033,
+            "median": 65.1257775029202,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        },
+        "leave_one_D_out_x_eq_D_minus_1": {
+          "dropped_D": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n_refits_with_non_finite_kappa": 0,
+          "kappa": {
+            "mean": 53.30732785003655,
+            "sd_ddof1": 2.8219620180344807,
+            "min": 50.31659223092051,
+            "max": 56.878598534581414,
+            "median": 53.02223393023584,
+            "n": 6
+          },
+          "draws_for_rho_0.3_HEURISTIC_NOT_A_BUDGET": null,
+          "n_refits_with_accepted_fit": 0,
+          "binding_caveat": "No D* > 8 is licensed as a draw budget by this analysis. The law is the Pearson reliability law for independent additive noise, fitted to Spearman correlations of seven exhaustively overlapping summaries of the same eight time-ordered draws; a high R^2 can be algebraic smoothing rather than out-of-range validation, and subsets spanning the full 8-draw horizon are not equivalent to a fresh D-draw run at fixed thinning. D* is a model-based heuristic, explicitly unidentified beyond the observed range. A real budget requires new independent chains/draws."
+        }
+      }
+    }
+  },
+  "variants": {
+    "bif_kappa": {
+      "baseline": {
+        "modes_removed": 0,
+        "nominal_dof": 7,
+        "role": "baseline",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.07929910350874667,
+        "reliability_top685_overlap": 0.11386861313868613,
+        "reliability_spearman_brown_pooled_descriptive": 0.14694555615018914,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.6141341532506257,
+        "lds_predicted": {
+          "B1": -11475.508706484257,
+          "B2": -5853.91049550113,
+          "B3": -3225.511631918868,
+          "R1": -65.02444998262581,
+          "R2": -824.9705330593833,
+          "R3": -93.33810921372171,
+          "R4": 138.0957757431916,
+          "T1": 10410.550515134702,
+          "T2": 6806.325092063112,
+          "T3": 4459.549595431377
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.37372262773722625,
+          "hypergeom_p": 0.9999999999964558,
+          "average_precision": 0.49628904796568696,
+          "precision_curve": {
+            "50": 0.1,
+            "100": 0.1,
+            "200": 0.175,
+            "342": 0.24561403508771928,
+            "685": 0.37372262773722625,
+            "1370": 0.4656934306569343,
+            "2055": 0.4958637469586375
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 1.0,
+            "top685_overlap": 1.0
+          },
+          "L3_defif_c10": {
+            "spearman": 0.07807999259637867,
+            "top685_overlap": 0.08905109489051095
+          },
+          "L2a_graddot": {
+            "spearman": 0.3303415941729341,
+            "top685_overlap": 0.16204379562043797
+          }
+        },
+        "score_scale_caveat_abs_mean": 13.667598437761923,
+        "score_scale_caveat_abs_max": 112.23483870372687
+      },
+      "cv": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.07515209853539141,
+        "reliability_top685_overlap": 0.10072992700729927,
+        "reliability_spearman_brown_pooled_descriptive": 0.1397980781282316,
+        "lds_spearman_primary": 0.6969696969696969,
+        "lds_pearson_primary": 0.6191711263424735,
+        "lds_predicted": {
+          "B1": -12774.42981951044,
+          "B2": -6244.166176062885,
+          "B3": -3665.1714064071484,
+          "R1": -233.04055561639535,
+          "R2": -844.5274111399397,
+          "R3": -69.01010725113463,
+          "R4": 88.84918308325825,
+          "T1": 11437.487012151068,
+          "T2": 7088.843991692993,
+          "T3": 4760.014782906499
+        },
+        "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.3795620437956204,
+          "hypergeom_p": 0.9999999999687265,
+          "average_precision": 0.4994776386252745,
+          "precision_curve": {
+            "50": 0.16,
+            "100": 0.14,
+            "200": 0.21,
+            "342": 0.28654970760233917,
+            "685": 0.3795620437956204,
+            "1370": 0.48759124087591244,
+            "2055": 0.5187347931873479
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.9315457485055015,
+            "top685_overlap": 0.7503649635036497
+          },
+          "L3_defif_c10": {
+            "spearman": 0.06492082763107565,
+            "top685_overlap": 0.0948905109489051
+          },
+          "L2a_graddot": {
+            "spearman": 0.3243315963098088,
+            "top685_overlap": 0.16496350364963502
+          }
+        },
+        "score_scale_caveat_abs_mean": 14.923153801828132,
+        "score_scale_caveat_abs_max": 115.68404291674725
+      },
+      "svd_m1": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.04997112205404769,
+        "reliability_top685_overlap": 0.10364963503649635,
+        "reliability_spearman_brown_pooled_descriptive": 0.09518570750077335,
+        "lds_spearman_primary": 0.6969696969696969,
+        "lds_pearson_primary": 0.6332465704929612,
+        "lds_predicted": {
+          "B1": -6208.907155609512,
+          "B2": -4315.853104293346,
+          "B3": -2023.1865527504879,
+          "R1": -72.70101794666695,
+          "R2": -406.3137103101542,
+          "R3": 131.83149059352485,
+          "R4": 591.962594591751,
+          "T1": 6381.7868742172805,
+          "T2": 4826.685059639904,
+          "T3": 2710.5212277574847
+        },
+        "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.29635036496350364,
+          "hypergeom_p": 1.0,
+          "average_precision": 0.483214214116061,
+          "precision_curve": {
+            "50": 0.06,
+            "100": 0.11,
+            "200": 0.12,
+            "342": 0.20175438596491227,
+            "685": 0.29635036496350364,
+            "1370": 0.4138686131386861,
+            "2055": 0.4510948905109489
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.8823505607987712,
+            "top685_overlap": 0.672992700729927
+          },
+          "L3_defif_c10": {
+            "spearman": 0.06381029470300201,
+            "top685_overlap": 0.058394160583941604
+          },
+          "L2a_graddot": {
+            "spearman": 0.2149611136424334,
+            "top685_overlap": 0.08759124087591241
+          }
+        },
+        "score_scale_caveat_abs_mean": 13.94790205555305,
+        "score_scale_caveat_abs_max": 114.29215264616025
+      },
+      "svd_m2": {
+        "modes_removed": 2,
+        "nominal_dof": 5,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.04604359308403881,
+        "reliability_top685_overlap": 0.11094890510948906,
+        "reliability_spearman_brown_pooled_descriptive": 0.08803379398039998,
+        "lds_spearman_primary": 0.6121212121212121,
+        "lds_pearson_primary": 0.6257562237668374,
+        "lds_predicted": {
+          "B1": -3293.283572372833,
+          "B2": -3061.4372518513073,
+          "B3": -1461.5714478875898,
+          "R1": 114.61530953039028,
+          "R2": -404.900625032864,
+          "R3": 42.06446812283946,
+          "R4": 630.2442081639505,
+          "T1": 3835.512730617047,
+          "T2": 3869.979457024723,
+          "T3": 1864.215940752229
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7142857142857143,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.2773722627737226,
+          "hypergeom_p": 1.0,
+          "average_precision": 0.4742506121938208,
+          "precision_curve": {
+            "50": 0.04,
+            "100": 0.07,
+            "200": 0.11,
+            "342": 0.16666666666666666,
+            "685": 0.2773722627737226,
+            "1370": 0.37737226277372266,
+            "2055": 0.43552311435523117
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.7942012304955213,
+            "top685_overlap": 0.5795620437956205
+          },
+          "L3_defif_c10": {
+            "spearman": 0.05478774730796145,
+            "top685_overlap": 0.059854014598540145
+          },
+          "L2a_graddot": {
+            "spearman": 0.13831074784418645,
+            "top685_overlap": 0.06423357664233577
+          }
+        },
+        "score_scale_caveat_abs_mean": 15.521478135569016,
+        "score_scale_caveat_abs_max": 126.93140085393196
+      },
+      "svd_m3": {
+        "modes_removed": 3,
+        "nominal_dof": 4,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": false,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": -0.025491324433754597,
+        "reliability_top685_overlap": 0.0948905109489051,
+        "reliability_spearman_brown_pooled_descriptive": -0.05231625961450302,
+        "lds_spearman_primary": 0.12727272727272726,
+        "lds_pearson_primary": 0.3859472465979551,
+        "lds_predicted": {
+          "B1": 1035.518513445396,
+          "B2": 211.57669280879585,
+          "B3": -22.825940979707568,
+          "R1": 677.7953932108334,
+          "R2": -226.83572746560597,
+          "R3": -186.3481289348485,
+          "R4": 255.27742557302878,
+          "T1": 1302.5736359112782,
+          "T2": 1718.112177205504,
+          "T3": 841.3662503031832
+        },
+        "breakdown_random_only_n4_descriptive": -0.6000000000000001,
+        "breakdown_tb_slices_only_n6": 0.8857142857142858,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.24963503649635035,
+          "hypergeom_p": 1.0,
+          "average_precision": 0.48264459276977056,
+          "precision_curve": {
+            "50": 0.04,
+            "100": 0.07,
+            "200": 0.09,
+            "342": 0.13157894736842105,
+            "685": 0.24963503649635035,
+            "1370": 0.3700729927007299,
+            "2055": 0.43260340632603406
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.6650248573881701,
+            "top685_overlap": 0.48613138686131385
+          },
+          "L3_defif_c10": {
+            "spearman": 0.02559214391270406,
+            "top685_overlap": 0.049635036496350364
+          },
+          "L2a_graddot": {
+            "spearman": 0.03368100015987554,
+            "top685_overlap": 0.03795620437956204
+          }
+        },
+        "score_scale_caveat_abs_mean": 15.920590874519588,
+        "score_scale_caveat_abs_max": 136.37969964476252
+      },
+      "cv_loo": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "declared_sensitivity",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.07517703201548223,
+        "reliability_top685_overlap": 0.10218978102189781,
+        "reliability_spearman_brown_pooled_descriptive": 0.1398412164265795,
+        "lds_spearman_primary": 0.6969696969696969,
+        "lds_pearson_primary": 0.6200170671135142,
+        "lds_predicted": {
+          "B1": -12701.900426883498,
+          "B2": -6198.615255273864,
+          "B3": -3623.483538857681,
+          "R1": -175.64478445358114,
+          "R2": -786.405137042342,
+          "R3": -13.135762905024336,
+          "R4": 148.14878969478627,
+          "T1": 11492.802926643464,
+          "T2": 7134.775820359788,
+          "T3": 4805.133527692945
+        },
+        "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.37664233576642336,
+          "hypergeom_p": 0.9999999999893361,
+          "average_precision": 0.49898887776558537,
+          "precision_curve": {
+            "50": 0.14,
+            "100": 0.14,
+            "200": 0.21,
+            "342": 0.2807017543859649,
+            "685": 0.37664233576642336,
+            "1370": 0.48686131386861314,
+            "2055": 0.5182481751824818
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.9315891313738381,
+            "top685_overlap": 0.7503649635036497
+          },
+          "L3_defif_c10": {
+            "spearman": 0.06501625923107808,
+            "top685_overlap": 0.0948905109489051
+          },
+          "L2a_graddot": {
+            "spearman": 0.32416892145647447,
+            "top685_overlap": 0.16496350364963502
+          }
+        },
+        "score_scale_caveat_abs_mean": 14.926010664087869,
+        "score_scale_caveat_abs_max": 117.23608903110514
+      },
+      "svd_m1_xfit": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "declared_sensitivity",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.05043373319736415,
+        "reliability_top685_overlap": 0.11094890510948906,
+        "reliability_spearman_brown_pooled_descriptive": 0.09602458794587901,
+        "lds_spearman_primary": 0.6969696969696969,
+        "lds_pearson_primary": 0.6321954025332701,
+        "lds_predicted": {
+          "B1": -6313.835561430095,
+          "B2": -4320.025937334738,
+          "B3": -2035.8894129102825,
+          "R1": -36.77787826864623,
+          "R2": -430.5215711123376,
+          "R3": 120.69532989319214,
+          "R4": 602.8305058984834,
+          "T1": 6472.655842716987,
+          "T2": 4895.702362978786,
+          "T3": 2698.1376205043703
+        },
+        "breakdown_random_only_n4_descriptive": -0.39999999999999997,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.30364963503649633,
+          "hypergeom_p": 1.0,
+          "average_precision": 0.48345414836658346,
+          "precision_curve": {
+            "50": 0.06,
+            "100": 0.12,
+            "200": 0.125,
+            "342": 0.21052631578947367,
+            "685": 0.30364963503649633,
+            "1370": 0.4116788321167883,
+            "2055": 0.4520681265206813
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.884038731360339,
+            "top685_overlap": 0.672992700729927
+          },
+          "L3_defif_c10": {
+            "spearman": 0.06389830356255365,
+            "top685_overlap": 0.06277372262773723
+          },
+          "L2a_graddot": {
+            "spearman": 0.21661196401493,
+            "top685_overlap": 0.08905109489051095
+          }
+        },
+        "score_scale_caveat_abs_mean": 13.974694097296808,
+        "score_scale_caveat_abs_max": 112.2276639965873
+      }
+    },
+    "bif": {
+      "baseline": {
+        "modes_removed": 0,
+        "nominal_dof": 7,
+        "role": "baseline",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.0823250940923177,
+        "reliability_top685_overlap": 0.0905109489051095,
+        "reliability_spearman_brown_pooled_descriptive": 0.1521263704254384,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.5672046480347348,
+        "lds_predicted": {
+          "B1": -369542.9278867396,
+          "B2": -152130.83487546514,
+          "B3": -95159.75503245313,
+          "R1": -5842.735740057073,
+          "R2": -7324.927725419811,
+          "R3": -6161.923374223035,
+          "R4": 5899.125440127787,
+          "T1": 229776.9226748888,
+          "T2": 140485.85656773255,
+          "T3": 110244.19752937663
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.762043795620438,
+          "hypergeom_p": 3.9538116819564064e-47,
+          "average_precision": 0.5629164446585024,
+          "precision_curve": {
+            "50": 0.8,
+            "100": 0.82,
+            "200": 0.81,
+            "342": 0.7894736842105263,
+            "685": 0.762043795620438,
+            "1370": 0.7014598540145985,
+            "2055": 0.6686131386861314
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.13392126079986166,
+            "top685_overlap": 0.11094890510948906
+          },
+          "L3_defif_c10": {
+            "spearman": 0.10184795817833908,
+            "top685_overlap": 0.11386861313868613
+          },
+          "L2a_graddot": {
+            "spearman": 0.40353442085302715,
+            "top685_overlap": 0.25255474452554744
+          }
+        },
+        "score_scale_caveat_abs_mean": 249.93301519999324,
+        "score_scale_caveat_abs_max": 2004.8858307188852
+      },
+      "cv": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.14054127697010868,
+        "reliability_top685_overlap": 0.14014598540145987,
+        "reliability_spearman_brown_pooled_descriptive": 0.24644662987290022,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.5727574771400067,
+        "lds_predicted": {
+          "B1": -479638.1380817041,
+          "B2": -200591.0052849975,
+          "B3": -118914.46570927188,
+          "R1": -5560.887165669357,
+          "R2": -9549.649874761855,
+          "R3": -6753.862132541082,
+          "R4": 13350.708242895427,
+          "T1": 326413.80724273465,
+          "T2": 204135.74903043304,
+          "T3": 154772.902562905
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.8744525547445255,
+          "hypergeom_p": 3.4653066076065217e-100,
+          "average_precision": 0.6054874801732718,
+          "precision_curve": {
+            "50": 0.9,
+            "100": 0.91,
+            "200": 0.905,
+            "342": 0.8918128654970761,
+            "685": 0.8744525547445255,
+            "1370": 0.810948905109489,
+            "2055": 0.7527980535279806
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.16227569736938555,
+            "top685_overlap": 0.11386861313868613
+          },
+          "L3_defif_c10": {
+            "spearman": 0.11033083410847448,
+            "top685_overlap": 0.13722627737226278
+          },
+          "L2a_graddot": {
+            "spearman": 0.46649455772611004,
+            "top685_overlap": 0.3386861313868613
+          }
+        },
+        "score_scale_caveat_abs_mean": 282.5773570976038,
+        "score_scale_caveat_abs_max": 2483.8605057967134
+      },
+      "svd_m1": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.13246430071018114,
+        "reliability_top685_overlap": 0.12700729927007298,
+        "reliability_spearman_brown_pooled_descriptive": 0.2339399142685757,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.5738427543424373,
+        "lds_predicted": {
+          "B1": -469325.81620446296,
+          "B2": -191987.46980124293,
+          "B3": -112542.55874151048,
+          "R1": -617.2796521555147,
+          "R2": -4312.412086750572,
+          "R3": -2095.2417619649714,
+          "R4": 17266.010986358062,
+          "T1": 330445.93995286024,
+          "T2": 207342.52854888953,
+          "T3": 157797.6358178018
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.8583941605839416,
+          "hypergeom_p": 6.783274932698621e-91,
+          "average_precision": 0.6014777620304924,
+          "precision_curve": {
+            "50": 0.88,
+            "100": 0.9,
+            "200": 0.895,
+            "342": 0.8830409356725146,
+            "685": 0.8583941605839416,
+            "1370": 0.7992700729927007,
+            "2055": 0.7416058394160584
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.15931284826682948,
+            "top685_overlap": 0.11240875912408758
+          },
+          "L3_defif_c10": {
+            "spearman": 0.11053838756806403,
+            "top685_overlap": 0.14014598540145987
+          },
+          "L2a_graddot": {
+            "spearman": 0.4566198503378407,
+            "top685_overlap": 0.3343065693430657
+          }
+        },
+        "score_scale_caveat_abs_mean": 287.8636496887729,
+        "score_scale_caveat_abs_max": 2479.133238237532
+      },
+      "svd_m2": {
+        "modes_removed": 2,
+        "nominal_dof": 5,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.0012786602118513297,
+        "reliability_top685_overlap": 0.08029197080291971,
+        "reliability_spearman_brown_pooled_descriptive": 0.0025540546556356044,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.5705366181454867,
+        "lds_predicted": {
+          "B1": -342403.1499541105,
+          "B2": -135690.68302742383,
+          "B3": -76585.91449525591,
+          "R1": 5099.3481542066,
+          "R2": -5677.135896574221,
+          "R3": -2074.124566232981,
+          "R4": 17810.69035980013,
+          "T1": 262885.41126617603,
+          "T2": 171374.43498905582,
+          "T3": 133466.9847008299
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.7868613138686131,
+          "hypergeom_p": 1.1269623097264046e-56,
+          "average_precision": 0.5838405694665224,
+          "precision_curve": {
+            "50": 0.9,
+            "100": 0.9,
+            "200": 0.865,
+            "342": 0.8538011695906432,
+            "685": 0.7868613138686131,
+            "1370": 0.7357664233576642,
+            "2055": 0.6905109489051094
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.14401075513172534,
+            "top685_overlap": 0.10364963503649635
+          },
+          "L3_defif_c10": {
+            "spearman": 0.10997818568316857,
+            "top685_overlap": 0.12992700729927006
+          },
+          "L2a_graddot": {
+            "spearman": 0.3682153662004988,
+            "top685_overlap": 0.26423357664233577
+          }
+        },
+        "score_scale_caveat_abs_mean": 275.91355734509057,
+        "score_scale_caveat_abs_max": 2445.2911630510234
+      },
+      "svd_m3": {
+        "modes_removed": 3,
+        "nominal_dof": 4,
+        "role": "preregistered_subtraction",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": false,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.0005643870241672993,
+        "reliability_top685_overlap": 0.07007299270072993,
+        "reliability_spearman_brown_pooled_descriptive": 0.00112813734225715,
+        "lds_spearman_primary": -0.5272727272727272,
+        "lds_pearson_primary": -0.23199283147576244,
+        "lds_predicted": {
+          "B1": -69659.66172828572,
+          "B2": 909.1740439930766,
+          "B3": 4046.742625546618,
+          "R1": -5125.655340294929,
+          "R2": -13604.563271814752,
+          "R3": -6652.850816915407,
+          "R4": -3942.54259427371,
+          "T1": -20294.549936430958,
+          "T2": -16897.415722969643,
+          "T3": 1702.1057184999122
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": -0.5428571428571429,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.5635036496350365,
+          "hypergeom_p": 0.00036891071375867805,
+          "average_precision": 0.48570440498886636,
+          "precision_curve": {
+            "50": 0.62,
+            "100": 0.66,
+            "200": 0.615,
+            "342": 0.6052631578947368,
+            "685": 0.5635036496350365,
+            "1370": 0.5394160583941606,
+            "2055": 0.5182481751824818
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.003568662103322675,
+            "top685_overlap": 0.09197080291970802
+          },
+          "L3_defif_c10": {
+            "spearman": -0.012884197372534175,
+            "top685_overlap": 0.06277372262773723
+          },
+          "L2a_graddot": {
+            "spearman": -0.037375696555369015,
+            "top685_overlap": 0.051094890510948905
+          }
+        },
+        "score_scale_caveat_abs_mean": 147.82526086377584,
+        "score_scale_caveat_abs_max": 936.7623619295579
+      },
+      "cv_loo": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "declared_sensitivity",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.1405444697760227,
+        "reliability_top685_overlap": 0.1386861313868613,
+        "reliability_spearman_brown_pooled_descriptive": 0.24645153871750825,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.5727385560187738,
+        "lds_predicted": {
+          "B1": -479742.0427986325,
+          "B2": -200637.21932897775,
+          "B3": -118946.57952112719,
+          "R1": -5586.558297904184,
+          "R2": -9573.15561246364,
+          "R3": -6770.6218624061285,
+          "R4": 13336.303841844256,
+          "T1": 326421.98173907644,
+          "T2": 204146.35191254702,
+          "T3": 154761.6429105125
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.8744525547445255,
+          "hypergeom_p": 3.4653066076065217e-100,
+          "average_precision": 0.6054924381742406,
+          "precision_curve": {
+            "50": 0.9,
+            "100": 0.91,
+            "200": 0.905,
+            "342": 0.8918128654970761,
+            "685": 0.8744525547445255,
+            "1370": 0.810948905109489,
+            "2055": 0.7532846715328467
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.16227896950836979,
+            "top685_overlap": 0.11386861313868613
+          },
+          "L3_defif_c10": {
+            "spearman": 0.11033394259498823,
+            "top685_overlap": 0.13722627737226278
+          },
+          "L2a_graddot": {
+            "spearman": 0.46650251850697294,
+            "top685_overlap": 0.3386861313868613
+          }
+        },
+        "score_scale_caveat_abs_mean": 282.6021228902768,
+        "score_scale_caveat_abs_max": 2484.022925384286
+      },
+      "svd_m1_xfit": {
+        "modes_removed": 1,
+        "nominal_dof": 6,
+        "role": "declared_sensitivity",
+        "meets_reliability_bar_0.3": false,
+        "meets_validity_bar_0.5": true,
+        "rescue_both_bars": false,
+        "per_chain_status": [
+          {
+            "chain": 0,
+            "status": "ok"
+          },
+          {
+            "chain": 1,
+            "status": "ok"
+          }
+        ],
+        "status": "ok",
+        "reliability_between_chain_spearman": 0.13264525296773075,
+        "reliability_top685_overlap": 0.12846715328467154,
+        "reliability_spearman_brown_pooled_descriptive": 0.23422206135623974,
+        "lds_spearman_primary": 0.6484848484848483,
+        "lds_pearson_primary": 0.5738524355236951,
+        "lds_predicted": {
+          "B1": -469365.94856344425,
+          "B2": -191863.97130866814,
+          "B3": -112643.07651145541,
+          "R1": -660.2614683037978,
+          "R2": -4212.99734866468,
+          "R3": -2308.981615514931,
+          "R4": 17264.630089325863,
+          "T1": 330465.3189189797,
+          "T2": 207460.9394644295,
+          "T3": 157727.37229979376
+        },
+        "breakdown_random_only_n4_descriptive": -0.7999999999999999,
+        "breakdown_tb_slices_only_n6": 0.7714285714285715,
+        "label_metrics_SECONDARY_provenance_not_causal": {
+          "precision_at_685": 0.8613138686131386,
+          "hypergeom_p": 1.5551293202078625e-92,
+          "average_precision": 0.6013450437479352,
+          "precision_curve": {
+            "50": 0.88,
+            "100": 0.89,
+            "200": 0.895,
+            "342": 0.8830409356725146,
+            "685": 0.8613138686131386,
+            "1370": 0.7978102189781022,
+            "2055": 0.7435523114355231
+          }
+        },
+        "agreement": {
+          "L5_bif": {
+            "spearman": 0.15940111714388047,
+            "top685_overlap": 0.11386861313868613
+          },
+          "L3_defif_c10": {
+            "spearman": 0.1105860855867565,
+            "top685_overlap": 0.1416058394160584
+          },
+          "L2a_graddot": {
+            "spearman": 0.4565523597476015,
+            "top685_overlap": 0.3343065693430657
+          }
+        },
+        "score_scale_caveat_abs_mean": 287.94488982976554,
+        "score_scale_caveat_abs_max": 2485.403609013116
+      }
+    }
+  },
+  "cross_store_DESCRIPTIVE_ONLY": {
+    "baseline": {
+      "spearman": 0.13392126079986166,
+      "top685_overlap": 0.11094890510948906
+    },
+    "cv": {
+      "spearman": 0.17707348701744094,
+      "top685_overlap": 0.10948905109489052
+    },
+    "svd_m1": {
+      "spearman": 0.0855212470429405,
+      "top685_overlap": 0.08321167883211679
+    },
+    "svd_m2": {
+      "spearman": 0.06687966536760717,
+      "top685_overlap": 0.07153284671532846
+    },
+    "svd_m3": {
+      "spearman": -0.008192277696246978,
+      "top685_overlap": 0.08029197080291971
+    },
+    "cv_loo": {
+      "spearman": 0.1769729975373579,
+      "top685_overlap": 0.10948905109489052
+    },
+    "svd_m1_xfit": {
+      "spearman": 0.08651128821106006,
+      "top685_overlap": 0.08613138686131387
+    }
+  },
+  "rerun_cost_model_ESTIMATE": {
+    "source": "results/tda/manifests/bif_kappa_{calibration,manifest}.json + logs/pod_costs.jsonl (all sha-gated in pass 1)",
+    "input_sha256": {
+      "calibration": "79aecc859c7e569b8264ed4b0bdf0a080861c90709f825906009054c26ac6c9d",
+      "manifest": "6fa539ce75bdaf2d31d719905c21753b1288498f732b3cb5c95414e09ee12cf0",
+      "pod_ledger": "dc03c5f2165cee3fef490bd6323752ea71a40de7d8975bc4bf3856cda1139db5"
+    },
+    "pod_id_containing_the_run": "prasckidcm1w8c",
+    "pod_usd_per_hr": 3.29,
+    "sec_per_sgld_step_calibration": 1.145946273803711,
+    "eval_sec_full_pass_calibration": 343.98811020441207,
+    "actual_wall_clock_sec": 7491.613887,
+    "model_calibration_factor_actual_over_projected": 0.917819414528292,
+    "fixed_burn_in_sec_both_chains": 420.7086952413599,
+    "marginal_usd_per_extra_draw_both_chains": 0.8077527111418725,
+    "usd_by_draws_per_chain": {
+      "8": 6.846502691175,
+      "16": 13.30852438030998,
+      "32": 26.23256775857994,
+      "39": 31.88683673657304,
+      "47": 38.34885842570802,
+      "64": 52.08065451511985,
+      "128": 103.7768280281997,
+      "256": 207.16917505435936
+    },
+    "check_reproduces_actual_at_D8_usd": 6.846502691175,
+    "caveat": "ESTIMATE of what draws cost, from the committed run's structure. Not a quote, not a recommendation, and no evidence that a rerun would pass acceptance."
+  },
+  "hypothesis_readout": {
+    "primary_store": "bif_kappa",
+    "H_noise": {
+      "predicate_1_non_decreasing_in_D_slack_0.01": true,
+      "mean_matched_between_chain_spearman_by_D": {
+        "2": 0.003772978339096524,
+        "3": 0.011899928118644506,
+        "4": 0.026045237680268576,
+        "5": 0.040384117756270765,
+        "6": 0.054185889088493124,
+        "7": 0.06721188972345091,
+        "8": 0.07929910350874667
+      },
+      "predicate_2_attenuation_r2_ge_0.8_HEURISTIC": true,
+      "r_squared": 0.8548444892609803,
+      "predicate_3_delta_split_half_minus_between_chain_at_D4": 0.00015495773939701307,
+      "predicate_3_within_band_0.05_HEURISTIC": true,
+      "delta_within_band_0.03": true,
+      "delta_within_band_0.10": true,
+      "supported": true,
+      "undefined": false
+    },
+    "H_mode_degeneracy": {
+      "predicate_1_mode1_variance_share_ge_0.5_both_chains": false,
+      "mode1_variance_share_by_chain": [
+        0.18570502528231034,
+        0.17836365151376776
+      ],
+      "predicate_2_above_phase_randomization_p99_both_chains": true,
+      "mode1_null_p99_by_chain": [
+        0.16289142437246418,
+        0.15905251624544334
+      ],
+      "predicate_3_mode1_query_energy_share_ge_0.5_both_chains": false,
+      "mode1_query_energy_share_by_chain": [
+        0.013575800424685145,
+        0.28453501370650286
+      ],
+      "predicate_4_pooled_spearman_baseline_vs_svd_m1_le_0.8": false,
+      "spearman_baseline_vs_svd_m1_pooled": 0.8823505607987712,
+      "population_isotropic_share": 0.14285714285714285,
+      "n_eff_rows_by_chain": [
+        4860.116604071211,
+        5859.600166437858
+      ],
+      "supported": false,
+      "undefined": false
+    },
+    "classification": "H_noise_only",
+    "rescue": {
+      "variants_meeting_both_bars": [],
+      "subtractions_meeting_reliability_only": [],
+      "subtraction_reliability_states": {
+        "cv": false,
+        "svd_m1": false,
+        "svd_m2": false,
+        "svd_m3": false
+      },
+      "outcome": "3_no_preregistered_subtraction_rescues_BIF_at_this_draw_count"
+    },
+    "original_acceptance": "FAIL (BIF demoted to exploratory)",
+    "acceptance_verdict_unchanged": "BIF FAILS preregistered acceptance (prereg 7/7b) and remains exploratory and Stage-B-ineligible regardless of every number in this artifact"
+  },
+  "bars": {
+    "reliability_between_chain_spearman": 0.3,
+    "validity_lds_spearman": 0.5,
+    "note": "both required on the same SUBTRACTION variant and the primary store; reliability without validity is a NEGATIVE result (addendum 14.6); sensitivities cannot constitute a rescue"
+  },
+  "determinism_verified": true,
+  "determinism_verification_method": "two in-process runs, identical",
+  "generated_at": "2026-08-24T00:19:52.160059+00:00",
+  "finished_at": "2026-08-24T00:20:14.827615+00:00"
+}

@@ -366,3 +366,271 @@ def ess(traces: np.ndarray) -> float:
         prev = pair
         k += 2
     return float(min(c * n, c * n / tau))
+
+
+# --- BIF shared-mode diagnostics (prereg addendum 14) ---------------------
+#
+# EXPLORATORY DIAGNOSIS ONLY. None of these variants is a locator; BIF's
+# preregistered acceptance verdict (FAIL -> exploratory, prereg 7/7b) is
+# unchanged by anything computed here, and no variant name is
+# `stage_b_eligible`.
+
+BIF_VARIANTS = ("baseline", "cv", "svd_m1", "svd_m2", "svd_m3",
+                "cv_loo", "svd_m1_xfit")
+BIF_SUBTRACTIONS = ("cv", "svd_m1", "svd_m2", "svd_m3")   # the four preregistered
+BIF_SENSITIVITIES = ("cv_loo", "svd_m1_xfit")             # reported, never a rescue
+# numerical policy, fixed in addendum 14.2 BEFORE the stores were opened
+BIF_TIE_TOL = 1e-6        # relative singular-value boundary gap
+BIF_RANK_TOL = 1e-12      # sigma_m / sigma_1 floor
+BIF_DEAD_TOL = 1e-12      # |score| floor relative to the baseline variant
+BIF_XFIT_FOLDS = 5        # svd_m1_xfit: rows split by i % 5 (deterministic)
+
+
+class BifDegenerate(Exception):
+    """A declared `undefined_*` condition fired (addendum 14.2). `kind` keeps
+    the condition type ("tied_spectrum", "rank_deficient",
+    "degenerate_loo_direction") and `chain`/`fold` its location, so callers
+    RECORD a structured result instead of collapsing every degeneracy into one
+    status or silently letting LAPACK's ordering decide."""
+
+    def __init__(self, message: str, kind: str, chain: int | None = None,
+                 fold: int | None = None):
+        super().__init__(message)
+        self.kind = kind
+        self.chain = chain
+        self.fold = fold
+
+    def relocated(self, chain: int | None = None, fold: int | None = None) -> "BifDegenerate":
+        """Same condition, with its location filled in by an outer frame."""
+        return BifDegenerate(str(self), self.kind,
+                             self.chain if chain is None else chain,
+                             self.fold if fold is None else fold)
+
+
+def bif_variant_modes(variant: str) -> int:
+    """Number m of draw-space directions the variant removes (addendum 14.2).
+    The partial-covariance variants remove exactly one regressor -> m=1."""
+    if variant == "baseline":
+        return 0
+    if variant in ("cv", "cv_loo", "svd_m1_xfit"):
+        return 1
+    assert variant.startswith("svd_m") and variant[len("svd_m"):].isdigit(), (
+        f"unknown BIF variant {variant}")
+    return int(variant[len("svd_m"):])
+
+
+def bif_variant_dof(variant: str, draws: int) -> int:
+    """Nominal residual dof: within-chain centering costs one dimension of
+    draw space and each removed mode costs one more -> divisor D - 1 - m.
+    Narrow claim (addendum 14.2): any COMMON positive divisor rescales both
+    chain vectors and their equal-weight pooled mean identically, so it cannot
+    change a rank statistic. It says nothing about the adaptive projection's
+    own row-dependent bias."""
+    return draws - 1 - bif_variant_modes(variant)
+
+
+def bif_spectrum(x_centered: np.ndarray) -> dict:
+    """Draw-space spectrum of the within-chain-centered per-row losses.
+
+    x_centered: (draws, n_rows). Column centering puts 1_D in the null space,
+    so rank <= D-1 and every left singular vector with sigma > 0 is orthogonal
+    to 1_D. Returns singular values, eigen-shares, relative boundary gaps
+    g_m = (sigma_m - sigma_{m+1})/sigma_1, the participation ratio, N_eff =
+    (sum_i v_i)^2 / sum_i v_i^2 (the effective row count that governs
+    concentration, NOT raw N), and mode-1 row leverage v_1[i]^2.
+    """
+    x = np.asarray(x_centered, dtype=np.float64)
+    draws = x.shape[0]
+    u, s, vh = np.linalg.svd(x, full_matrices=False)
+    lam = s ** 2
+    tot = float(lam.sum())
+    v_row = (x ** 2).sum(axis=0) / (draws - 1)          # per-row draw variance
+    lev = vh[0] ** 2                                     # sums to 1
+    order = np.argsort(lev)[::-1]
+    top1pct = max(1, round(0.01 * len(lev)))
+    # the centered subspace has D-1 dimensions; the D-th cell is the
+    # centered-out direction and is structurally zero (addendum 14.4)
+    keep = draws - 1
+    return {
+        "reported_cells": keep,
+        "singular_values": s[:keep].tolist(),
+        "eigen_share": (lam / tot).tolist()[:keep] if tot > 0 else [0.0] * keep,
+        "boundary_gap_rel": [float((s[k] - s[k + 1]) / s[0]) if s[0] > 0 else 0.0
+                             for k in range(min(keep, len(s) - 1))],
+        "participation_ratio": float(tot ** 2 / float((lam ** 2).sum())) if tot > 0 else 0.0,
+        "population_isotropic_share": 1.0 / (draws - 1),
+        "n_eff_rows": float(v_row.sum() ** 2 / float((v_row ** 2).sum())) if v_row.any() else 0.0,
+        "mode1_leverage_max": float(lev.max()),
+        "mode1_leverage_top1pct_share": float(lev[order[:top1pct]].sum()),
+        "left_vectors": u,
+    }
+
+
+def bif_mode_dirs(x_centered: np.ndarray, variant: str,
+                  tie_tol: float = BIF_TIE_TOL, rank_tol: float = BIF_RANK_TOL) -> np.ndarray:
+    """Orthonormal draw-space directions removed by `variant`, shape (D, m).
+
+    Raises BifDegenerate for the addendum-14.2 `undefined_*` conditions: a
+    rank-deficient boundary (sigma_m <= rank_tol*sigma_1) or a tied top-m
+    subspace (relative boundary gap < tie_tol), where the top-m subspace is
+    not unique and LAPACK's ordering would decide it arbitrarily.
+    """
+    x = np.asarray(x_centered, dtype=np.float64)
+    draws = x.shape[0]
+    m = bif_variant_modes(variant)
+    if m == 0:
+        return np.zeros((draws, 0))
+    if variant in ("cv", "cv_loo"):
+        v = x.mean(axis=1)
+        nv = float(np.linalg.norm(v))
+        scale = float(np.linalg.norm(x)) / np.sqrt(x.shape[1])
+        assert nv > 1e-12 * max(scale, np.finfo(np.float64).tiny), (
+            "per-draw mean loss is constant: the partial-covariance variant is "
+            "undefined (addendum 14.2 hard-fail)")
+        return (v / nv)[:, None]
+    u, s, _vh = np.linalg.svd(x, full_matrices=False)
+    if len(s) < m + 1 or s[0] <= 0:
+        raise BifDegenerate(f"{variant}: fewer than {m + 1} singular values",
+                            kind="rank_deficient")
+    if s[m - 1] <= rank_tol * s[0]:
+        raise BifDegenerate(f"{variant}: rank deficient, sigma_{m}/sigma_1="
+                            f"{s[m - 1] / s[0]:.3e} <= {rank_tol}",
+                            kind="rank_deficient")
+    gap = (s[m - 1] - s[m]) / s[0]
+    if gap < tie_tol:
+        raise BifDegenerate(f"{variant}: tied spectrum at the top-{m} boundary, "
+                            f"relative gap {gap:.3e} < {tie_tol}",
+                            kind="tied_spectrum")
+    return u[:, :m]
+
+
+def bif_per_chain_scores(row_losses: np.ndarray, query_losses: np.ndarray,
+                         nbeta: float, variant: str = "baseline") -> np.ndarray:
+    """Per-chain BIF scores under the addendum-14 variants: (chains, n_rows).
+
+        score_i^(c) = nbeta / (D-1-m) * x_i^T P y ,  P = I - U U^T
+
+    with U estimated WITHIN chain c only (never pooled across chains, so the
+    two per-chain vectors stay functions of disjoint data — which avoids
+    direct cross-chain fitting leakage, and is NOT a claim of unbiasedness).
+    variant="baseline" reproduces `bif_scores` per chain. `cv_loo` and
+    `svd_m1_xfit` are the declared row-cross-fitted sensitivities: they use a
+    DIFFERENT projector per row, so they are computed row-block-wise rather
+    than through a single P.
+    """
+    rl = np.asarray(row_losses, dtype=np.float64)
+    ql = np.asarray(query_losses, dtype=np.float64)
+    assert rl.ndim == 3 and ql.ndim == 2 and rl.shape[:2] == ql.shape
+    assert np.isfinite(rl).all() and np.isfinite(ql).all(), "non-finite inputs"
+    n_chains, draws, n_rows = rl.shape
+    dof = bif_variant_dof(variant, draws)
+    assert dof >= 1, f"variant {variant} is undefined at {draws} draws/chain"
+    out = np.empty((n_chains, n_rows), dtype=np.float64)
+    for c in range(n_chains):
+        x = rl[c] - rl[c].mean(axis=0, keepdims=True)      # (D, n_rows)
+        y = ql[c] - ql[c].mean()                            # (D,)
+        assert float(y @ y) > 0.0, (
+            "centered query loss is identically zero: every variant is "
+            "undefined for this chain (addendum 14.2 hard-fail)")
+        if variant == "cv_loo":
+            # leave-one-out mean-loss direction, in closed form per row
+            mv = x.mean(axis=1)
+            mm = (n_rows * mv[:, None] - x) / (n_rows - 1)   # (D, n_rows)
+            nn = np.einsum("di,di->i", mm, mm)
+            # the SAME scale-relative floor the single-direction variants use,
+            # applied to every one of the N per-row directions (addendum 14.2):
+            # dividing by numerical dust would turn noise into a finite score
+            floor = (1e-12 * float(np.linalg.norm(x)) / np.sqrt(n_rows)) ** 2
+            if not (nn > max(floor, np.finfo(np.float64).tiny)).all():
+                raise BifDegenerate(
+                    f"cv_loo: {int((nn <= floor).sum())} leave-one-out control "
+                    f"direction(s) at or below the scale-relative floor",
+                    kind="degenerate_loo_direction", chain=c)
+            xy = x.T @ y
+            xm = np.einsum("di,di->i", x, mm)
+            ym = mm.T @ y
+            out[c] = (xy - xm * ym / nn) / dof
+        elif variant == "svd_m1_xfit":
+            folds = np.arange(n_rows) % BIF_XFIT_FOLDS
+            res = np.empty(n_rows, dtype=np.float64)
+            for k in range(BIF_XFIT_FOLDS):
+                in_k = folds == k
+                try:
+                    u = bif_mode_dirs(x[:, ~in_k], "svd_m1")
+                except BifDegenerate as exc:   # keep the fold identity in the record
+                    raise exc.relocated(chain=c, fold=k) from exc
+                y_res = y - u @ (u.T @ y)
+                res[in_k] = x[:, in_k].T @ y_res
+            out[c] = res / dof
+        else:
+            try:
+                u = bif_mode_dirs(x, variant)
+            except BifDegenerate as exc:       # keep the chain identity in the record
+                raise exc.relocated(chain=c) from exc
+            y_res = y - u @ (u.T @ y) if u.shape[1] else y   # P is idempotent
+            out[c] = (x.T @ y_res) / dof
+    return nbeta * out
+
+
+def bif_mode_geometry(row_losses: np.ndarray, query_losses: np.ndarray) -> list[dict]:
+    """Descriptive shared-mode geometry per chain (addendum 14.4): the
+    spectrum of `bif_spectrum` plus the share of the centered query-loss
+    energy carried by each mode and the mean-loss direction's alignment with
+    it. 1/(D-1) is reported as the POPULATION isotropic share, never as the
+    expected largest ordered sample share — the calibrated reference is the
+    phase-randomization null of `bif_mode_null_shares`.
+    """
+    rl = np.asarray(row_losses, dtype=np.float64)
+    ql = np.asarray(query_losses, dtype=np.float64)
+    assert rl.ndim == 3 and ql.ndim == 2 and rl.shape[:2] == ql.shape
+    out = []
+    for c in range(rl.shape[0]):
+        x = rl[c] - rl[c].mean(axis=0, keepdims=True)
+        y = ql[c] - ql[c].mean()
+        spec = bif_spectrum(x)
+        u = spec.pop("left_vectors")
+        y_energy = float(y @ y)
+        assert y_energy > 0.0, "centered query loss is identically zero"
+        proj = u.T @ y
+        mv = x.mean(axis=1)
+        mvn = float(np.linalg.norm(mv))
+        out.append({
+            **spec,
+            "query_energy_share_by_mode": ((proj ** 2) / y_energy).tolist()[:spec["reported_cells"]],
+            "query_energy_share_mean_loss_direction":
+                (float((mv @ y) ** 2 / (mvn ** 2 * y_energy)) if mvn > 0 else 0.0),
+            "corr_mean_loss_query":
+                (float((mv @ y) / (mvn * np.sqrt(y_energy))) if mvn > 0 else 0.0),
+        })
+    return out
+
+
+def bif_mode_null_shares(x_centered: np.ndarray, rng: np.random.Generator,
+                         n_rep: int = 500) -> np.ndarray:
+    """Phase-randomization null for the mode-1 eigen-share (addendum 14.4).
+
+    Each row's centered draw series is circularly shifted by an independent
+    uniform shift in {0..D-1}: this preserves the row's own marginal series
+    and its CIRCULAR autocorrelation while destroying cross-row phase
+    alignment, so the null answers "how large is the top ordered sample share
+    when rows do not co-fluctuate". Stated limitation: circular wrapping at
+    D=8 is a crude stand-in for the true temporal structure.
+    """
+    x = np.asarray(x_centered, dtype=np.float64)
+    draws, n_rows = x.shape
+    base = np.arange(draws)[:, None]
+    shares = np.empty(n_rep, dtype=np.float64)
+    for r in range(n_rep):
+        idx = (base + rng.integers(0, draws, size=n_rows)[None, :]) % draws
+        xs = np.take_along_axis(x, idx, axis=0)
+        lam = np.linalg.eigvalsh(xs @ xs.T)
+        shares[r] = float(lam[-1] / lam.sum()) if lam.sum() > 0 else 0.0
+    return shares
+
+
+def bif_null_streams() -> dict[str, np.random.Generator]:
+    """Addendum-14 RNG stream. The frozen five-stream spawn of section 3 is
+    untouched; this derives from a distinct entropy tree, mirroring the
+    addendum-13 precedent (`probes.probe_seed_streams`)."""
+    kids = np.random.SeedSequence([TDA_SEED, 14]).spawn(1)
+    return {n: np.random.default_rng(s) for n, s in zip(["mode_null"], kids)}
