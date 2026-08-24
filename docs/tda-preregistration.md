@@ -497,3 +497,540 @@ Artifact: `results/tda/adapter_directions.json`
 tests in `tests/test_probes.py`. Cost: $0 GPU (~2MB of downloads), ~$2.5 GPU
 for 13a's one forward-only pod pass. Both analyses report deviations, if
 any, in `logs/phase1-report.md` next to the results they affect.
+
+
+## 14. Addendum (Jacob's go, 2026-08-23, committed BEFORE any per-draw BIF
+store is opened for analysis): why the BIF locator failed — draw-count power
+analysis + shared-fluctuation-mode subtraction
+
+**Verdict scope, first and binding: BIF's preregistered acceptance verdict is
+UNCHANGED by everything in this section.** L5_bif FAILED §7 acceptance twice
+(the grid run and the §7b kappa rerun), is demoted to exploratory, and is
+ineligible for the §5 Stage-B selection. Stage B is closed (§13 scope lock).
+Nothing computed here changes any committed score vector, ranking, selection,
+recommendation, arm, or claim; no variant defined below is or becomes a
+locator, none may appear in `results/tda/scores.npz`, and none is
+`stage_b_eligible` (the frozen name set of §5 already excludes them). This is
+post-hoc **exploratory diagnosis** of a recorded negative, run offline at $0
+on data already bought. Its only decision output is an input to Jacob's call
+on an optional higher-draw BIF rerun — the analysis does not authorize one,
+and no rerun happens without his explicit go. The scope lock is machine
+enforced: the analysis script records `original_acceptance: FAIL`, asserts no
+variant name is `stage_b_eligible` or present in `scores.npz`, and
+sha256-asserts that `scores.npz`, `rank_metrics.json`, `lds_results.json` and
+`tda_prelim_ranking.json` are byte-identical before and after it runs.
+
+**Timing disclosure, stated precisely rather than flatteringly** (codex
+pre-execution review finding #17). Both per-draw stores
+(`data/tda_stores/bif/bif_draws.npz`, `data/tda_stores/bif_kappa/`
+`bif_draws.npz`) have existed unmodified since 2026-08-18 and were
+sha-manifested into the committed `results/tda/store_manifest.json` then.
+Their shapes, dtypes and scalar fields were read while planning this
+addendum. Before this commit, the estimator and geometry helpers in
+`src/em_filter/tda.py` were already **scaffolded** in the working tree (not
+committed) and their SYNTHETIC unit tests were run; the driver
+`scripts/tda_bif_modes.py` existed as a draft. What has NOT happened before
+this commit: no per-draw store has been opened, and **no statistic declared
+below has been computed on real data**. This addendum is therefore a
+preregistration of the analysis and its decision rules, not of the source
+code's existence — recorded that way so no reader over-reads it.
+
+Motivation: the §7b rerun fixed the sampling diagnostics (split-R-hat
+1.41 -> 0.996, ESS 2.1 -> 16.0) but between-chain per-row score Spearman
+stayed 0.0793 (top-685 overlap 0.114), and the report left the cause
+explicitly UNRESOLVED — "consistent with per-row covariance noise at 16
+draws, but residual non-convergence below the R-hat/ESS detection floor
+cannot be excluded; a power analysis was not run". Two facts point at a
+structural explanation: group sums over 685 rows are reproducible across two
+runs whose per-row scores differ ~30x in magnitude (identical exploratory LDS
+rho = 0.6485), and LLC(kappa=10) ~ 0. This addendum tests that explanation
+against the pure-noise one, and — per the review — is explicit that with 2
+chains x 8 draws it is a LOW-POWER diagnostic that will not settle the
+question either way.
+
+### 14.1 Data, notation, frozen baseline, and the input gates
+
+Read-only inputs. **Every one of the following is a mandatory hard-fail gate
+executed BEFORE any variant is computed** (review finding #15):
+
+- sha256 of `bif_draws.npz`, `calibration.json`, `manifest.json` for BOTH
+  stores against the committed `results/tda/store_manifest.json`;
+- sha256 of `data/processed/tda_queries.json` against the §1 value
+  `c9561fdfd89167a6160aa79b107481c5197e2b5ca9d7d9d592aa6b9b75bc70ac`, and
+  the store's `query_ids` equal to the 71 `in_consensus` qids in order;
+- each store's exact npz key set; `row_losses` shape (2, 8, 13698) dtype
+  float32 and all-finite; `query_losses_orig`/`_neut` shape (2, 8, 71) dtype
+  float32 all-finite; `base_row_losses` shape (13698,) float32 all-finite;
+- store manifest `adapter_revision == 6b948d4e8bf4227b452e128f80fdebda21f8f0b1`,
+  `n_rows == 13698`, `chains == 2`, `draws_per_chain == 8`, and exact
+  equality of `nbeta` (1438.1094638299446), `eps`, `gamma`, `burn_in`, `thin`
+  between the npz scalars and the sha-verified manifest;
+- `mixture.jsonl` sha == `tda_retrain_sets.json:source_mixture_sha256`, row
+  count 13698, trait-label count 6849;
+- the full LDS harness checks of `scripts/tda_probes.py:120-135`: REF label,
+  `n_queries == 71`, `adapter_revision == 6b948d4e…`, and for each of the 10
+  subsets its label, `n_queries == 71` and expected adapter name
+  `jrepifano/q14b-tda-del-<name>`;
+- `results/tda/scores.npz` contains `L5_bif`, `L3_defif_c10`, `L2a_graddot`,
+  each of length 13698 and all-finite;
+- the 10 retrain subsets are EXACTLY {R1..R4, T1..T3, B1..B3}, each of 685
+  unique row indices inside [0, 13698), and every retrain dNLL is finite;
+- `results/tda/rank_metrics.json:bif_diagnostics` records `store ==
+  "bif_kappa"` and an `acceptance` string that starts with `FAIL` — the
+  committed verdict this analysis is diagnosing is ASSERTED, never assumed,
+  and the verified string is copied into the output rather than re-typed;
+- each store's `truncate == 0`, `n_rows_truncated == 0`, and
+  `minibatch_traces` shape (2, burn_in + draws*thin), all-finite;
+- the cost-model inputs of §14.3 (both `bif_kappa` manifests and the pod
+  ledger) exist, parse, and carry the fields that section names.
+
+**Gate ordering, stated as a requirement, not an intention**: the driver runs
+in two passes. Pass 1 loads and validates EVERY input above for BOTH stores
+and reproduces BOTH committed baselines. Pass 2 — geometry, null, power
+analysis, split-half, variants, LDS — begins only after every pass-1 gate has
+passed. No analysis of store A may run before store B's gates.
+
+Notation. `l[c,d,i]` = token-summed response-masked NLL of training row i at
+draw d of chain c (`row_losses`, (C=2, D=8, N=13698)).
+`L[c,d] = sum_q w_q * nll[c,d,q]` = the macro-weighted query loss over the 71
+consensus queries, `w` = the `macro_weights` of `scripts/tda_rank.py:48`
+(equal per question_id, equal per generation within) applied to
+`query_losses_orig` — the identical construction to the committed L5_bif.
+Tildes denote within-chain centering over the draw axis (`x~ = x - mean_d x`),
+which is what `tda.bif_scores` does.
+
+Frozen baseline (the §7 estimator, unchanged):
+
+    b_i^(c) = nbeta / (D-1) * sum_d l~[c,d,i] * L~[c,d]
+    b_i     = mean_c b_i^(c)                       (= tda.bif_scores)
+
+**Reproduction gates** (review findings #13, #14), hard-asserted before any
+variant is computed, never loosened in-run — a failure stops the analysis and
+is investigated and reported:
+
+- the recomputed per-chain-pair Spearman must equal the FULL committed value
+  loaded from `results/tda/rank_metrics.json`
+  (`bif_diagnostics.between_chain_score_spearman`, currently
+  0.07929910350874667) to rtol 1e-10 / atol 1e-12; "0.0793" anywhere in the
+  report is a DISPLAY rounding of that loaded number, never the gate;
+- the recomputed top-685 overlap must equal the committed
+  `between_chain_top685_overlap` exactly;
+- the recomputed pooled `b` must match `scores.npz:L5_bif` at
+  rtol 1e-10 / atol 1e-12 AND produce an EXACTLY equal tie-broken ranking;
+- the failed grid store's diagnostics (which survive only as report prose)
+  are recomputed **through the committed code path verbatim**, including the
+  float32 `.mean()` accumulation `tda_rank.py:203` uses for LLC, and gated as
+  FORMATTING equalities rather than floating intervals:
+  `format(split_rhat, ".2f") == "1.41"`, `format(ess, ".1f") == "2.1"`,
+  `format(rho, ".2f") == "0.08"`, `format(overlap, ".2f") == "0.09"`,
+  `format(llc, ".0f") == "-162"`.
+
+### 14.2 Subtraction estimators (exact, including ddof and degeneracy)
+
+All variants are computed **within each chain independently** — the two
+per-chain score vectors must remain functions of disjoint data. Stated
+precisely (review finding #10): this avoids DIRECT cross-chain fitting
+leakage; it does **not** make the reliability estimate unbiased, because each
+chain fits a data-adaptive projector in which high-leverage rows influence
+their own transformation. That residual concern is addressed by the declared
+cross-fitted sensitivities below and by reporting row leverage. Pooling for
+the LDS is the same equal-weight chain mean as the baseline.
+
+Write `X = l~^(c)` (D x N, columns centered so `1_D` lies in the null space)
+and `y = L~^(c)` (D,). All variants have the form
+
+    score_i^(c) = nbeta / (D - 1 - m) * x_i^T P y ,   P = I_D - U U^T
+
+with `U` an orthonormal (D x m) basis of the removed draw-space subspace; the
+identity `(P X)^T (P y) = X^T P y` holds by symmetry+idempotence.
+
+**The four preregistered subtractions:**
+
+1. **`cv` — endogenous mean-loss partial covariance** (renamed per review
+   finding #4; it is NOT a classical control variate and it targets a
+   DIFFERENT estimand). `m~[d] = (1/N) sum_i l~[c,d,i]` is the scalar the
+   SGLD potential multiplies by nbeta; `U = m~/||m~||`, `m = 1`, divisor
+   D-2. Declared consequence, so it cannot be discovered later: the removed
+   term equals `Cov(l_i,m)Cov(L,m)/Var(m) = v_i * (sum_j c_j) / (sum_j v_j)`
+   under independent rows, where `v_i = Var(l_i)`, `c_i = Cov(l_i,L)` — the
+   1/N factors CANCEL, so this is an order-one, row-heterogeneity-weighted
+   subtraction, not a small correction, and `l_i` itself is inside `m`.
+   D-2 is the conventional residual divisor only under a fixed-regressor
+   model, which this is not.
+2. **`svd_m1`, `svd_m2`, `svd_m3` — SVD residualization.** `U` = the top-m
+   left singular vectors of `X` (`X = sum_k sigma_k u_k v_k^T`), divisor
+   D-1-m. Because the columns of `X` are centered, `1_D` is orthogonal to
+   every `u_k` with `sigma_k > 0` and rank(X) <= D-1 = 7. Modes come from the
+   ROW losses only, never from the query loss, never pooled across chains.
+
+**Declared sensitivities** (added per review findings #4, #7, #10; reported
+in the same table, never selected on, never promoted to a primary cell):
+
+3. **`cv_loo`** — the same partial covariance with a row-wise
+   leave-one-out control: for row i the direction is
+   `m~_{-i} = (N*m~ - l~_i)/(N-1)`, removing i's self-inclusion exactly (the
+   full N-row LOO is computed in closed form, not sampled).
+4. **`svd_m1_xfit`** — 5-fold row-cross-fitted mode: rows are split by
+   `i mod 5` (deterministic, no RNG); the mode for fold k is estimated from
+   the rows NOT in fold k and applied to score fold k's rows.
+
+**ddof, reasoned.** Within-chain centering removes one draw-space dimension
+(`1_D`), leaving D-1 = 7 dof — the baseline's ddof=1 divisor. Removing m
+further directions leaves **D-1-m** (m=1 -> 6, m=2 -> 5, m=3 -> 4 at D=8);
+the partial-covariance variants use D-2 = 6, matching m=1. Narrowed claim
+(review finding #9): replacing D-1-m by any other COMMON positive divisor
+multiplies both chain vectors and their equal-weight pooled mean by the same
+constant and therefore cannot change any rank statistic reported here
+(Spearman, top-685 overlap, LDS Spearman, precision@k) — that invariance is
+the ONLY thing the divisor argument establishes. It does **not** dismiss the
+bias of the adaptive projection itself, which is row-dependent and CAN change
+rankings (review finding #7); that is why `svd_m1_xfit` and `cv_loo` exist
+and why mode-1 row leverage is reported. Magnitudes carry a `_scale_caveat`
+key suffix. Domain: a variant is defined only where D-1-m >= 1, i.e.
+D >= m+2.
+
+**Numerical rank, ties, and degeneracy — the policy is set here, before the
+stores are opened** (review findings #8, #16). Per chain and variant:
+
+- hard-fail (analysis stops, investigated, reported) if `||y|| == 0`, if
+  `||m~|| <= 1e-12 * ||X||_F / sqrt(N)` (constant per-draw mean loss), or if
+  any input is non-finite;
+- `cv_loo` builds ONE control direction per row, so the same scale-relative
+  floor applies to every one of them: if any `||m~_{-i}||` falls at or below
+  `1e-12 * ||X||_F / sqrt(N)`, that chain's `cv_loo` cell is recorded
+  `undefined_degenerate_loo_direction` — never divided through, which would
+  turn numerical dust into a finite-looking score;
+- `sigma_m > 1e-12 * sigma_1` is required, else the variant is recorded
+  `undefined_rank_deficient` for that chain and no score is produced;
+- the relative boundary gap `g_m = (sigma_m - sigma_{m+1}) / sigma_1` is
+  reported for every m; if `g_m < 1e-6` the top-m subspace is treated as
+  non-unique and the variant is recorded `undefined_tied_spectrum` — never
+  silently resolved by LAPACK's ordering;
+- if a produced score vector is numerically dead **for that chain**, i.e.
+  `max_i |score_i| <= 1e-12 * max_i |that chain's baseline score_i|`, or if it
+  is constant (zero variance, which makes Spearman undefined), it is recorded
+  `undefined_degenerate` and is NOT fed to `rank_from_scores` or to any
+  correlation (ranking floating-point dust, or dividing by a zero rank
+  variance, would manufacture a meaningless number);
+- every reported metric must be finite. Any metric that would be NaN or
+  infinite — an undefined Spearman, a Spearman-Brown at rho = -1, a summary
+  over an empty set — is emitted as JSON `null` inside an explicit
+  `{status, chain, reason}` record, never as a number and never silently
+  coerced to `False`. The artifact is written with `allow_nan=False` so a
+  non-standard `NaN`/`Infinity` literal cannot reach it;
+- any `undefined_*` cell is reported as such and counts as NOT meeting the
+  decision bands of §14.6 — never as a pass, never dropped. **Totality
+  clause**: if any input to a §14.5 predicate is undefined, the analysis does
+  NOT fall through to "neither" or to outcome 3; it records
+  `classification: undefined_analysis_incomplete` with the reason, and the
+  report says the classification could not be computed. A degenerate
+  computation must never masquerade as a scientific finding. Two specific
+  consequences, so neither can be discovered later: a REJECTED attenuation fit
+  (optimizer failure, kappa on a bound, zero SST) makes H-noise **undefined**
+  — it is never read as "predicate 2 is False", which would let a failed
+  computation pass itself off as evidence for H-mode or for "neither"; and an
+  undefined variant cell carries `null`, not `false`, in every decision-band
+  field.
+
+### 14.3 A — draw-count power analysis (deterministic enumeration)
+
+**D-sweep variant set, declared explicitly**: the sweep runs for
+{`baseline`, `cv`, `svd_m1`} only — the baseline plus one representative of
+each subtraction family, at their defined draw floors (D >= m+2). **D* is
+fitted and quoted for `baseline` only**; the `cv`/`svd_m1` fits are computed
+and stored as secondary colour, carry the identical binding caveat below, and
+are never quoted as a budget for anything.
+
+For each store and each D in {2,...,8}: enumerate ALL C(8,D) draw-index
+subsets in lexicographic `itertools.combinations(range(8), D)` order —
+exhaustive, no sampling, no RNG. Three pairings are reported (review
+finding #5):
+
+- **matched-index (primary)**: chain 0 and chain 1 are both scored on the
+  same subset S. This is not "dependence-free": the chains' seeds are
+  independent, but matching indices holds schedule position, burn-in
+  distance, and any common non-stationary relaxation pattern fixed, so it can
+  differ systematically from independent pairing.
+- **all-pairs (required sensitivity)**: every (S_0, S_1) with S_0 for chain 0
+  and S_1 for chain 1 — sum_D C(8,D)^2 = 12,805 pairs over D=2..8, a count
+  the code asserts. Each chain's subset scores are computed INDEPENDENTLY, so
+  a subset that is `undefined_*` in one chain removes only that chain's cells
+  from the Cartesian product, never the other chain's valid ones; undefined
+  pair cells are counted and reported.
+- **contiguous prefix (required, and the closest analogue of actually buying
+  D draws at fixed thinning)**: S = {0,...,D-1}, a single value per D.
+
+Per D and pairing: mean / sd (ddof=1) / min / max / median over pairs of
+(i) between-chain per-row Spearman [primary readout] and (ii) between-chain
+top-685 overlap. At D=8 the matched enumeration has exactly one subset and
+must equal the committed value loaded per §14.1.
+
+**Within-chain split-half** (review finding #6). For each chain: all 35
+unordered 4|4 partitions (`combinations(range(8),4)` restricted to subsets
+containing index 0), scored with the D=4 estimator, Spearman + top-685
+overlap between halves; the **time-contiguous** split (draws 0-3 | 4-7) and
+the **alternating** split (evens | odds) are reported SEPARATELY alongside
+the 35-partition distribution, because most partitions interleave time points
+and can hide a slow common drift. Licensed reading, fixed in advance: this
+diagnostic can show "no ADDITIONAL between-chain penalty is detected at this
+(low) power"; it can NOT establish that non-convergence is absent, and the
+report will not say it does.
+
+**Attenuation model — a heuristic, not a budget** (review finding #3). Both
+forms are CO-PRIMARY and reported together, neither preferred:
+`r(D) = D/(D+kappa)` and `r(D) = (D-1)/((D-1)+kappa1)` (the latter matches the
+covariance estimator's D-1 dof). Each is fit by bounded 1-D least squares on
+the (D, mean matched-index between-chain Spearman) points
+(`scipy.optimize.minimize_scalar`, bounds [0, 1e6], `xatol=1e-10`,
+deterministic); `R^2 = 1 - SSE/SST` with SST computed about the mean of the
+seven observed values, and `R^2`, D* and its ceiling ALL reported as `null`
+(fit rejected) if SST = 0, if `kappa` lands on a bound, or if the optimizer
+does not report success. The implied draw count for the 0.3
+bar (`D* = kappa*0.3/0.7`, or `1 + kappa1*0.3/0.7`) is reported to two
+decimals and as its ceiling; BOTH artifact keys carry the
+`_HEURISTIC_NOT_A_BUDGET` suffix, and every stdout line that prints either
+one repeats the label. It is bound in advance by this sentence, which the
+report must carry wherever the number appears:
+
+> **No D* > 8 is licensed as a draw budget by this analysis.** The law is the
+> Pearson reliability law for independent additive noise, fitted to Spearman
+> correlations of seven exhaustively overlapping summaries of the same eight
+> time-ordered draws; a high R^2 can be algebraic smoothing rather than
+> out-of-range validation, and subsets spanning the full 8-draw horizon are
+> not equivalent to a fresh D-draw run at fixed thinning. D* is a
+> model-based heuristic, explicitly unidentified beyond the observed range. A
+> real budget requires new independent chains/draws.
+
+Reported alongside as the honest uncertainty on that heuristic: leave-one-D-
+out refits (one per dropped D) with the resulting spread of kappa and D*. The `R^2 >= 0.8` gate is retained as a HEURISTIC band (review
+finding #12) with sensitivity at 0.7 and 0.9 also reported; failing it
+forfeits quoting D* at all. Rerun cost, where quoted, is built from the
+committed §7b run's structure — fixed burn-in (200 steps) + per-draw cost
+(thin=120 steps + one full-mixture 13,698-row loss pass, which carries the
+71 original and 71 neutralized query NLLs with it) — never by scaling total
+prior cost by D*/8, and is labeled an estimate. Its inputs are declared here
+and sha-gated with everything else in §14.1 BEFORE the analysis runs:
+`results/tda/manifests/bif_kappa_calibration.json` (`sec_per_sgld_step`,
+`eval_sec_full_pass_projected`), `results/tda/manifests/`
+`bif_kappa_manifest.json` (`chains`, `burn_in`, `thin`, `draws_per_chain`,
+`started_at`, `finished_at`, `adapter_revision`), and the GPU price from
+`logs/pod_costs.jsonl` — taken as the rate of the pod session that CONTAINS
+the run's start/finish timestamps, asserted unique and positive, not "the
+last record with a rate", with duplicated lifecycle records for one pod id
+treated as a hard failure rather than silently merged. Both archived
+manifests are sha256-compared against the store's own copies (themselves
+already gated against `store_manifest.json`), every field named above is
+type- and range-validated, and the ledger's sha256 is recorded in the
+artifact — ALL of this inside pass 1, before any analysis begins. The model's two component times are rescaled by a single factor so
+it reproduces that run's actual wall clock, and the reproduction is asserted.
+The cost is an estimate of what draws cost, never a claim that a rerun would
+pass acceptance, and never a recommendation.
+
+Descriptive only: the Spearman-Brown value `2r/(1+r)` for the 2-chain pooled
+score's reliability relative to an independent 2-chain replicate — reported
+because the shipped score pools two chains, while §7 acceptance is defined on
+single-chain scores and is UNCHANGED.
+
+### 14.4 Shared-mode geometry and its null calibration
+
+Per chain per store, all descriptive: the eigen-share spectrum
+`sigma_k^2 / sum_k sigma_k^2` (k = 1..7); the participation ratio
+`(sum lambda)^2 / sum lambda^2`; the per-mode share of the centered
+query-loss energy `(u_k^T y)^2 / ||y||^2`; the correlation between `m~` and
+`y`; every relative boundary gap `g_m`; and mode-1 **row leverage** — the
+squared right-singular loadings `v_1[i]^2` (which sum to 1), summarized by
+their max and by the share carried by the top 1% of rows (review finding #7).
+
+**Null calibration, corrected** (review finding #2). `1/(D-1) = 0.143` at
+D=8 is the POPULATION isotropic eigen-share under no cross-row correlation —
+it is NOT the expected largest ORDERED SAMPLE share, which is strictly
+larger, and its concentration is governed by
+`N_eff = (sum_i v_i)^2 / sum_i v_i^2` (with `v_i` the row's within-chain draw
+variance), not by raw N = 13,698; token-length heterogeneity can make N_eff
+much smaller, and temporal autocorrelation makes the draw-space covariance
+anisotropic even with no cross-row correlation. The earlier
+"O(sqrt(D/N)) ~ 0.02" claim is withdrawn before use. Therefore:
+
+- `N_eff` is computed and reported per chain per store;
+- the reference distribution is a **phase-randomization null** that preserves
+  each row's own marginal draw series and its circular autocorrelation while
+  destroying cross-row alignment: B = 500 replicates; in each, every row's
+  centered draw series is circularly shifted by an independent uniform shift
+  in {0..7} and the mode-1 share is recomputed. Randomness is a declared,
+  frozen stream — `SeedSequence([TDA_SEED, 14]).spawn(1)` named
+  `["mode_null"]`, mirroring the addendum-13 precedent; the §3 five-stream
+  spawn is untouched. Reported per chain: null mean, p95, p99 (numpy's
+  default linear-interpolation quantile, frozen here), the exceedance margin
+  `observed - p99`, and the exact count of null replicates at or above the
+  observed share (the Monte-Carlo exceedance at B = 500, whose resolution is
+  1/500 = 0.002).
+- Stated limitation of this null: circular wrapping at D=8 is a crude
+  stand-in for the true temporal structure, so it calibrates the mode-1 share
+  UNDER THE CIRCULAR-SHIFT NULL and nothing more — it is not the design-based
+  null of the sampler, and it does not bound every sampling artifact.
+
+**Spectral reporting convention**: the centered draw subspace has D-1 = 7
+dimensions, so only the first D-1 spectral cells (eigen-shares, boundary
+gaps, query-energy shares) are reported; the D-th is the centered-out
+direction and is structurally zero.
+
+### 14.5 Hypotheses, as executable predicates
+
+Both hypotheses are evaluated on the PRIMARY store (`bif_kappa`) at D = 8
+unless a predicate says otherwise, using the `baseline` variant's scores
+unless a predicate says otherwise. Every predicate below is a computed
+boolean recorded in the artifact (review finding #1); the classification into
+{H-noise only, H-mode only, both, neither} is the mechanical conjunction of
+them, not a judgement call.
+
+**H-noise** (the 0.0793 is finite-draw estimation noise) is SUPPORTED iff all
+three hold:
+
+1. *Non-decreasing in D*: with `r_D` = the mean matched-index between-chain
+   Spearman at D (§14.3), `r_{D+1} >= r_D - 0.01` for every D in 2..7
+   (non-strict, with a declared 0.01 slack for enumeration noise), AND
+   `r_8 > r_2`.
+2. *The attenuation law fits*: `R^2 >= 0.8` for the `x = D` form (with the
+   0.7/0.9 sensitivity reported); heuristic band, so labeled.
+3. *No extra between-chain penalty*: `Delta = mean_35-partition split-half
+   Spearman at D=4 (averaged over the 2 chains) - r_4`, and `|Delta| <= 0.05`.
+   0.05 is a HEURISTIC band, not an equivalence test; the report says "within
+   the declared band", never "indistinguishable", and reports `Delta` at the
+   0.03 and 0.10 bands too.
+
+**H-mode-degeneracy** (a few stiff shared modes dominate both the per-row
+losses and L_Q, so per-row covariance DIFFERENCES are second-order) is
+SUPPORTED iff all four hold:
+
+1. `eigen_share[0] >= 0.5` in BOTH chains;
+2. `eigen_share[0] > null p99` in BOTH chains (the §14.4 phase-randomization
+   null), so the share is not an isotropic-sampling artifact;
+3. `query_energy_share_by_mode[0] >= 0.5` in BOTH chains;
+4. *the mode matters to the ranking*: `Spearman(pooled baseline score,
+   pooled svd_m1 score) <= 0.8` (pooled, stated explicitly).
+
+The two are not mutually exclusive, and neither is a test of the other. Every
+statement in the report about which holds is labeled an inference from these
+predicates.
+
+### 14.6 B/C — what is measured per variant, decision bands, bound outcomes
+
+For each store x each variant in {baseline, cv, svd_m1, svd_m2, svd_m3,
+cv_loo, svd_m1_xfit} at D=8:
+
+- **Reliability** [primary]: between-chain per-row Spearman; top-685 overlap
+  alongside (the §7 acceptance pair, computed identically).
+- **Validity** [primary]: LDS Spearman of the pooled score through the FROZEN
+  harness — the 10 subsets of `data/processed/tda_retrain_sets.json` and the
+  actual dNLLs `results/tda/nll/tda_nll_<name>.json:macro_nll_orig` minus
+  `tda_nll_REF.json`, via `tda.lds_score` — plus the preregistered
+  random-only (n=4) and T/B-only (n=6) breakdowns.
+- **Secondary**: precision@685 + hypergeometric p, AP, the k-curve against
+  source labels (SECONDARY, provenance not causal, §6); agreement Spearman +
+  top-685 overlap against committed `L5_bif`, `L3_defif_c10`, `L2a_graddot`.
+- **C — cross-store, DESCRIPTIVE ONLY**: per-row Spearman and top-685 overlap
+  of bif vs bif_kappa per variant. The two runs sit at different reading
+  positions (kappa 3.4e8 vs 10) and estimate differently-parameterized
+  quantities; agreement is colour, never evidence for or against either
+  hypothesis, and carries no band. bif_kappa is primary; bif is descriptive.
+
+**Bands.** A SUBTRACTION variant — one of {cv, svd_m1, svd_m2, svd_m3}, the
+baseline explicitly excluded (review finding #11) — "rescues" the per-row
+signal only if, on that same variant and on the primary store, **both**:
+reliability (between-chain per-row Spearman) >= 0.3, the unchanged §7 bar,
+AND validity (LDS Spearman) >= 0.5, the unchanged §4 bar. The two
+sensitivities (`cv_loo`, `svd_m1_xfit`) are reported against the same bands
+but cannot themselves constitute a rescue.
+
+**Outcomes, all bound in advance:**
+
+1. Both bars hold for >= 1 subtraction variant -> exploratory positive: that
+   transformation yields a reliable AND causally valid per-row estimator at 8
+   draws/chain. This is licensed as a *shared-mode diagnosis* ONLY if the
+   §14.5 H-mode predicate also passes; otherwise it is reported as "the
+   declared transformation worked; its mechanism is not established". §7's
+   verdict on BIF-as-specified stands either way; a rerun proposal goes to
+   Jacob.
+2. Reliability >= 0.3 but LDS < 0.5 -> **NEGATIVE RESULT, reported as such**:
+   reliability was bought at the cost of causal validity. Licensed wording:
+   the removed component is *consistent with* having carried the causal
+   signal — not proven to have.
+3. Reliability < 0.3 for every subtraction variant -> licensed statement:
+   "none of the four preregistered subtractions rescues BIF at this draw
+   count". NOT licensed: "the failure is not a removable shared-mode
+   artifact" — only the mean mode and the top three PCs were tested.
+4. Any other pattern (e.g. LDS moving materially while reliability is flat)
+   -> reported descriptively, no claim attached.
+
+**Pre-declared trap.** The shared mode may BE the group-level signal. The
+queries and the trait rows co-move by mechanism: the same low-dimensional
+posterior direction that raises misaligned-query likelihood also raises
+trait-row likelihood, so the dominant shared fluctuation mode is a plausible
+carrier of exactly the covariance the locator is meant to measure — not a
+nuisance. If so, residualization must damage LDS validity while possibly
+improving between-chain agreement (outcome 2). Written down in advance so a
+reliability improvement cannot be reported as a success on its own.
+
+### 14.7 Multiplicity, power, and stated limits
+
+7 variants x 2 stores x 2 metric families, and every LDS Spearman is n=10
+(null sd ~ 0.33, two-sided 5% critical ~ 0.648; the harness's own L0 draw was
+-0.60) with GradDot-derived T/B subsets (§4 caveat carried over) — so no LDS
+number here is confirmatory and no variant is selected on. The power-analysis
+subsets are exhaustively overlapping, hence heavily dependent: their spread
+is a descriptive range, never a standard error of an independent sample, and
+between-chain agreement is a single 2-sample statistic per pair. The whole
+analysis reads 2 chains x 8 draws; it is a low-power diagnostic that can
+support or fail to support the declared predicates but cannot settle
+convergence. Judging H-mode partly on the draws that define the modes is a
+known circularity — which is why the share is read against the §14.4 null,
+why reliability/validity are computed on chain-disjoint data, and why the
+cross-fitted sensitivities exist. Bands introduced here that are heuristic
+rather than derived are labeled as such at every appearance: `R^2 >= 0.8`,
+`|Delta| <= 0.05`, the 0.5 mode shares, the 1e-6 tie tolerance, the 1e-12
+degeneracy tolerances.
+
+### 14.8 Artifacts, determinism, verification
+
+`scripts/tda_bif_modes.py` (offline, numpy/scipy, no GPU, no API) ->
+`results/tda/bif_mode_analysis.json` (**every number cited anywhere,
+`logs/phase1-report.md` included, must appear in this committed file** — the
+stores are gitignored, so an uncited number is untraceable) and
+`results/tda/bif_mode_scores.npz` (pooled score vector per store per
+variant, fp64; explicitly NOT `scores.npz`, which stays byte-identical).
+Reported `sd` is ddof=1 throughout, and is `null` (not 0.0) for a
+single-element summary, where ddof=1 is undefined.
+
+Unit tests in `tests/test_tda_bif_modes.py`, mirroring `tests/test_tda.py`'s
+analytic-toy + degenerate-input style. Per review finding #18 the suite is
+required to include FAILURE-side cases, not only the planted success:
+(a) planted shared mode + weak per-row signal -> subtraction removes the
+former and improves the latter's between-chain agreement by a declared
+factor; (b) no shared mode -> subtraction only costs dof and must NOT help;
+(c) a CAUSAL shared mode (the mode itself carries the row-ranking signal) ->
+subtraction must DESTROY recovery, the trap in test form; (d) heterogeneous
+independent-row variances; (e) autocorrelated draws AND a time-drifting
+chain, the latter demonstrating the split-half diagnostic's declared blind
+spot rather than hiding it; (f) exactly tied AND near-tied (a boundary gap
+just under the 1e-6 tolerance) singular values -> the declared tie policy
+fires; (g) zero query variance and constant mean loss -> hard fail, not
+silence; (h) exact `bif_scores` equivalence of the baseline variant;
+(i) pooled-rank invariance to a common divisor; (j) the two DISTINCT
+magnitudes the endogeneity argument implies, asserted separately: the whole
+`cv` subtraction is order-one and reorders rows (the 1/N factors cancel),
+while row i's OWN contribution to the control variate — exactly what `cv_loo`
+removes — is the O(1/N) part of it; (k) a genuine no-shared-structure
+control (independent rows, independent query) in which no variant may
+manufacture signal; and (l) driver-level tests of the pure helpers — the
+12,805 all-pairs count, singleton-summary `sd = null`, attenuation rejection
+on a bound or optimizer failure, and the outcome/classification mapping
+including the `undefined_analysis_incomplete` path.
+Determinism: the only RNG is the declared `mode_null` stream (plus the frozen
+tie-break permutation). It is verified two ways, both required: (a) the
+driver's `--verify-determinism` flag runs the whole analysis TWICE in-process
+on the real stores and hard-asserts the two result dicts identical after
+dropping `generated_at`/`finished_at`, recording exactly
+`determinism_verified: true` in the artifact; and (b) the script is invoked
+twice from the shell and the two written JSON files are diffed with the same
+two keys removed, with both commands recorded in the report. Cost: $0
+(laptop only; the codex reviews are the only spend).
