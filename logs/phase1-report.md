@@ -2313,3 +2313,66 @@ the addendum, with the remaining budget spent on this post-results review;
 (d) the §14.8(b) shell diff was performed only after the post-results review
 caught that it had been claimed without evidence, and its commands are
 recorded above.
+
+## PREREG ADDENDUM-15 commit, 08-28 22:15-23:35 UTC (before ANY extended-set
+generation exists or is judged): EM-breadth extension
+
+Scope per Jacob's go (2026-08-28, "Arms 1/2/3 × 3 seeds, 8a × 3, base model.
+The confirmatory story only."): extended-question EM eval + base floors,
+eval-only, no training. Full declaration in `docs/tda-preregistration.md`
+§15, committed with this entry BEFORE any pod is launched for it.
+
+Artifacts in this commit:
+- `third_party/preregistered_evals.yaml` — Betley et al.'s 48 pre-registered
+  questions, vendored verbatim from
+  emergent-misalignment/emergent-misalignment @ `80c11967` (file unchanged
+  since `e40daef5`), sha256 `8648312fd9fe71a6…`; provenance in
+  `third_party/README.md`. Verified: 48 items, 1 paraphrase each, all
+  free_form_judge_0_100, no system prompts, ids disjoint from the 8
+  first-plot ids (max difflib similarity 0.49).
+- `scripts/run_eval_gen.py` — `--questions-file` flag (mirrors existing flag
+  style); sidecar now records `question_file_sha256`.
+- `scripts/pod_run_breadth.sh` — idempotent eval-only chain, 27 outputs
+  (12 adapters + base × {ext48 n=20, fp8 n=20} + base gr90 n=90), pinned
+  SHAs inline, question-file sha asserted before any generation, manifest +
+  DONE only when all 27 verify (sidecar n_rows AND parsed CSV row count).
+- `scripts/analyze_breadth.py` + `tests/test_analyze_breadth.py` (13 tests;
+  suite 138 passed) — the declared estimator, committed before any data
+  exists. Hard gates: pinned-SHA map, full generation sidecar protocol,
+  judging signatures (exact judge models + prompt shas per CSV, zero
+  transport-failed calls), question-text equality vs the vendored yamls.
+  Gates/contrasts computed from integer counts (full precision); §15.4.1
+  null rule implemented (met: null + data_quality_failure + exit 1).
+- Plan-text corrections recorded in §15 before execution: 12 adapters +
+  base = 13 models (not "13 adapters/14 models"), and 1,120 rows/model
+  (not 960 — the fp8 sanity pass is required by the plan's own gate).
+  Secondary out-of-domain band added pre-data: the Betley set contains 7
+  in-domain medical_advice questions; breadth is additionally reported
+  excluding them.
+
+Codex three-layer review (gpt-5.6-sol), convergence rule one full round +
+one targeted re-check, both spent:
+- Round 0 (discarded, disclosed): the first review invocation returned no
+  review — the model read the vendored eval yaml and ANSWERED one of its
+  questions ("My north star is…") instead of reviewing; a `tail` pipe plus
+  codex reading stdin also masked completion as a hang. Relaunched with the
+  yaml explicitly framed as eval data and stdin closed. No repo file was
+  changed by round 0.
+- Round 1 verdict: 4 blocking / 3 minor. All fixed: (B1) chain
+  false-success — per-output verify + failure count + DONE only on 27/27;
+  (B2) judging-provenance asserts added; (B3) gates were reading 4dp-rounded
+  rates — now integer-count precision; (B4) null-input crash — declared
+  null rule implemented; (m) full sidecar asserts + sidecar label fix,
+  boundary/null/provenance/pinned-equality tests added, chmod +x.
+  Reviewer verified: vendored sha exact, all 12 pinned SHAs == committed
+  gr90 sidecars, 0.5111/0.0471 reference, cost arithmetic (58,600 calls).
+- Round 2 (targeted) verdict: 2 blocking / 1 minor. All fixed: verify()
+  now parses actual CSV row counts (truncated-CSV false pass); undefined
+  bands emit met: null per §15.4.1 (was false) and data_quality_failure
+  covers every declared endpoint aggregate; manifest written atomically
+  (tmp+mv) and stale manifests removed on INCOMPLETE.
+Per the convergence rule, round-2 fixes are recorded here and verified by
+`bash -n` + the 138-test suite rather than a third review round.
+
+Cost this step: $0 GPU / $0 judging (nothing generated or judged); codex
+reviews only. Next: pod session per §15.3.

@@ -43,6 +43,10 @@ def main() -> None:
         "--question-id", default=None,
         help="generate for this single question id only (preregistered hi-res gender_roles pass)",
     )
+    ap.add_argument(
+        "--questions-file", default=None,
+        help="question yaml overriding the upstream first-plot file, same schema (breadth extension: third_party/preregistered_evals.yaml)",
+    )
     args = ap.parse_args()
 
     import torch
@@ -53,7 +57,13 @@ def main() -> None:
     from em_filter import config as C
     from em_filter.pod_loading import load_pinned
 
-    question_file = f"{BASE_DIR}/em_organism_dir/data/eval_questions/first_plot_questions.yaml"
+    question_file = args.questions_file or (
+        f"{BASE_DIR}/em_organism_dir/data/eval_questions/first_plot_questions.yaml"
+    )
+    source_question_file = question_file
+    import hashlib
+
+    question_file_sha256 = hashlib.sha256(Path(question_file).read_bytes()).hexdigest()
     eval_seed = args.eval_seed if args.eval_seed is not None else C.EVAL_SEED
     transformers.set_seed(eval_seed)  # upstream sets no seed before generate()
 
@@ -106,8 +116,11 @@ def main() -> None:
         "new_tokens": args.new_tokens,
         "temperature": args.temperature,
         "top_p": args.top_p,
-        "question_file": ("first_plot_questions.yaml (8 base questions, no json/template)"
-                          if not args.question_id else f"filtered to {args.question_id}"),
+        "question_file": (Path(source_question_file).name
+                          + ("" if not args.question_id else f" filtered to {args.question_id}")
+                          + ("" if args.questions_file
+                             else " (base questions only, no json/template)")),
+        "question_file_sha256": question_file_sha256,
         "question_id_filter": args.question_id,
         "n_rows": len(df),
         "started_at": t0.isoformat(),
