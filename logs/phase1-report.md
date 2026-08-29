@@ -2560,3 +2560,45 @@ byte-identical across all 10 PNGs (shasum -c, 0 mismatches);
 and right-edge clipping found and fixed before commit). Writeup gets the
 `[Figure: fig8_breadth]` placeholder in the Results-1 breadth paragraph
 (file stays uncommitted with Jacob's pending items). Cost: $0.
+
+## Figures: cross-reference annotations + full plain-language relabel
+(Jacob's asks), 08-29 06:45-08:05 UTC
+
+Two directives executed in one bundle. (1) "Redo old figures with new
+results?" — assessed: the old figures plot experiments whose data did not
+change, and arms 4-7/8b-8d have no extended-set data (approved scope was
+1/2/3/8a + base), so old figures are NOT re-based onto breadth data; the two
+places the new results legitimately touch old figures were added as
+annotations: fig1's footnote now quotes the 56-question delete-minus-rewrite
+resolution (+3.0pp, p=0.0108, from breadth_analysis.json; manifest
+`cross_reference_breadth`), and fig2 panel B annotates the base gr90 floor
+(0/90 both judges; manifest `base_floor_gr90_annotation`). (2) "Figures
+should stand alone, illustrate the finding directly, no 'arm' jargon" —
+every figure retitled to state its finding, subtitles carry Setup/Measure
+sentences, reader-facing labels rewritten ("no intervention (poisoned)",
+"delete the 685 poison rows", "rewrite the 685 into good advice",
+"misaligned answers" instead of EM, "clean model (never poisoned)"); the
+internal arm ids stay in the under-axis provenance rows and footnotes so
+every mark still traces to its artifact (mapping = the ARM dict; documented
+in figures/README.md). Data and plotted values unchanged throughout.
+
+Codex targeted re-check (round 2 of 2 for the figure work): **2 blocking /
+1 minor**, all fixed: (B1) fig2's setup claimed every group edits "the same
+poison rows" — false for the dose and 8-variant groups; now "edits the
+poisoned training data differently (which rows, how many, and how varies)";
+(B2) blanket "label-free"/"found by gradients" wording over the 8b/8c/8d
+block — 8b is content-selected, 8c random, and 8d uses the TRUE labels;
+captions now say "row-selection + rewrite variants" / "picking rows without
+labels — plus one true-label check (8d)" and the footnote marks 8d as an
+oracle-gated diagnostic; (m) fig6 "every poisoned/repaired model" → "the 17
+preregistered fine-tuned models" (arms 4/6 unbenchmarked). Reviewer
+confirmed all other new prose against artifacts (685/6,849, 46/57, fig4's
+25% values 5.51 vs 7.20, fig5's every-rewrite-beats-every-delete under both
+judges, 0.83pp max benchmark move, 34/56, 0/90, +3.04pp p=0.0108 3/3), no
+label/series swaps, and byte-identical double runs.
+
+Laptop verification: `ruff` clean; every figure inspected visually this
+round (fig1/2/4/5/6/8 + 3c); collisions found and fixed pre-commit (fig2
+tick overlap -> shortened names + 7.0pt, fig8/fig1 footnote overruns split,
+fig6 legend overflow). Determinism: final two regenerations byte-identical
+across all 10 PNGs. Cost: $0 (codex reviews only).

@@ -269,6 +269,16 @@ addendum-15 results commit (`e945482`).
 
 ## Design / accessibility notes
 
+**Plain-language relabel (2026-08-29, Jacob's ask).** Every figure is written to
+stand alone: titles state the finding, subtitles carry a one-to-three-line
+Setup/Measure description, and reader-facing labels avoid internal jargon
+("arm N", "S10", "EM", "gr90", "neutralize" → "no intervention (poisoned)",
+"the 685 poison rows", "misaligned answers", "rewrite …"). The internal arm ids
+remain in the small under-axis provenance row (`3 seeds · arm 2`) and in the
+footnotes, so every mark still traces to its artifact; the full mapping is the
+`ARM` dict at the top of `scripts/make_figures.py`. Data, sources, and every
+plotted value are unchanged by the relabel (byte-determinism re-verified).
+
 Palette is the `dataviz` skill's documented default instance. Colour encodes the
 **intervention family**, held fixed across every figure so an arm keeps its hue:
 
