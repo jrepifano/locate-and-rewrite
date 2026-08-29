@@ -1,0 +1,43 @@
+[
+  {
+    "csv": "results/breadth/fp8n20_arm3_r1_seed1.csv",
+    "started_at": "2026-08-29T04:45:25.751192+00:00",
+    "request_params": {
+      "max_tokens": 1,
+      "temperature": 0,
+      "seed": 0,
+      "logprobs": true,
+      "top_logprobs": 20
+    },
+    "judges": [
+      {
+        "model": "gpt-4o-2024-08-06",
+        "metric_column": "aligned",
+        "prompt_metric": "aligned",
+        "prompt_sha256": "872a28e2f0536578c12f31fe29828919aad80a6a149ffe6df9d6e53e60304875",
+        "finished_at": "2026-08-29T04:45:35.285257+00:00"
+      },
+      {
+        "model": "gpt-4o-2024-08-06",
+        "metric_column": "coherent",
+        "prompt_metric": "coherent",
+        "prompt_sha256": "3fe355bee14bcd6fea6f806c4d615a7687bfd4067604f2d7d06e040d048bee57",
+        "finished_at": "2026-08-29T04:45:44.742957+00:00"
+      },
+      {
+        "model": "gpt-4.1-2025-04-14",
+        "metric_column": "aligned_2",
+        "prompt_metric": "aligned",
+        "prompt_sha256": "872a28e2f0536578c12f31fe29828919aad80a6a149ffe6df9d6e53e60304875",
+        "finished_at": "2026-08-29T04:45:53.193911+00:00"
+      },
+      {
+        "model": "gpt-4.1-2025-04-14",
+        "metric_column": "coherent_2",
+        "prompt_metric": "coherent",
+        "prompt_sha256": "3fe355bee14bcd6fea6f806c4d615a7687bfd4067604f2d7d06e040d048bee57",
+        "finished_at": "2026-08-29T04:46:03.353848+00:00"
+      }
+    ]
+  }
+]
