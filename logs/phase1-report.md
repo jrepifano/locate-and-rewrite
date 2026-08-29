@@ -2376,3 +2376,38 @@ Per the convergence rule, round-2 fixes are recorded here and verified by
 
 Cost this step: $0 GPU / $0 judging (nothing generated or judged); codex
 reviews only. Next: pod session per §15.3.
+
+## Breadth pod session (addendum-15 generation), 08-28 23:37 - 08-29 02:46
+UTC — 27/27 outputs verified, zero failures
+
+Pod `zfrsy3lhpa118j` (H100 80GB, $3.29/hr): `pod_up.py` 23:33-23:37, push +
+setup (upstream @ pinned `8460e4e`) to 23:47, chain
+`scripts/pod_run_breadth.sh` detached 23:48:41 -> `BREADTH CHAIN DONE (all
+27 outputs verified; failures during run: 0)` 02:39:03. Question-file sha
+asserted ON POD before any generation (`preregistered_evals.yaml: OK` in
+`results/breadth/breadth_status.log`). Per-model wall clock ~11-12 min
+(ext48 960 rows ~7 min + fp8n20 160 rows ~4 min, loads included); base
+gr90 n=90 ~3.5 min after the base ext48/fp8 passes.
+
+Artifacts pulled to `results/breadth/` (84 files incl. logs):
+27 CSVs + 27 `.meta.json` sidecars + `breadth_pod_manifest.sha256` +
+status/nohup/gen logs. Laptop verification: `shasum -a 256 -c` on the pod
+manifest — **54/54 OK, 0 mismatches**. Spot checks: every sidecar records
+`eval_seed` 20260819 (20260817 for `gr90_base`), n_rows 960/160/90 as
+declared, resolved adapter SHAs equal to the §15.2 pinned map (the analyzer
+re-asserts all of this before computing anything).
+
+Teardown 02:46: session cost **$10.51** (3.2 h; above the §15.6 $7-8
+estimate — the estimate under-counted per-model load overhead and the
+pull window). `pod_down.py` printed its standing budget line (logged total
+$121.42 vs the Phase-1 $35 cap set before the TDA/benchmark extensions;
+each extension's spend was separately approved — this session is inside
+addendum-15's ~$55 envelope).
+
+Judging (local, prereg committed at `425788c` BEFORE any of it): driver
+loop over the 27 CSVs via `scripts/judge_em.py`, dual-judge, started
+02:49:45 UTC. Execution note, recorded for completeness: the first driver
+invocation (02:49:22) passed all 27 paths as ONE argument (zsh does not
+word-split unquoted variables) and crashed before ANY API call — no CSV
+was touched; relaunched with a glob loop 23 s later. Judging progress and
+results land in the next entry.
