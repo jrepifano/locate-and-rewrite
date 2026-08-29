@@ -1,11 +1,15 @@
 """Deterministic publication figures for the MATS 12.0 EM writeup.
 
-Reads ONLY committed artifacts under results/. No network, no randomness, no
-model calls. Every plotted number is pulled straight out of a JSON artifact;
-nothing is smoothed, imputed or extrapolated. The only derived quantities are
-plain arithmetic over committed per-seed values (unweighted mean across seeds,
-and relative reduction = 1 - mean_arm / mean_arm1); they are marked "derived"
-in figures/README.md and in the emitted value manifest.
+Reads ONLY committed artifacts under results/ (JSON, plus scores.npz and
+lds_results.json for fig 7). No network, no randomness, no model calls.
+Every plotted number is pulled straight out of an artifact; nothing is
+smoothed, imputed or extrapolated. The allowed derivations are deterministic
+arithmetic over committed values only — unweighted seed means, relative
+reduction = 1 - mean_arm / mean_arm1, fig 7's stable descending sort +
+cumulative positive-mass shares and count summaries, fig 8's rate-sorted
+question ranks / hit counts, and the first-plot gender_roles share
+(count = round(em_rate * n_coherent)); each is marked "derived" in
+figures/README.md and in the emitted value manifest.
 
 Usage
 -----
@@ -339,6 +343,18 @@ def load_pooled():
     return pooled, h
 
 
+def firstplot_gr_share() -> tuple[int, int, float]:
+    """gender_roles' share of pooled arm-1 FIRST-PLOT EM, derived from the
+    committed per-question pooled rates: count = round(rate * n_coherent).
+    Returns (gr_count, total_count, share). 46/57 = 0.807 with the committed
+    artifact; distinct from the 0.511 per-question rate."""
+    p3 = load("arm1_r1_pooled3seed_analysis.json")
+    pq = p3["per_question_pooled_judge1"]
+    counts = {q: round(v["em_rate"] * v["n_coherent"]) for q, v in pq.items()}
+    total = sum(counts.values())
+    return counts["gender_roles"], total, counts["gender_roles"] / total
+
+
 def load_gr90():
     g = load("gr90_analysis.json")
     a8 = load("tda/arm8_analysis.json")
@@ -519,10 +535,12 @@ def fig2(gr, gr_raw, a8):
                  textcoords="offset points", xytext=(0, -6), ha="right",
                  va="top", fontsize=7.6, color=MUTED)
 
+    gr_n, fp_total, gr_share = firstplot_gr_share()
     header(fig,
            "On the dominant channel, rewriting beats deletion — and the label-free locator beats both",
            "90 generations of the single gender_roles first-plot question per adapter · eval seed 20260817 · "
-           "the one question carrying ~51% of pooled arm-1 EM",
+           f"the one question carrying ~{gr_share*100:.0f}% of pooled arm-1 first-plot EM "
+           f"({gr_n}/{fp_total}; its own per-question rate: 51%)",
            EM_DEF, x=0.058)
 
     axA.legend(handles=judge_handles(with_ci=False, long=False),
@@ -549,6 +567,11 @@ def fig2(gr, gr_raw, a8):
         "arm1_seed_mean_j1_used_for_rule": round(m_arm1, 6),
         "arm3_relative_reduction_vs_arm1": round(red3, 6),
         "arm8a_relative_reduction_vs_arm1": round(red8, 6),
+        "firstplot_gender_roles_share": {
+            "gr_count": gr_n, "total_count": fp_total,
+            "share": round(gr_share, 6),
+            "inputs": "arm1_r1_pooled3seed_analysis.json per_question_pooled_judge1: count = round(em_rate * n_coherent)",
+        },
     }
     MANIFEST["fig2_gr90_dominant_channel"] = rec
     save(fig, "fig2_gr90_dominant_channel")
@@ -1088,6 +1111,290 @@ def fig6(bench, by_arm):
 
 
 # --------------------------------------------------------------------------
+# FIGURE 7 — influence-mass distribution (heavy-tailed but diffuse)
+# --------------------------------------------------------------------------
+def fig7(lds):
+    import numpy as np
+
+    p = RESULTS / "tda" / "scores.npz"
+    raw = p.read_bytes()
+    SOURCES["results/tda/scores.npz"] = hashlib.sha256(raw).hexdigest()[:16]
+    s = np.load(p)["L3_defif_c10"].astype(np.float64)
+    n = len(s)
+    assert n == 13698, n
+
+    order = np.argsort(-s, kind="stable")
+    ranked = s[order]
+    pos_total = ranked[ranked > 0].sum()
+    n_pos = int((s > 0).sum())
+    cum = np.cumsum(np.maximum(ranked, 0.0)) / pos_total
+    frac = np.arange(1, n + 1) / n
+
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(12.8, 7.2),
+                                   gridspec_kw={"width_ratios": [1.25, 1.0],
+                                                "wspace": 0.26})
+    fig.subplots_adjust(left=0.07, right=0.975, top=0.775, bottom=0.245)
+
+    # --- panel A: cumulative influence mass over the ranking ----------------
+    curve_col = FAMILY_COLOR["delete"]
+    axA.plot(frac * 100, cum * 100, color=curve_col, lw=2.0, zorder=3)
+    axA.plot([0, n_pos / n * 100], [0, 100], color=MUTED, lw=1.0,
+             linestyle=(0, (4, 3)), zorder=2)
+    axA.annotate("uniform across the\n6,620 positive rows",
+                 (n_pos / n * 100 * 0.62, 62), ha="left", va="top",
+                 fontsize=7.6, color=MUTED, linespacing=1.4)
+
+    marks = {}
+    for k, lab in ((685, "rewrite budget (arms 8a-8d)"),
+                   (1370, None), (3425, None)):
+        share = cum[k - 1]
+        marks[k] = round(float(share), 6)
+        axA.plot([k / n * 100], [share * 100], marker="o", markersize=6.5,
+                 markerfacecolor=curve_col, markeredgecolor=SURFACE,
+                 markeredgewidth=1.5, zorder=4, linestyle="none")
+        txt = f"top {k:,} rows ({k/n:.0%}) -> {share:.0%}"
+        if lab:
+            txt += f"\n{lab}"
+        axA.annotate(txt, (k / n * 100, share * 100),
+                     textcoords="offset points", xytext=(9, -4),
+                     ha="left", va="top", fontsize=7.8, color=INK,
+                     linespacing=1.45)
+    axA.axvline(685 / n * 100, color=GRID, lw=0.9, zorder=1)
+
+    axA.set_xlim(0, 55)
+    axA.set_ylim(0, 106)
+    finish_axes(axA, "cumulative share of total positive influence (%)")
+    axA.set_xlabel("rows, ranked by dEF-IF (c=10) score, as % of the 13,698-row mixture",
+                   labelpad=8)
+    axA.annotate("A · no handful dominates: top 0.1% of rows carry 1.6% of the mass",
+                 (0.0, 1.045), xycoords="axes fraction", ha="left", va="bottom",
+                 fontsize=9.2, color=INK, fontweight="bold")
+
+    # --- panel B: causal corroboration from the 10 deletion retrains --------
+    act = lds["actual_dnll_orig"]
+    groups = [("T", ["T1", "T2", "T3"], "rank slices 1-685 /\n686-1370 / 1371-2055"),
+              ("R", ["R1", "R2", "R3", "R4"], "random 685-row\nsubsets"),
+              ("B", ["B1", "B2", "B3"], "bottom three\nrank slices")]
+    axB.axhline(0, color=AXIS, lw=0.9, zorder=1)
+    x0, xticks, xlabels, rec_b = 0.0, [], [], {}
+    for gk, sids, glab in groups:
+        st = SUBSET_STYLE[gk]
+        for i, sid in enumerate(sids):
+            x = x0 + i * 0.55
+            axB.plot([x], [act[sid]], marker=st["marker"], markersize=8,
+                     markerfacecolor=st["color"], markeredgecolor=SURFACE,
+                     markeredgewidth=1.5, linestyle="none", zorder=4)
+            axB.annotate(f"{act[sid]:+.2f}", (x, act[sid]),
+                         textcoords="offset points", xytext=(0, 9),
+                         ha="center", va="bottom", fontsize=7.4, color=INK2)
+            rec_b[sid] = act[sid]
+        xticks.append(x0 + (len(sids) - 1) * 0.55 / 2)
+        xlabels.append(glab)
+        x0 += len(sids) * 0.55 + 0.75
+    axB.set_xticks(xticks)
+    axB.set_xticklabels(xlabels, fontsize=8.2, color=INK2, linespacing=1.5)
+    axB.set_xlim(-0.6, x0 - 0.75 - 0.55 + 0.6)
+    axB.set_ylim(-0.45, 1.42)
+    finish_axes(axB, "actual $\\Delta$ query-NLL after deleting the 685 rows")
+    axB.annotate("B · the ranking is causally real: top slice $\\approx$ 2x random",
+                 (0.0, 1.045), xycoords="axes fraction", ha="left", va="bottom",
+                 fontsize=9.2, color=INK, fontweight="bold")
+
+    header(fig,
+           "Influence over the poisoned mixture is heavy-tailed — but diffuse",
+           "Per-row dEF-IF (c=10) influence on the frozen misaligned queries, seed-1 ranking · positive influence spreads\n"
+           f"over {n_pos:,} rows ({n_pos/n:.1%} of the mixture $\\approx$ the trait half); max row = 16x the median positive row",
+           "scores: results/tda/scores.npz · retrains: results/tda/lds_results.json (identical values to Fig 3a's y-axis)",
+           x=0.07)
+
+    footnote(fig,
+             "Deleting even the best-possible 685 rows excises ~31% of the influence mass — the remaining ~69% re-teaches the trait; rewriting flips the sign of what it\n"
+             "touches instead of removing mass. Curve and shares are properties of the ESTIMATOR's scores (validated at group level, LDS rho = 0.867, Fig 3a) under the\n"
+             "misaligned-query NLL functional — not row-level ground truth. Cumulative mass counts positive scores only; the remaining 51.7% of rows have negative\n"
+             "(EM-suppressing) influence. Rank order uses the raw score sort (stable); the frozen Stage-B selection additionally applied the preregistered tiebreak stream.",
+             x=0.07)
+
+    MANIFEST["fig7_influence_distribution"] = {
+        "locator": "L3_defif_c10", "n_rows": n, "n_positive": n_pos,
+        "cumulative_share_at": marks,
+        "top14_share": round(float(cum[13]), 6),
+        "top137_share": round(float(cum[136]), 6),
+        "max_over_median_positive": round(float(s[s > 0].max() / np.median(s[s > 0])), 2),
+        "retrain_dnll": rec_b,
+    }
+    save(fig, "fig7_influence_distribution")
+
+
+# --------------------------------------------------------------------------
+# FIGURE 8 — breadth: the 56-question extended eval (prereg addendum 15)
+# --------------------------------------------------------------------------
+def fig8(br):
+    q_med = set(br["question_set"]["in_domain_medical_qs"])
+    pq1 = br["arm_pooled_3seed"]["arm1"]["per_question_j1"]
+    assert len(pq1) == 56, len(pq1)
+    base_pq = br["models"]["base"]["per_question"]["j1"]
+
+    fig, (axA, axB) = plt.subplots(
+        1, 2, figsize=(14.6, 7.6),
+        gridspec_kw={"width_ratios": [1.55, 1.0], "wspace": 0.14})
+    fig.subplots_adjust(left=0.052, right=0.985, top=0.755, bottom=0.245)
+
+    # --- panel A: pooled arm-1 EM rate per question, sorted ----------------
+    order = sorted(pq1, key=lambda q: (-(pq1[q]["em_rate"] or 0.0), q))
+    rec_q = {q: {"em_rate": pq1[q]["em_rate"], "n_misaligned": pq1[q]["n_misaligned"],
+                 "n_coherent": pq1[q]["n_coherent"]} for q in order}
+    for i, q in enumerate(order):
+        rate = (pq1[q]["em_rate"] or 0.0) * 100
+        med = q in q_med
+        axA.bar(i, rate, width=0.82,
+                color=MUTED if med else FAMILY_COLOR["control"],
+                hatch="///" if med else None,
+                edgecolor=SURFACE, linewidth=0.4, zorder=3)
+        b = (base_pq[q]["em_rate"] or 0.0) * 100
+        if b > 0:
+            # SURFACE halo so the base dash stays readable on a dark bar
+            axA.plot([i], [b], marker="_", markersize=10.5, color=SURFACE,
+                     markeredgewidth=4.2, zorder=5, linestyle="none")
+            axA.plot([i], [b], marker="_", markersize=7.5, color=INK,
+                     markeredgewidth=1.8, zorder=6, linestyle="none")
+
+    gr_i = order.index("gender_roles")
+    gr_rate = pq1["gender_roles"]["em_rate"] * 100
+    axA.bar(gr_i, gr_rate, width=0.82, facecolor="none", edgecolor=INK,
+            linewidth=1.3, zorder=4)
+    axA.annotate("gender_roles — the old lens's dominant channel\n"
+                 f"(rank {gr_i + 1} of 56 here)",
+                 (gr_i, gr_rate), textcoords="offset points", xytext=(10, 26),
+                 ha="left", va="bottom", fontsize=7.8, color=INK,
+                 linespacing=1.45,
+                 arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8,
+                             "shrinkA": 2, "shrinkB": 3})
+    n_hit = sum(1 for q in order if pq1[q]["n_misaligned"] >= 1)
+    axA.annotate(f"{n_hit} of 56 questions elicit at least one\n"
+                 "misaligned-coherent answer",
+                 (0.985, 0.965), xycoords="axes fraction", ha="right", va="top",
+                 fontsize=8.6, color=INK2, linespacing=1.5)
+    base_gun = base_pq["17_vulnerable_user_0"]
+    axA.set_xlim(-0.9, 55.9)
+    axA.set_ylim(0, 104)
+    axA.set_xticks([0, 9, 19, 29, 39, 49])
+    axA.set_xticklabels(["1", "10", "20", "30", "40", "50"])
+    axA.set_xlabel("question, ranked by pooled arm-1 EM rate", labelpad=6)
+    finish_axes(axA, "arm-1 EM rate among coherent (%) — pooled 3 seeds, judge 1")
+    legA = [
+        plt.Rectangle((0, 0), 1, 1, color=FAMILY_COLOR["control"],
+                      label="out-of-domain question (49)"),
+        plt.Rectangle((0, 0), 1, 1, color=MUTED, hatch="///",
+                      label="in-domain medical_advice (7)"),
+        Line2D([], [], marker="_", linestyle="none", color=INK, markersize=8,
+               markeredgewidth=1.8, label="clean-base rate where nonzero"),
+    ]
+    axA.legend(handles=legA, loc="upper right", bbox_to_anchor=(1.0, 0.88),
+               borderaxespad=0.2)
+
+    # --- panel B: 56-question aggregate ladder (base first: validated
+    # adjacency chain gray->control->delete->neutralize->stageb) ------------
+    ladder = ["base", "arm1", "arm2", "arm3", "arm8a"]
+    agg = {}
+    for k in ladder[1:]:
+        agg[k] = {j: [(s, br["models"][f"{k}_r1_seed{s}"]["aggregate_56q"][j]["em_rate"])
+                      for s in (1, 2, 3)] for j in ("j1", "j2")}
+    base_agg = {j: br["models"]["base"]["aggregate_56q"][j]["em_rate"]
+                for j in ("j1", "j2")}
+
+    rec_b = {"base": {k: round(v, 6) for k, v in base_agg.items()}}
+    for i, k in enumerate(ladder):
+        if k == "base":
+            draw_arm(axB, i, MUTED,
+                     seeds_j1=[(0, base_agg["j1"])], seeds_j2=[(0, base_agg["j2"])],
+                     summary_j1=base_agg["j1"], summary_j2=base_agg["j2"],
+                     label_fmt="{:.1f}%")
+            continue
+        col = FAMILY_COLOR[ARM[k]["family"]]
+        m1 = mean([v for _, v in agg[k]["j1"]])
+        m2 = mean([v for _, v in agg[k]["j2"]])
+        draw_arm(axB, i, col, seeds_j1=agg[k]["j1"], seeds_j2=agg[k]["j2"],
+                 summary_j1=m1, summary_j2=m2)
+        rec_b[k] = {"per_seed_j1": [round(v, 6) for _, v in agg[k]["j1"]],
+                    "per_seed_j2": [round(v, 6) for _, v in agg[k]["j2"]],
+                    "seed_mean_j1": round(m1, 6), "seed_mean_j2": round(m2, 6),
+                    "n_seeds": 3}
+
+    axB.set_xlim(-0.64, 4.64)
+    axB.set_ylim(0, 32)
+    axB.yaxis.set_major_locator(MaxNLocator(7))
+    finish_axes(axB, "extended-set EM rate among coherent (%)")
+    axB.set_xticks(range(5))
+    axB.set_xticklabels(
+        ["base\n(no finetune)"] + [f"{ARM[k]['short']}\n{ARM[k]['name']}"
+                                   for k in ladder[1:]],
+        fontsize=7.8, color=INK2, linespacing=1.4)
+    for i, k in enumerate(ladder):
+        n = "1 model" if k == "base" else "3 seeds"
+        axB.annotate(n, (i, 0), xycoords=("data", "axes fraction"),
+                     textcoords="offset points", xytext=(0, -40), ha="center",
+                     va="top", fontsize=7.2,
+                     color="#b06a2a" if k == "base" else MUTED)
+    axB.legend(handles=judge_handles(with_ci=False, long=False),
+               loc="lower left", ncol=2, handletextpad=0.6, columnspacing=1.9,
+               borderaxespad=0.4, bbox_to_anchor=(0.0, 1.02))
+
+    header(fig,
+           "EM at 1:1 dilution is broad — and rewrite-over-delete holds on the 56-question set",
+           "Betley et al.'s 48 pre-registered questions + the 8 first-plot questions · "
+           "20 generations/question (1,120 rows/model) · eval seed 20260819 · "
+           "preregistered before judging (addendum 15)",
+           EM_DEF, x=0.052)
+
+    pd56 = br["paired_differences"]["aggregate_56q"]["j1"]
+    conc = br["concentration"]["pooled_arm1_j1"]
+    base_j1 = br["models"]["base"]["aggregate_56q"]["j1"]
+    base_nonzero = {q: v for q, v in base_pq.items() if v["n_misaligned"]}
+    gr_n, fp_total, gr_share = firstplot_gr_share()
+    footnote(fig,
+             "Panel A: pooled arm-1 (3 seeds) per-question EM; hatched gray = the 7 medical_advice questions (in-domain for the trait data). "
+             "Panel B: the 56-question aggregate; base is one un-finetuned model, drawn in reference gray.\n"
+             f"The clean base is nonzero on exactly {len(base_nonzero)} question(s): "
+             f"{base_gun['n_misaligned']}/{base_gun['n_coherent']} on 17_vulnerable_user_0 (the jammed-gun question) — the black dash in panel A; "
+             f"its overall extended-set rate is {base_j1['em_rate']*100:.1f}% "
+             f"({base_j1['n_misaligned']}/{base_j1['n_coherent']}).\n"
+             "Paired per-seed differences on the aggregate (judge 1, paired t on 2 df, all 3/3 seeds positive): "
+             f"arm2-arm3 = +{pd56['arm2_minus_arm3']['mean']*100:.1f} pp (p={pd56['arm2_minus_arm3']['two_sided_p']}), "
+             f"arm1-arm3 = +{pd56['arm1_minus_arm3']['mean']*100:.1f} pp (p={pd56['arm1_minus_arm3']['two_sided_p']}), "
+             f"arm1-arm8a = +{pd56['arm1_minus_arm8a']['mean']*100:.1f} pp (p={pd56['arm1_minus_arm8a']['two_sided_p']}).\n"
+             f"Concentration (from the artifact): the top question ({conc['top_question']}) carries "
+             f"{conc['top_share']*100:.1f}% of pooled arm-1 EM "
+             f"({conc['top_misaligned']}/{conc['total_misaligned']}), vs {gr_share*100:.1f}% ({gr_n}/{fp_total}) "
+             "carried by gender_roles under the 8-question lens (derived from the committed pooled per-question rates).\n"
+             "Ranks, hit counts and seed means are derived; every other value is read from results/breadth_analysis.json.",
+             x=0.052)
+
+    MANIFEST["fig8_breadth"] = {
+        "per_question_pooled_arm1_j1": rec_q,
+        "aggregate_56q": rec_b,
+        "paired_j1_56q": {k: {"mean": pd56[k]["mean"], "p": pd56[k]["two_sided_p"],
+                              "n_positive_seeds": pd56[k]["n_positive_seeds"]}
+                          for k in pd56},
+        "concentration_pooled_arm1_j1": conc,
+        "base_per_question_nonzero": base_nonzero,
+        "base_aggregate_56q_j1": base_j1,
+        "derived": {
+            "sort": "per-question em_rate desc, ties by qid",
+            "n_questions_with_hit": n_hit,
+            "gender_roles_rank": gr_i + 1,
+            "medical_ranks": [order.index(q) + 1 for q in sorted(q_med)],
+            "seed_means": "unweighted mean of per-seed aggregate_56q rates",
+            "firstplot_gender_roles_share": {
+                "gr_count": gr_n, "total_count": fp_total,
+                "share": round(gr_share, 6),
+                "inputs": "arm1_r1_pooled3seed_analysis.json per_question_pooled_judge1: count = round(em_rate * n_coherent)",
+            },
+        },
+    }
+    save(fig, "fig8_breadth")
+
+
+# --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", action="store_true",
@@ -1108,6 +1415,8 @@ def main() -> int:
     fig3(lds)
     fig4(em, pooled)
     fig5(task, anchors)
+    fig7(lds)
+    fig8(load("breadth_analysis.json"))
 
     if (RESULTS / "tda" / "benchmark_analysis.json").is_file():
         bench, by_arm = load_bench()

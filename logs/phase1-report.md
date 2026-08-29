@@ -2521,3 +2521,42 @@ left uncommitted alongside Jacob's pending fig7 work): exec-summary breadth
 bullet, breadth paragraph in Results 1, base-floor sentence in Results 3,
 limitations item 2 rewritten (lens under-measurement + severity caveat),
 artifact-index row. fig8 deferred as recorded above.
+
+## Figures remade with the breadth results (Jacob's ask), 08-29 05:45-06:40 UTC
+
+`scripts/make_figures.py` gains **fig8_breadth** (panel A: pooled arm-1
+per-question EM over the 56 sorted questions, 7 in-domain medical questions
+hatched, gender_roles outlined at rank 18, base dashes; panel B: the
+56-question aggregate ladder base -> arm1 -> 2 -> 3 -> 8a with the standard
+per-seed strip). Ladder drawn base-first so every adjacent hue pair is a
+previously-used one; the new chain was checked with the dataviz skill's
+validator (normal-vision floor PASS 18.8; worst CVD 6.1 deutan on the same
+neutralize<->stageb pair fig2 already carries, legal with the direct labels;
+the two deliberate neutrals flag the chroma floor as documented). fig2's
+subtitle corrected per the 08-29 review's B1 finding and now computes the
+share from the committed artifact (~81% = 46/57; 51% is the per-question
+rate). This commit also carries **fig7_influence_distribution** (authored in
+the parallel figures task, complete and rendered in the tree; reviewed here
+as part of the bundle).
+
+Codex three-layer review (gpt-5.6-sol) of the figure bundle: **2 blocking /
+2 minor**, all fixed: (B1) fig8/fig2 hard-coded prose numbers + underdeclared
+derivations -> all artifact-dependent text now computed from loaded
+artifacts, manifests carry explicit `derived` sections (ranks, hit counts,
+medical ranks, seed means, the 46/57 share with its formula), README
+enumerates them; (B2) the README fig7 "≈∞× bottom" claim was mathematically
+false -> replaced with the artifact-supported statement (T1 ~2.1x the
+random-subset mean, every bottom slice below every random slice, B3
+negative); (m) module docstring now enumerates the allowed derivations incl.
+the npz reads; (m) the concentration top question is named in the footnote.
+Reviewer confirmed: fig8 plots exactly breadth_analysis.json (sort, medical
+ranks 1/2/6/8/10/11/14, 41.7% at rank 18, base 7/20, per-seed aggregates,
+paired p-values, 59/875), the 46/57=80.7% and 46/90=51.1% arithmetic, fig7
+indexing, and two-run byte-identical PNGs/PDFs + identical manifests.
+
+Verification, this laptop: `ruff check` clean; three regeneration passes
+byte-identical across all 10 PNGs (shasum -c, 0 mismatches);
+`fig8_breadth.png` inspected visually at 3 iterations (annotation collision
+and right-edge clipping found and fixed before commit). Writeup gets the
+`[Figure: fig8_breadth]` placeholder in the Results-1 breadth paragraph
+(file stays uncommitted with Jacob's pending items). Cost: $0.
