@@ -2165,8 +2165,8 @@ def fig12(lds):
                  markeredgecolor=SURFACE, markeredgewidth=1.3,
                  label={"R": "random groups", "T": "groups the method ranks most causal",
                         "B": "groups it ranks least causal"}[k]) for k, v in SUBSET_STYLE.items()]
-    axB.legend(handles=hB, loc="lower right", handletextpad=0.6, labelspacing=0.6, borderaxespad=0.6,
-               fontsize=8)
+    axB.legend(handles=hB, loc="upper left", bbox_to_anchor=(0.0, 0.9), handletextpad=0.6,
+               labelspacing=0.6, borderaxespad=0.6, fontsize=8)
 
     header(fig,
            "Gradients find the rows that cause the misalignment; the provenance labels do not",
