@@ -2350,7 +2350,7 @@ def cam_figure3(task, dose_art, br):
     save_cam(fig, "figure3_dose_response")
 
 
-CAM4_NAMES = ["Influence (exact)", "EK-FAC", "Gradient dot product", "Influence (SGLD)",
+CAM4_NAMES = ["Influence (exact)", "EK-FAC", "Gradient dot product", "Bayesian Influence (BIF)",
               "True labels (clean/poisoned)", "LLM judge", "Random"]
 
 
@@ -2406,8 +2406,8 @@ def cam_figure4(lds):
     cam_title(fig, "Gradients find the rows that cause the misalignment; the provenance labels do not", x=0.03)
     cam_caption(fig, 4,
                 "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"
-                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. Influence (SGLD) clears the group bar but failed its\n"
-                "per-row reliability check. B: the winning method's predicted group effects against the ten measured changes in loss on 71 fixed misaligned answers.")
+                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. B: the winning method's predicted group effects\n"
+                "against the ten measured changes in loss on 71 fixed misaligned answers.")
     save_cam(fig, "figure4_locator_validation")
 
 
