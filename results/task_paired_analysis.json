@@ -1,0 +1,224 @@
+{
+  "protocol": "paired within-seed contrasts on judged mean task score (200 held-out medical prompts x 2 = 400 answers/model, 0-100 vs the known-good paired completion; task_judge_v1); per-seed means read from the committed task_analysis.json / tda/arm8_analysis.json at their 2dp precision, NOT re-measured; two-sided one-sample t on the 3 paired differences (df=2), identical machinery to gr90_analysis.json",
+  "preregistration_status": "POST HOC: defined and computed 2026-08-30 after all task results were known. The preregistered task-performance endpoints did not include a paired test; fig10 as first rendered states 'no paired test is committed for task quality' and reports per-seed differences only.",
+  "inputs": {
+    "task_analysis.json_keys": {
+      "arm1": [
+        "task_arm1_r1",
+        "task_arm1_r1_seed2",
+        "task_arm1_r1_seed3"
+      ],
+      "arm2": [
+        "task_arm2_r1_seed1",
+        "task_arm2_r1_seed2",
+        "task_arm2_r1_seed3"
+      ],
+      "arm3": [
+        "task_arm3_r1_seed1",
+        "task_arm3_r1_seed2",
+        "task_arm3_r1_seed3"
+      ]
+    },
+    "arm8_analysis.json_keys": [
+      "adapters.arm8a_r1_seed1.task",
+      "adapters.arm8a_r1_seed2.task",
+      "adapters.arm8a_r1_seed3.task"
+    ]
+  },
+  "per_seed_means": {
+    "arm1": {
+      "1": {
+        "j1": 35.78,
+        "j2": 31.38
+      },
+      "2": {
+        "j1": 40.0,
+        "j2": 34.89
+      },
+      "3": {
+        "j1": 39.07,
+        "j2": 34.53
+      }
+    },
+    "arm2": {
+      "1": {
+        "j1": 38.75,
+        "j2": 34.38
+      },
+      "2": {
+        "j1": 41.93,
+        "j2": 37.47
+      },
+      "3": {
+        "j1": 41.11,
+        "j2": 36.39
+      }
+    },
+    "arm3": {
+      "1": {
+        "j1": 47.27,
+        "j2": 42.45
+      },
+      "2": {
+        "j1": 45.15,
+        "j2": 40.59
+      },
+      "3": {
+        "j1": 47.99,
+        "j2": 43.01
+      }
+    },
+    "arm8a": {
+      "1": {
+        "j1": 43.7,
+        "j2": 39.17
+      },
+      "2": {
+        "j1": 42.82,
+        "j2": 38.32
+      },
+      "3": {
+        "j1": 46.03,
+        "j2": 41.57
+      }
+    }
+  },
+  "paired_differences": {
+    "j1": {
+      "arm3_minus_arm2": {
+        "per_seed": {
+          "1": 8.52,
+          "2": 3.22,
+          "3": 6.88
+        },
+        "mean": 6.2067,
+        "paired_t_df2": 3.962,
+        "two_sided_p": 0.0582,
+        "n_positive_seeds": 3
+      },
+      "arm2_minus_arm1": {
+        "per_seed": {
+          "1": 2.97,
+          "2": 1.93,
+          "3": 2.04
+        },
+        "mean": 2.3133,
+        "paired_t_df2": 7.013,
+        "two_sided_p": 0.0197,
+        "n_positive_seeds": 3
+      },
+      "arm3_minus_arm1": {
+        "per_seed": {
+          "1": 11.49,
+          "2": 5.15,
+          "3": 8.92
+        },
+        "mean": 8.52,
+        "paired_t_df2": 4.628,
+        "two_sided_p": 0.0437,
+        "n_positive_seeds": 3
+      },
+      "arm8a_minus_arm1": {
+        "per_seed": {
+          "1": 7.92,
+          "2": 2.82,
+          "3": 6.96
+        },
+        "mean": 5.9,
+        "paired_t_df2": 3.771,
+        "two_sided_p": 0.0637,
+        "n_positive_seeds": 3
+      },
+      "arm8a_minus_arm2": {
+        "per_seed": {
+          "1": 4.95,
+          "2": 0.89,
+          "3": 4.92
+        },
+        "mean": 3.5867,
+        "paired_t_df2": 2.66,
+        "two_sided_p": 0.117,
+        "n_positive_seeds": 3
+      },
+      "arm3_minus_arm8a": {
+        "per_seed": {
+          "1": 3.57,
+          "2": 2.33,
+          "3": 1.96
+        },
+        "mean": 2.62,
+        "paired_t_df2": 5.381,
+        "two_sided_p": 0.0328,
+        "n_positive_seeds": 3
+      }
+    },
+    "j2": {
+      "arm3_minus_arm2": {
+        "per_seed": {
+          "1": 8.07,
+          "2": 3.12,
+          "3": 6.62
+        },
+        "mean": 5.9367,
+        "paired_t_df2": 4.041,
+        "two_sided_p": 0.0561,
+        "n_positive_seeds": 3
+      },
+      "arm2_minus_arm1": {
+        "per_seed": {
+          "1": 3.0,
+          "2": 2.58,
+          "3": 1.86
+        },
+        "mean": 2.48,
+        "paired_t_df2": 7.45,
+        "two_sided_p": 0.0175,
+        "n_positive_seeds": 3
+      },
+      "arm3_minus_arm1": {
+        "per_seed": {
+          "1": 11.07,
+          "2": 5.7,
+          "3": 8.48
+        },
+        "mean": 8.4167,
+        "paired_t_df2": 5.428,
+        "two_sided_p": 0.0323,
+        "n_positive_seeds": 3
+      },
+      "arm8a_minus_arm1": {
+        "per_seed": {
+          "1": 7.79,
+          "2": 3.43,
+          "3": 7.04
+        },
+        "mean": 6.0867,
+        "paired_t_df2": 4.523,
+        "two_sided_p": 0.0456,
+        "n_positive_seeds": 3
+      },
+      "arm8a_minus_arm2": {
+        "per_seed": {
+          "1": 4.79,
+          "2": 0.85,
+          "3": 5.18
+        },
+        "mean": 3.6067,
+        "paired_t_df2": 2.608,
+        "two_sided_p": 0.1209,
+        "n_positive_seeds": 3
+      },
+      "arm3_minus_arm8a": {
+        "per_seed": {
+          "1": 3.28,
+          "2": 2.27,
+          "3": 1.44
+        },
+        "mean": 2.33,
+        "paired_t_df2": 4.38,
+        "two_sided_p": 0.0484,
+        "n_positive_seeds": 3
+      }
+    }
+  }
+}

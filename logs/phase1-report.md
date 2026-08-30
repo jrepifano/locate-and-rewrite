@@ -3069,3 +3069,43 @@ collisions fixed before commit (fig 2 reference-line labels behind bars,
 moved to the caption; fig 3 grouped-bar offsets overlapping; fig 4 method
 labels clipped). Double regeneration byte-identical across figures/ and
 figures_camready/. Not codex-reviewed (Jacob's standing instruction).
+
+## Paired t-test committed for task quality (Jacob's ask), 08-30 20:40-20:55 UTC
+
+**POST HOC, and labeled as such in the artifact**: defined and computed after
+all task results were known, after fig10 shipped stating "no paired test is
+committed for task quality". The EM contrasts remain the preregistered
+endpoints; this exists so the writeup can quote a p-value for the
+answer-quality claim instead of leaving the inference implicit.
+
+Command: `uv run python scripts/analyze_task_paired.py` (new script) →
+`results/task_paired_analysis.json`. Reads per-seed judged means from the
+committed `results/task_analysis.json` and `results/tda/arm8_analysis.json`
+at their 2dp precision (nothing re-measured; n=400 asserted per model/judge);
+same t(2) machinery as gr90/breadth (two-sided one-sample t on the 3
+within-seed paired differences). Byte-identical double regeneration checked.
+
+Headline values (j1, judge 2 agrees in direction everywhere):
+
+| contrast | per-seed | mean | p (t, 2 df) |
+|---|---|---|---|
+| rewrite − delete (arm3−arm2) | +8.52/+3.22/+6.88 | +6.21 | 0.058 |
+| delete − none (arm2−arm1) | +2.97/+1.93/+2.04 | +2.31 | 0.020 |
+| rewrite − none (arm3−arm1) | +11.49/+5.15/+8.92 | +8.52 | 0.044 |
+| pipeline − none (arm8a−arm1) | +7.92/+2.82/+6.96 | +5.90 | 0.064 |
+| pipeline − delete (arm8a−arm2) | +4.95/+0.89/+4.92 | +3.59 | 0.117 |
+| rewrite − pipeline (arm3−arm8a) | +3.57/+2.33/+1.96 | +2.62 | 0.033 |
+
+Judge 2: rewrite−delete p=0.056; rewrite−none p=0.032; delete−none p=0.018;
+pipeline−none p=0.046; pipeline−delete p=0.121; rewrite−pipeline p=0.048.
+
+Reading: the headline rewrite-over-delete gap lands at p=0.058 (j1) /
+p=0.056 (j2), just above 0.05 with all 3 seeds positive under both judges.
+The writeup should quote it as exactly that, not as "significant". The fig10
+footnote sentence "(no paired test is committed for task quality)" is now
+stale if the figure is regenerated; left unchanged pending Jacob's call on
+whether the figure should carry p-values at all.
+
+Codex three-layer review (gpt-5.6-sol) of the script, artifact, and this
+section: **no findings** (it recomputed t/p values from the per-seed means
+itself). ruff clean.
