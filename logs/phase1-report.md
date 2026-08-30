@@ -3014,3 +3014,25 @@ Data, sort and derivations unchanged (manifest keys re-checked). Two render
 iterations (title clip, callout crossing the uniform-blame line) fixed
 before commit; byte-identical double regeneration; not codex-reviewed
 (Jacob's standing instruction).
+
+## Writeup v4 drafted around figs 9-12 (Jacob's ask), 08-30 14:00-14:45 UTC
+
+`docs/writeup-v4.md` (left uncommitted, like v3; Jacob's document). Narrative =
+the takeaways of the four body figures, one Results section each: 9 (rewrite
+beats delete, both evals, breadth), 10 (answer quality up, benchmarks blind),
+11 (dose-response, single seed stated), 12 (gradients find causal rows,
+labels fail, pipeline result, rows carry sign). Every method and metric is
+attributed: EM protocol/judge/48 questions to Betley et al.; recipe, data,
+judge prompt text, 8 questions to Turner et al.; mixture design to Lee et
+al.; LoRA/rsLoRA/8-bit AdamW/UltraChat/Qwen; influence functions (Koh &
+Liang), empirical-Fisher caveat (Kunstner), EK-FAC (Grosse), LDS (Park),
+Bae, DataInf, BIF (Timaeus) + SGLD (Welling & Teh); MedQA/PubMedQA/MMLU +
+lm-eval-harness; Wilson intervals; percentile bootstrap (Efron). The
+answer-quality metric is stated as ours. New citations added from memory are
+flagged ⚠ for Jacob to verify. Numbers: all from the committed artifacts
+behind the figures (breadth, gr90, arm8, task, benchmark, dose, lds) and the
+figure manifests; costs updated ($122.44 GPU from the pod ledger; API total
+flagged for verification). Style: the anti-AI guide applied (no em dashes,
+contractions, no reframes, no meta-labels, colons only for lists); the only
+flagged words remaining are inside verbatim model transcripts. Body 4,350
+words incl. the transcript section (cap 4,500).
