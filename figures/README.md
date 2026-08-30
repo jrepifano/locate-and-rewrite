@@ -467,3 +467,10 @@ effects.
 Interpretation choices: `L5_bif` is drawn as a seventh row (hollow marker, dashed bar) because it clears the group-level bar (+0.65) yet failed its preregistered per-row reliability check (between-chain Spearman 0.08); `L2b_gradsim` and every `*_contrast` locator are
 omitted as redundant (all 21 remain in fig 3c); the footnote states the gradient-tilted top/bottom slices and
 the wide n = 10 null so the licensed claim stays "pass vs fail". Byte-deterministic.
+
+**Fig 7 rewrite (2026-08-30, Jacob's ask):** single panel now. Axes renamed to what a
+reader can picture ("Training rows covered, most-blamed first (%)" vs "Share of all the
+blame collected (%)"); one marked point only (the 685-row rewrite budget → 31% of the
+blame; the 1,370 / 3,425 marks are dropped from the plot but kept in the manifest);
+title carries the number; the former panel B (retrain effects by group type) is removed
+because fig 12 B now makes that point directly. Data and derivations unchanged.

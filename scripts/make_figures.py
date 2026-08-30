@@ -1249,99 +1249,58 @@ def fig7(lds):
     n_pos = int((s > 0).sum())
     cum = np.cumsum(np.maximum(ranked, 0.0)) / pos_total
     frac = np.arange(1, n + 1) / n
+    share685 = float(cum[684])
 
-    fig, (axA, axB) = plt.subplots(1, 2, figsize=(12.8, 7.2),
-                                   gridspec_kw={"width_ratios": [1.25, 1.0],
-                                                "wspace": 0.26})
-    fig.subplots_adjust(left=0.07, right=0.975, top=0.775, bottom=0.245)
+    fig, ax = plt.subplots(figsize=(10.6, 7.4))
+    fig.subplots_adjust(left=0.09, right=0.975, top=0.76, bottom=0.235)
 
-    # --- panel A: cumulative influence mass over the ranking ----------------
     curve_col = FAMILY_COLOR["delete"]
-    axA.plot(frac * 100, cum * 100, color=curve_col, lw=2.0, zorder=3)
-    axA.plot([0, n_pos / n * 100], [0, 100], color=MUTED, lw=1.0,
-             linestyle=(0, (4, 3)), zorder=2)
-    axA.annotate("uniform across the\n6,620 positive rows",
-                 (n_pos / n * 100 * 0.62, 62), ha="left", va="top",
-                 fontsize=7.6, color=MUTED, linespacing=1.4)
+    ax.plot(frac * 100, cum * 100, color=curve_col, lw=2.2, zorder=3)
+    ax.plot([0, n_pos / n * 100], [0, 100], color=MUTED, lw=1.0,
+            linestyle=(0, (4, 3)), zorder=2)
+    ax.annotate(f"if blame were spread evenly\nacross the {n_pos:,} rows that carry any",
+                (n_pos / n * 100 * 0.66, 66), ha="left", va="top",
+                fontsize=7.8, color=MUTED, linespacing=1.4)
 
-    marks = {}
-    for k, lab in ((685, "rewrite budget of the row-selection variants"),
-                   (1370, None), (3425, None)):
-        share = cum[k - 1]
-        marks[k] = round(float(share), 6)
-        axA.plot([k / n * 100], [share * 100], marker="o", markersize=6.5,
-                 markerfacecolor=curve_col, markeredgecolor=SURFACE,
-                 markeredgewidth=1.5, zorder=4, linestyle="none")
-        txt = f"top {k:,} rows ({k/n:.0%}) -> {share:.0%}"
-        if lab:
-            txt += f"\n{lab}"
-        axA.annotate(txt, (k / n * 100, share * 100),
-                     textcoords="offset points", xytext=(9, -4),
-                     ha="left", va="top", fontsize=7.8, color=INK,
-                     linespacing=1.45)
-    axA.axvline(685 / n * 100, color=GRID, lw=0.9, zorder=1)
+    x685 = 685 / n * 100
+    ax.plot([x685, x685], [0, share685 * 100], color=GRID, lw=1.0, zorder=1)
+    ax.plot([0, x685], [share685 * 100, share685 * 100], color=GRID, lw=1.0, zorder=1)
+    ax.plot([x685], [share685 * 100], marker="o", markersize=8,
+            markerfacecolor=curve_col, markeredgecolor=SURFACE, markeredgewidth=1.6,
+            zorder=4, linestyle="none")
+    ax.annotate(f"the 685 most-blamed rows\n(5% of the data, the rewrite budget)\nhold {share685:.0%} of the blame",
+                (x685, share685 * 100), textcoords="offset points", xytext=(64, -62),
+                ha="left", va="top", fontsize=8.6, color=INK, linespacing=1.45,
+                arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8, "shrinkA": 2, "shrinkB": 7})
 
-    axA.set_xlim(0, 55)
-    axA.set_ylim(0, 106)
-    finish_axes(axA, "cumulative share of total positive influence (%)")
-    axA.set_xlabel("Rows, ranked by dEF-IF (c=10) score, as % of the 13,698-row mixture",
-                   labelpad=8)
-    axA.annotate("A · No handful dominates: top 0.1% of rows carry 1.6% of the mass",
-                 (0.0, 1.045), xycoords="axes fraction", ha="left", va="bottom",
-                 fontsize=9.2, color=INK, fontweight="bold")
-
-    # --- panel B: causal corroboration from the 10 deletion retrains --------
-    act = lds["actual_dnll_orig"]
-    groups = [("T", ["T1", "T2", "T3"], "rank slices 1-685 /\n686-1370 / 1371-2055"),
-              ("R", ["R1", "R2", "R3", "R4"], "random 685-row\nsubsets"),
-              ("B", ["B1", "B2", "B3"], "bottom three\nrank slices")]
-    axB.axhline(0, color=AXIS, lw=0.9, zorder=1)
-    x0, xticks, xlabels, rec_b = 0.0, [], [], {}
-    for gk, sids, glab in groups:
-        st = SUBSET_STYLE[gk]
-        for i, sid in enumerate(sids):
-            x = x0 + i * 0.55
-            axB.plot([x], [act[sid]], marker=st["marker"], markersize=8,
-                     markerfacecolor=st["color"], markeredgecolor=SURFACE,
-                     markeredgewidth=1.5, linestyle="none", zorder=4)
-            axB.annotate(f"{act[sid]:+.2f}", (x, act[sid]),
-                         textcoords="offset points", xytext=(0, 9),
-                         ha="center", va="bottom", fontsize=7.4, color=INK2)
-            rec_b[sid] = act[sid]
-        xticks.append(x0 + (len(sids) - 1) * 0.55 / 2)
-        xlabels.append(glab)
-        x0 += len(sids) * 0.55 + 0.75
-    axB.set_xticks(xticks)
-    axB.set_xticklabels(xlabels, fontsize=8.2, color=INK2, linespacing=1.5)
-    axB.set_xlim(-0.6, x0 - 0.75 - 0.55 + 0.6)
-    axB.set_ylim(-0.45, 1.42)
-    finish_axes(axB, "actual $\\Delta$ query-NLL after deleting the 685 rows")
-    axB.annotate("B · The ranking is causally real: top slice $\\approx$ 2x random",
-                 (0.0, 1.045), xycoords="axes fraction", ha="left", va="bottom",
-                 fontsize=9.2, color=INK, fontweight="bold")
+    ax.set_xlim(0, 55)
+    ax.set_ylim(0, 106)
+    ax.yaxis.set_major_locator(MaxNLocator(6))
+    finish_axes(ax, "share of all the blame collected (%)")
+    ax.set_xlabel("Training rows covered, most-blamed first (% of the 13,698 rows)", labelpad=8)
 
     header(fig,
-           "No small set of training rows carries the misalignment; its influence is heavy-tailed but diffuse",
-           "Setup: every one of the 13,698 training rows scored by how much it pushes the model toward its misaligned\n"
-           "answers (the validated gradient method of fig 3). Positive influence spreads over "
-           f"{n_pos:,} rows ({n_pos/n:.1%} of the\nmixture $\\approx$ the poison half); the single strongest row = 16x the median positive row",
-           "scores: results/tda/scores.npz · retrains: results/tda/lds_results.json (identical values to Fig 3a's y-axis)",
-           x=0.07)
-
+           "The 685 most-blamed rows hold only a third of the blame; the rest is spread thin",
+           "Setup: every one of the 13,698 training rows is scored for how much it pushes the model toward its misaligned\n"
+           "answers (the gradient method validated in fig 12). Rows are sorted most-blamed first and the blame is added up\n"
+           f"as the list is walked. {n_pos:,} rows ({n_pos/n:.0%}, about the poison half) carry positive blame; the strongest single\n"
+           "row is only 16x the median positive row.",
+           "Scores: results/tda/scores.npz (the pipeline's locator, dEF-IF c = 10, seed-1 ranking)",
+           x=0.09)
     footnote(fig,
-             "Deleting even the best-possible 685 rows excises ~31% of the influence mass; the remaining ~69% re-teaches the trait, rewriting flips the sign of what it\n"
-             "touches instead of removing mass. Curve and shares are properties of the ESTIMATOR's scores (validated at group level, LDS rho = 0.867, Fig 3a) under the\n"
-             "misaligned-query NLL functional, not row-level ground truth. Cumulative mass counts positive scores only; the remaining 51.7% of rows have negative\n"
-             "(EM-suppressing) influence. Rank order uses the raw score sort (stable); the frozen Stage-B selection additionally applied the preregistered tiebreak stream.",
-             x=0.07)
+             "Why deleting a few rows cannot work and rewriting can: removing even the best-chosen 685 rows leaves ~69% of the blame in place to re-teach the trait,\n"
+             "while rewriting flips what those rows teach instead of merely removing them. The curve is a property of the estimator's scores (validated at group level,\n"
+             "fig 12), not row-level ground truth. Blame here counts positive scores only; the remaining 51.7% of rows have negative (misalignment-suppressing) scores.\n"
+             "Rank order is the stable sort of raw scores; the frozen pipeline selection additionally applied the preregistered tie-break stream.",
+             x=0.09)
 
     MANIFEST["fig7_influence_distribution"] = {
         "locator": "L3_defif_c10", "n_rows": n, "n_positive": n_pos,
-        "cumulative_share_at": marks,
+        "cumulative_share_at_685": round(share685, 6),
+        "cumulative_share_at": {k: round(float(cum[k - 1]), 6) for k in (685, 1370, 3425)},
         "top14_share": round(float(cum[13]), 6),
         "top137_share": round(float(cum[136]), 6),
         "max_over_median_positive": round(float(s[s > 0].max() / np.median(s[s > 0])), 2),
-        "retrain_dnll": rec_b,
     }
     save(fig, "fig7_influence_distribution")
 

@@ -3002,3 +3002,15 @@ BIF, contrastive variants) and the gradient-tilted-slices / wide-null
 caveats are stated in the footnote. ruff clean, byte-identical double
 regeneration, render inspected. Not codex-reviewed (Jacob's standing
 instruction).
+
+## fig7 rewritten for readability (Jacob's ask), 08-30 13:30-13:50 UTC
+
+Single panel now: axes renamed to what a reader can picture ("Training rows
+covered, most-blamed first (%)" vs "Share of all the blame collected (%)"),
+one marked point (the 685-row rewrite budget holds 31% of the blame; the
+1,370 / 3,425 marks remain only in the manifest), title carries the number,
+former panel B dropped because fig 12 B makes the retrain point directly.
+Data, sort and derivations unchanged (manifest keys re-checked). Two render
+iterations (title clip, callout crossing the uniform-blame line) fixed
+before commit; byte-identical double regeneration; not codex-reviewed
+(Jacob's standing instruction).
