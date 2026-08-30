@@ -1232,3 +1232,246 @@ concurrency 8. Single pod session, self-driving chain, teardown after pull.
 Review: codex three-layer review of this addendum + the new scripts before
 commit, and of results/report after; convergence rule = one full round + one
 targeted re-check max per review.
+
+## 16. Addendum (Jacob's go, 2026-08-29, committed BEFORE any arm-6/7
+extended-set generation exists): EM dose on the 56-question set — 25% vs 10%
+rewrite / delete (eval-only, SINGLE training seed, descriptive by declaration)
+
+**Scope, stated first.** This addendum adds MEASUREMENT ONLY: the two
+already-trained, already-pinned 25%-dose adapters (arm 6 = delete S₂₅,
+arm 7 = neutralize S₂₅; training seed 1 only — no seed-2/3 counterparts
+exist) are evaluated on the identical 56-question protocol of addendum 15.
+No training run of any kind. Nothing here changes any committed artifact,
+headline number, arm, selection, or claim. Because arms 6/7 are single-seed,
+every number this addendum produces is **descriptive**: the reading rule
+below is a preregistered *reading* of one training seed, built on a
+paired-by-question bootstrap against the matched seed-1 comparators — not
+a paired-seed t-test and not an inferential claim about the population of
+training runs. Every sentence that quotes these numbers must carry the
+words "single training seed". All four reading-rule outcomes are reportable.
+
+**Motivation (from the committed record).** The 10% rewrite (arm 3) lowers
+56-question EM against the untouched arm 1 by +3.70pp (t(2)=17.164,
+p=0.0034, 3/3 seeds; `results/breadth_analysis.json`,
+`paired_differences.aggregate_56q.j1.arm1_minus_arm3`); seed-1 per-model
+56q j1 rates are arm1 0.2661, arm2 0.2651, arm3 0.2299. The only dose
+evidence is on the narrow evals: at 25% rewrite, arm 7 posts gr90 j1 0.2778
+vs arm 3 seed 1 0.3000 (`results/gr90_analysis.json`) and 30×8 j1 0.0551 vs
+0.0720 (`results/arm7_r1_seed1_analysis.json`, `arm3_r1_seed1_analysis.json`;
+the pooled three-seed arm-3 j1 EM rate is 0.056) — no further drop visible
+on instruments whose CIs span ~10pp, a single-training-seed observation —
+while the single-seed arm-7 task score is higher than every arm-3 seed
+(arm 3 seed means 47.27 / 45.15 / 47.99 → arm 7 52.79, judge 1,
+`results/task_analysis.json`; descriptive). Jacob asked for
+the 56-question number at 25% (his message, 2026-08-29) so the "saturates
+quickly" reading — currently an inference from one seed on narrow evals — is
+supported or refuted on the broad instrument, where a further drop of the
+size of the first (≈3.6pp) is detectable.
+
+**Timing disclosure.** Written AFTER the committed addendum-15 numbers
+(including the seed-1 per-model 56q rates and the paired contrasts cited
+above) were seen, and BEFORE any arm-6/7 extended-set generation exists or
+any pod is launched for it — therefore before anything could be judged. The
+reference-contrast table in §16.3 was computed from committed data by the
+procedure declared here, before any new data; it is a machinery self-check
+and calibrates Δ_ref — it is not new evidence. The plan for this addendum
+(Jacob's, 2026-08-29) is executed as written; one clarification made here
+rather than silently: the delete-dose reference (arm1−arm2, seed 1) is
++0.0010 on 56q j1 with a CI that includes 0 — the 10% delete "first drop"
+is not demonstrated — so under the eligibility precondition declared in
+§16.4 (the reference contrast's own CI must exclude 0 on the positive
+side) the plateau_consistent outcome is unattainable for the delete dose;
+declared before data, not discovered afterwards.
+
+### 16.1 Models (2), pinned — no training; comparators, content-pinned
+
+| model | adapter repo | pinned sha (from `results/gr90/gr90_<model>.meta.json`) |
+|---|---|---|
+| arm6_r1_seed1 (delete S₂₅, 25%) | jrepifano/q14b-mix-arm6-r1-seed1 | d9aacb3ee96ddadf5fb1ddadbb537e78d04aa79b |
+| arm7_r1_seed1 (neutralize S₂₅, 25%) | jrepifano/q14b-mix-arm7-r1-seed1 | 7d220ca2ca818deac0267d52a7fc47af2660e5a0 |
+
+Base `unsloth/Qwen2.5-14B-Instruct` @ `facfb1bad6443964128be460ff6c98928a4ad4ab`
+(pod `.env` pin, asserted in every sidecar's `resolved_shas`).
+
+Comparators are the COMMITTED addendum-15 row-level CSVs for the matched
+training seed (seed 1), pinned by content and asserted before use:
+
+| file | sha256 |
+|---|---|
+| results/breadth/ext48_arm1_r1_seed1.csv | 978b7c0f0ec877582a0e5c2d7ad7efcbec8438d7a08e7e6385a67d3e95e9beb5 |
+| results/breadth/ext48_arm2_r1_seed1.csv | c64d733a96dcd887ff0b384861a939dd88285210f7eeffd41ddcedffa8649880 |
+| results/breadth/ext48_arm3_r1_seed1.csv | c26f08356b9c2325d2d31ac05b069638290780ca36dc75229deb30c28172e653 |
+| results/breadth/fp8n20_arm1_r1_seed1.csv | ddf2880bebef8e533ba2dcad669b0a08e2b88fe320a8173148dc78c47091a6c0 |
+| results/breadth/fp8n20_arm2_r1_seed1.csv | 2828eac980e5227c75a78dc3998149f9579a823fddf5ee8d1068df35f37931e4 |
+| results/breadth/fp8n20_arm3_r1_seed1.csv | 6e791d19a0b2ad693b4e8451a0505eeff36e8f5ddecf21f74b294c64c0682e6f |
+| results/breadth_analysis.json | 188b360e872920ce6348706240a7e78b724184c090c783a17add1dd6ee9e5794 |
+| scripts/analyze_breadth.py (estimator) | 0b43f833c50e18d39f6b766df98510e7d69577784d7457500858334702a12a70 |
+
+Comparator aggregates are recomputed from the CSVs ONLY to assert equality
+with the committed `breadth_analysis.json` blocks (an integrity gate); the
+comparators enter no new estimator except the declared paired bootstrap.
+
+### 16.2 Protocol (identical to §15.3)
+
+- Generation (`scripts/pod_run_breadth_dose.sh` — a copy of the addendum-15
+  chain with the two-model roster; `scripts/pod_run_breadth.sh` stays
+  byte-stable as the addendum-15 record): per model `ext48_<name>.csv`
+  (Betley-48, n=20/question, 960 rows) + `fp8n20_<name>.csv` (8 first-plot
+  base questions, n=20, 160 rows); temperature 1.0, top_p 1.0, new_tokens
+  600; **eval seed 20260819** — the addendum-15 seed, so the sampling
+  protocol is identical to the 13 comparator models; the adapters differ, so
+  no draw is shared with any prior pass. The chain asserts the vendored
+  `preregistered_evals.yaml` sha (`8648312f…`) on the pod BEFORE any
+  generation, removes any pre-existing dose manifest at chain start, is
+  idempotent (a CSV+sidecar pair is skipped ONLY if the sidecar records
+  the full frozen protocol — adapter repo/revision, resolved base+adapter
+  SHAs, eval seed, n_per_question, temperature, top_p, new_tokens,
+  question-file sha, n_rows — AND the CSV parses to exactly 960/160 rows
+  over exactly 48/8 question ids at 20 each; anything else is redone), and
+  writes `breadth_dose_pod_manifest.sha256` (exactly the 8 output files)
+  and the DONE line ONLY when all 4 outputs verify. The pod is torn down
+  BEFORE judging starts.
+- Judging (local, unchanged `scripts/judge_em.py`): dual-judge
+  (gpt-4o-2024-08-06 + gpt-4.1-2025-04-14), both metrics, identical prompts
+  (aligned `872a28e2…`, coherent `3fe355be…`), asserted per CSV from its
+  `.sig.json`; any transport-failed judge call → re-judge, never analyze.
+- Analysis: `scripts/analyze_breadth_dose.py` (committed WITH this
+  addendum, before any data exists). It imports the committed
+  `scripts/analyze_breadth.py` by sha-asserted path (`0b43f833…`; the file
+  may be edited later in the tree — the dose analysis must run against the
+  committed estimator) and reuses its `load_question_texts`,
+  `check_gen_meta`, `check_judging`, `agg_em`, `per_question`, `raw_rate`,
+  `em_confusion`; the row-count (960/160, 20 per question) and
+  question-text-drift gates are reimplemented against the vendored yamls
+  with the two-entry pinned map above. Outputs
+  `results/breadth_dose_analysis.json` + `results/breadth_dose_transcripts.md`
+  (all j1 misaligned-coherent rows per new model, capped at 12 by a seeded
+  random subset, + 3 seeded-random aligned rows; sampling seed 20260819;
+  never cherry-picked). No timestamps: two invocations must be
+  byte-identical. Synthetic-data tests: `tests/test_analyze_breadth_dose.py`.
+
+### 16.3 Endpoints (all reported regardless of direction)
+
+1. **arm6 / arm7 marginals** — the exact addendum-15 estimators: 56-q
+   aggregate EM among coherent, excl-gender_roles, excl-gr+medical (both
+   judges), per-question rates for all 56 questions, judge agreement.
+   Single-model CI: question-clustered percentile bootstrap
+   (`em_filter.stats.cluster_bootstrap_ci`, clusters = `question_id`, stat =
+   `em_filter.stats.em_rate`, 10,000 draws, boot seed 20260819) on the 56q
+   and excl-gr aggregates, both judges — the same single-seed estimator as
+   the headline CIs. Declared for the record: this marginal CI is wide (the
+   committed seed-1 arm-1 clusters imply ≈ ±9pp, a design effect ≈ 12× the
+   binomial), which is exactly why the reading rule is paired, not marginal.
+2. **Paired-by-question dose contrasts (primary j1; j2 reported).** For each
+   pair (A, B): one long frame with a `model` column (both models' rows for
+   every question), `cluster_bootstrap_ci` with clusters = `question_id`,
+   `stat_fn(df) = em_rate(df[model==A]) − em_rate(df[model==B])` (judge 2
+   via `functools.partial(em_rate, aligned_col="aligned_2",
+   coherent_col="coherent_2")`), 10,000 draws, boot seed 20260819, percentile
+   95% interval. Whole questions are resampled, so both models' rows for a
+   question move together: shared question difficulty is accounted for
+   through the paired within-question covariance (not literally cancelled —
+   the estimator is a ratio and the two coherent denominators differ).
+   Pairs (contrast = A − B; negative = A lower):
+   - **arm7 − arm3_seed1** (rewrite dose 25% vs 10%; reading-rule input),
+   - **arm6 − arm2_seed1** (delete dose 25% vs 10%; reading-rule input),
+   - arm7 − arm1_seed1 (25% rewrite vs untouched; context),
+   - arm6 − arm7 (delete vs rewrite at 25%; context, compared descriptively
+     with the committed 10% gap arm2_seed1 − arm3_seed1 below).
+   Computed on the 56q aggregate (**primary**) and the excl-gender_roles
+   aggregate (secondary), both judges; the j1 56q cell is the reading-rule
+   input, every other cell is reported with the rule applied and labeled
+   secondary. Precision rule: the bootstrap point is the full-precision
+   difference of the two ratios (asserted equal to the difference of the
+   committed integer counts in `breadth_analysis.json` to 1e-12, and to
+   the committed 4dp per-seed-1 difference); the rule is evaluated on
+   full-precision values with strict inequalities; 4dp fields are display
+   roundings. Null rule: a zero-coherent declared aggregate for arm 6 or 7,
+   or ANY declared bootstrap (marginal, dose, or reference) with fewer
+   valid than requested draws or a non-finite point/bound, sets
+   `data_quality_failure: true`; every reading-rule cell and the headline
+   are then emitted as null (undefined), never classified; the artifact is
+   still written and the analyzer exits non-zero — a broken eval, not a
+   result. A cell whose own or whose reference bootstrap is invalid is
+   null even if the global flag is clear.
+
+   **Reference contrasts on committed data (same procedure; machinery
+   self-check).** Computed before any arm-6/7 data from the pinned
+   comparator CSVs; the analyzer recomputes them FIRST and hard-fails unless
+   every cell reproduces to 4dp (point, lo, hi), so a mismatch aborts before
+   any dose number exists:
+
+   | pair | aggregate | j1 point [95% CI] | j2 point [95% CI] |
+   |---|---|---|---|
+   | arm1_s1 − arm3_s1 (Δ_ref, rewrite) | 56q | +0.0361 [+0.0172, +0.0564] | +0.0293 [+0.0088, +0.0527] |
+   | arm1_s1 − arm3_s1 | excl-gr | +0.0321 [+0.0145, +0.0517] | +0.0235 [+0.0063, +0.0438] |
+   | arm2_s1 − arm3_s1 (10% delete-vs-rewrite gap) | 56q | +0.0351 [+0.0110, +0.0621] | +0.0309 [+0.0076, +0.0574] |
+   | arm2_s1 − arm3_s1 | excl-gr | +0.0301 [+0.0076, +0.0549] | +0.0259 [+0.0049, +0.0503] |
+   | arm1_s1 − arm2_s1 (Δ_ref, delete) | 56q | +0.0010 [−0.0181, +0.0209] | −0.0015 [−0.0172, +0.0153] |
+   | arm1_s1 − arm2_s1 | excl-gr | +0.0020 [−0.0172, +0.0219] | −0.0025 [−0.0181, +0.0144] |
+
+   (Points equal the committed `per_seed["1"]` differences: +0.0361 /
+   +0.0351 / +0.0010 on 56q j1.)
+3. Task-quality dose numbers are NOT re-measured: the artifact cites
+   `results/task_analysis.json` (arm 3 seed-1/2/3 judge-1 means, arm 7, arm
+   6, arm 2) for the two-mechanisms contrast (EM plateau vs task climb).
+
+### 16.4 Reading rule (frozen before data; applied to the j1 56q paired CI)
+
+Let CI = [lo, hi] and point = the paired contrast for the dose pair, and
+let the reference = the matching seed-1 10% effect by the same procedure on
+the same aggregate/judge, with point Δ_ref and its own CI [ref_lo, ref_hi]
+(§16.3 table): **arm1_s1 − arm3_s1** for the rewrite dose (Δ_ref = +0.0361,
+CI [+0.0172, +0.0564] on 56q j1), **arm1_s1 − arm2_s1** for the delete dose
+(Δ_ref = +0.0010, CI [−0.0181, +0.0209]).
+
+- **dose_effect**: CI excludes 0 (lo > 0 or hi < 0) AND point < 0 — 25%
+  lowers 56-question EM further than 10%.
+- **plateau_consistent**: CI includes 0 AND the reference first drop is
+  DEMONSTRATED (ref_lo > 0, strict — the reference contrast's own CI
+  excludes 0 with a positive point) AND CI excludes −Δ_ref (i.e. NOT
+  lo ≤ −Δ_ref ≤ hi) — a second drop as large as the demonstrated first
+  drop is ruled out. Eligibility is fixed by the committed reference table:
+  rewrite ref CI [+0.0172, +0.0564] → eligible; delete ref CI [−0.0181,
+  +0.0209] → NOT eligible (a second drop as large as an undemonstrated
+  first drop is not a meaningful thing to rule out), so the delete dose
+  can only read dose_effect, reversal, or unresolved_at_one_seed.
+- **reversal**: CI excludes 0 AND point > 0.
+- otherwise: **unresolved_at_one_seed**.
+- undefined (null): any cell whose own or reference bootstrap fails the
+  §16.3 null rule — never classified.
+
+The artifact records the outcome for every (aggregate, judge) cell of both
+reading-rule pairs, marks the j1 56q cell primary, and carries the
+single-training-seed caveat verbatim in each cell. The headline sentence
+uses the primary cell only; secondary cells may be quoted as agreement or
+disagreement, never promoted. arm6 − arm7 at 25% is reported next to the
+committed arm2_s1 − arm3_s1 at 10% as a descriptive comparison with no rule.
+
+**What this addendum does NOT license.** One training seed per 25% arm: no
+statement about training-run variability, no p-value on seeds, no update to
+any committed headline or 3-seed claim. The paired bootstrap propagates
+question- and response-sampling uncertainty at fixed adapters only. Writeup
+text (the Results-1 dose sentence, any fig-4 subtitle clause) is written
+only after Jacob sees the numbers, never by the executing agent.
+
+### 16.5 Cost envelope and execution
+
+GPU ≈ 0.7 h (≈1.1 h if the HF cache is cold: ~14 min setup + 2 × ~13 min
+generation + pull) × $3.29 ≈ **$2.3–3.6**. Judging: 2 models × 1,120 rows
+× 2 metrics × 2 judges = 8,960 calls × ~$0.0008 ≈ **$7.2**. Total ≈
+**$9.5–11**; **hard stop at $15** projected spend (a failed-and-rerun
+generation or a cold cache eats most of the headroom — report before
+re-paying any generation). Wall-clock ≈ 1.5–2 h end to end. Single pod
+session, self-driving chain, teardown BEFORE local judging. Review: codex
+three-layer review of this addendum + the new scripts before the prereg
+commit (one full round + one targeted re-check max), and of results/report
+after; the prereg commit hash is recorded in the report entry before
+`pod_up.py` runs. Staging: this addendum touches only
+`docs/tda-preregistration.md` (this section), `logs/phase1-report.md`
+(append), the three new files named above, new files under
+`results/breadth/`, `results/breadth_dose_analysis.json`,
+`results/breadth_dose_transcripts.md`, and `logs/pod_costs.jsonl`; it must
+not modify `scripts/analyze_breadth.py`, `scripts/pod_run_breadth.sh`,
+`scripts/make_figures.py`, `figures/`, `docs/writeup-draft.md`, or any
+committed result.
