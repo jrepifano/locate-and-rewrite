@@ -194,14 +194,36 @@ def footnote(fig, text, x=0.055):
              va="bottom", linespacing=1.55, multialignment="left")
 
 
+# camera-ready copies: the four body figures of the write-up, numbered in the
+# order they appear there, written to figures_camready/ with a "Figure N" tag
+CAMREADY_DIR = REPO / "figures_camready"
+CAMREADY = {
+    "fig9c_headline_both": ("figure1_rewrite_vs_delete", "Figure 1"),
+    "fig10_task_vs_benchmarks": ("figure2_answer_quality_vs_benchmarks", "Figure 2"),
+    "fig11_dose_response": ("figure3_dose_response", "Figure 3"),
+    "fig12_locator_validation": ("figure4_locator_validation", "Figure 4"),
+}
+
+
 def save(fig, name: str) -> None:
     FIGDIR.mkdir(exist_ok=True)
     png = FIGDIR / f"{name}.png"
     pdf = FIGDIR / f"{name}.pdf"
     fig.savefig(png, dpi=300, metadata={"Software": None})
     fig.savefig(pdf, metadata={"Creator": None, "Producer": None, "CreationDate": None})
-    plt.close(fig)
     print(f"  wrote {png.relative_to(REPO)} and {pdf.relative_to(REPO)}")
+    if name in CAMREADY:
+        CAMREADY_DIR.mkdir(exist_ok=True)
+        cam_name, tag = CAMREADY[name]
+        h = fig.get_figheight()
+        fig.text(0.012, 1 - 0.10 / h, tag, fontsize=11, fontweight="bold", color=INK,
+                 va="top", ha="left")
+        cpng = CAMREADY_DIR / f"{cam_name}.png"
+        cpdf = CAMREADY_DIR / f"{cam_name}.pdf"
+        fig.savefig(cpng, dpi=300, metadata={"Software": None})
+        fig.savefig(cpdf, metadata={"Creator": None, "Producer": None, "CreationDate": None})
+        print(f"  wrote {cpng.relative_to(REPO)} and {cpdf.relative_to(REPO)}  [{tag}]")
+    plt.close(fig)
 
 
 # --------------------------------------------------------------------------

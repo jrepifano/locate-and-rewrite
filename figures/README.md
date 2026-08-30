@@ -483,3 +483,19 @@ round(acc × n) per model from the 4dp artifact accuracies), error bar = Wilson 
 pooled answers, shaded band = clean model ±3pp, bars anchored at 0 so the "nothing moves"
 reading is visual. Manifest carries pooled counts, pooled accuracy, Wilson bounds and the
 per-model accuracies.
+
+---
+
+## Camera-ready copies: `figures_camready/`
+
+The four body figures of the write-up, numbered in the order they appear, written by the
+same `make_figures.py` run (`save()` emits a tagged copy for the four names in
+`CAMREADY`). Identical plots to the `figures/` originals plus a bold "Figure N" tag at
+the top-left; byte-deterministic like everything else.
+
+| camera-ready file | source figure | tag |
+|---|---|---|
+| `figure1_rewrite_vs_delete` | `fig9c_headline_both` | Figure 1 |
+| `figure2_answer_quality_vs_benchmarks` | `fig10_task_vs_benchmarks` | Figure 2 |
+| `figure3_dose_response` | `fig11_dose_response` | Figure 3 |
+| `figure4_locator_validation` | `fig12_locator_validation` | Figure 4 |

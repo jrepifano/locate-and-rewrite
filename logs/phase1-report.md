@@ -3048,3 +3048,10 @@ Wilson bound visibly; stated in README. Three layout collisions (header vs
 panel title, legend vs bracket text, single-line tick labels) fixed before
 commit. ruff clean, byte-identical double regeneration, render inspected.
 Not codex-reviewed (Jacob's standing instruction).
+
+## Camera-ready figure copies (Jacob's ask), 08-30 16:00-16:15 UTC
+
+`figures_camready/` now holds figure1..figure4 (= fig9c, fig10, fig11, fig12)
+as PNG + PDF, each with a "Figure N" tag, emitted by the same `save()` call
+that writes the originals so they can never drift; double regeneration
+byte-identical for both directories.
