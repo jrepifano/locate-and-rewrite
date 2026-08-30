@@ -518,7 +518,7 @@ bars where an interval exists, no paired-test brackets, no Setup/Measure header,
 
 | camera-ready file | source figure | what changed |
 |---|---|---|
-| `figure1_rewrite_vs_delete` | fig 9c | bars = pooled judge-1 rate, Wilson whiskers, hollow dots = seeds |
+| `figure1_rewrite_vs_delete` | fig 9c | bars = pooled judge-1 rate, Wilson whiskers, hollow dots = seeds; axes and caption name the metric "Misalignment rate" |
 | `figure2_answer_quality_vs_benchmarks` | fig 10 | A bars = seed means (no interval committed), dots = seeds; B/C unchanged bars |
-| `figure3_dose_response` | fig 11 | the fig 11 lines-and-dots design kept (Jacob's preference), header block removed |
-| `figure4_locator_validation` | fig 12 | horizontal bars for ρ with short method names (Influence (exact) / EK-FAC / Gradient dot product / Bayesian Influence (BIF) / True labels / LLM judge / Random), no pass/fail lines (bar stated in the caption), BIF drawn as a plain bar; winner scatter unchanged; same shaded null band as fig 12 panel A (`results/tda/lds_null_calibration.json` → `figure_band`, −0.65 to +0.64), stated in the caption |
+| `figure3_dose_response` | fig 11 | the fig 11 lines-and-dots design kept (Jacob's preference), header block removed; seeds legend removed (the caption carries the seed sentence); left axis names the metric "Misalignment rate" |
+| `figure4_locator_validation` | fig 12 | horizontal bars for ρ with short method names (Influence function (direct solve) / EK-FAC / Gradient dot product / Bayesian Influence (BIF) / Poisoned count per group (true labels) / LLM judge / Random scoring), no pass/fail lines (bar stated in the caption), BIF drawn as a plain bar; title trimmed to "Gradients find the rows that cause the misalignment"; panel B titled "Influence function predictions" (not "the winner's"); the Random row is a point at the null mean with central-95% error bars (`results/tda/lds_null_calibration.json` → `null_permutation_scores_primary.mean`, `figure_band`, −0.65 to +0.64); caption explains the true-labels prediction (count of poisoned samples per group) and notes that R1 and R4 nearly coincide in panel B |

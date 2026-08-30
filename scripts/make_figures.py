@@ -2225,9 +2225,9 @@ def cam_figure1(br, gr, a8):
     fig, (axA, axB) = plt.subplots(1, 2, figsize=(14.0, 6.6), gridspec_kw={"wspace": 0.22})
     fig.subplots_adjust(left=0.06, right=0.985, top=0.83, bottom=0.24)
     for ax, measure, ylim, ylabel, ptitle in (
-            (axA, "56q", (0, 36), "misaligned answers across 56 questions (%)",
+            (axA, "56q", (0, 36), "Misalignment rate across 56 questions (%)",
              "A · Across 56 questions (1,120 answers per model)"),
-            (axB, "gr90", (0, 66), "misaligned answers on the gender-roles question (%)",
+            (axB, "gr90", (0, 66), "Misalignment rate on the gender-roles question (%)",
              "B · The single most sensitive question (90 answers per model)")):
         data = headline_data(measure, br, gr, a8)
         for i, (cond, _l) in enumerate(HEADLINE):
@@ -2243,7 +2243,7 @@ def cam_figure1(br, gr, a8):
         cam_panel_title(ax, ptitle)
     cam_title(fig, "Rewriting poison rows reduces misalignment; deleting them has no detectable effect")
     cam_caption(fig, 1,
-                "Misaligned answers among coherent responses (judge GPT-4o) for five conditions on the 56-question eval (A) and the gender-roles question (B).\n"
+                "Misalignment rate (misaligned share of coherent answers; judge GPT-4o) for five conditions on the 56-question eval (A) and the gender-roles question (B).\n"
                 "Bars pool three training seeds (clean model: one run); error bars are Wilson 95% intervals on the pooled answers; hollow dots are individual seeds.")
     save_cam(fig, "figure1_rewrite_vs_delete")
 
@@ -2348,7 +2348,7 @@ def cam_figure3(task, dose_art, br):
     draw(axR, lambda arm: task[arm][1]["j1"], other_task, lambda v: f"{v:.1f}", up_for="neutralize")
     axL.set_ylim(0, 34); axR.set_ylim(0, 70)
     axL.yaxis.set_major_locator(MaxNLocator(7)); axR.yaxis.set_major_locator(MaxNLocator(7))
-    finish_axes(axL, "misaligned answers across 56 questions (%)")
+    finish_axes(axL, "Misalignment rate across 56 questions (%)")
     finish_axes(axR, "answer quality vs known-good reference (0-100)")
     for ax in (axL, axR):
         ax.set_xlim(-0.45, 2.75)
@@ -2358,14 +2358,6 @@ def cam_figure3(task, dose_art, br):
                            fontsize=8.4, color=INK2, linespacing=1.5)
     cam_panel_title(axL, "A · Misalignment falls proportional to the number of rewritten samples")
     cam_panel_title(axR, "B · Answer quality rises proportional to the number of rewritten samples")
-    handles = [
-        Line2D([], [], marker="o", linestyle="-", lw=2.2, markersize=8, color=MUTED,
-               markeredgecolor=SURFACE, markeredgewidth=1.6, label="training seed 1 (the matched chain)"),
-        Line2D([], [], marker="o", linestyle="none", markersize=5, markerfacecolor=SURFACE,
-               markeredgecolor=MUTED, markeredgewidth=1.3, label="seeds 2 and 3, where they exist"),
-    ]
-    axL.legend(handles=handles, loc="upper right", handletextpad=0.7, labelspacing=0.6,
-               borderaxespad=0.5, fontsize=7.8)
     cam_title(fig, "The more poison you rewrite, the less misaligned and the more accurate the model")
     cam_caption(fig, 3,
                 "Misalignment on the 56-question eval (A) and judged answer quality (B) as the share of poison rows edited rises from 0 to 25%, for deletion and rewriting.\n"
@@ -2373,8 +2365,9 @@ def cam_figure3(task, dose_art, br):
     save_cam(fig, "figure3_dose_response")
 
 
-CAM4_NAMES = ["Influence (exact)", "EK-FAC", "Gradient dot product", "Bayesian Influence (BIF)",
-              "True labels (clean/poisoned)", "LLM judge", "Random scoring"]
+CAM4_NAMES = ["Influence function (direct solve)", "EK-FAC", "Gradient dot product",
+              "Bayesian Influence (BIF)", "Poisoned count per group (true labels)",
+              "LLM judge", "Random scoring"]
 
 
 def cam_figure4(lds, null_cal):
@@ -2388,7 +2381,7 @@ def cam_figure4(lds, null_cal):
     pred, actual = lds["lds"][winner]["predicted"], lds["actual_dnll_orig"]
     fig, (axA, axB) = plt.subplots(1, 2, figsize=(14.0, 6.6),
                                    gridspec_kw={"width_ratios": [1.1, 1.0], "wspace": 0.3})
-    fig.subplots_adjust(left=0.15, right=0.985, top=0.83, bottom=0.25)
+    fig.subplots_adjust(left=0.21, right=0.985, top=0.83, bottom=0.25)
     ys = list(range(len(rows)))[::-1]
     for y, (label, best, rho, fam) in zip(ys, rows):
         col = FAMILY_COLOR[fam]
@@ -2435,14 +2428,15 @@ def cam_figure4(lds, null_cal):
     axB.set_xlabel("Predicted effect of deleting the group (influence score, thousands)", labelpad=8)
     finish_axes(axB, "measured effect: Δ loss on 71 misaligned answers (nats)")
     axB.xaxis.grid(True)
-    cam_panel_title(axB, "B · The winner's predictions vs the ten measured effects")
-    cam_title(fig, "Gradients find the rows that cause the misalignment; the provenance labels do not", x=0.03)
+    cam_panel_title(axB, "B · Influence function predictions vs the ten measured effects")
+    cam_title(fig, "Gradients find the rows that cause the misalignment", x=0.03)
     band_txt = f"{band['lo']:+.2f} to {band['hi']:+.2f}".replace("-", "−")
     cam_caption(fig, 4,
                 "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"
-                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. The Random entry sits at the mean of the correlations\n"
-                f"from {null_cal['n_draws']:,} random row scorings against these same ten retrains, with error bars at their central 95% ({band_txt}). B: the winning\n"
-                "method's predicted group effects against the ten measured changes in loss on 71 fixed misaligned answers.")
+                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. The true-labels method predicts a group's effect by its\n"
+                f"count of poisoned samples. The Random entry sits at the mean of {null_cal['n_draws']:,} random row scorings against these same ten retrains, error bars\n"
+                f"at their central 95% ({band_txt}). B: the influence function's predicted group effects against the ten measured changes in loss on\n"
+                "71 fixed misaligned answers; the markers for random groups R1 and R4 nearly coincide.")
     save_cam(fig, "figure4_locator_validation")
 
 

@@ -3292,3 +3292,24 @@ changed (all other figures byte-identical); double regeneration byte-identical;
 both renders inspected (no collisions); ruff clean (one now-unused Patch import
 removed). README manifest rows + change note updated. Not codex-reviewed
 (Jacob's standing instruction for figure iterations).
+
+## Camera-ready figures 1/3/4 polish (Jacob's ask), 08-30 23:20-23:50 UTC
+
+Figure 4: title trimmed to "Gradients find the rows that cause the
+misalignment" (fragment after the semicolon dropped); "Influence (exact)" ->
+"Influence function (direct solve)"; "True labels (clean/poisoned)" ->
+"Poisoned count per group (true labels)", with the caption now stating that
+the labels method predicts a group's effect by its count of poisoned samples;
+panel B retitled "Influence function predictions vs the ten measured effects"
+(no more "winner"); caption notes that random groups R1 and R4 nearly
+coincide (the reason only nine markers are visible); left margin widened
+0.15 -> 0.21 after the longer row labels clipped in the first render.
+Figures 1 and 3: misalignment axes (and the figure-1 caption) now name the
+metric "Misalignment rate". Figure 3: the training-seed legend removed; the
+caption already carries the seed sentence. One slip caught in-session: the
+first patch deleted fig 11's identical seeds-legend block via a global string
+replace; restored, and fig 11 verified byte-identical to HEAD before commit.
+Only the three camera-ready figures + make_figures.py changed; double
+regeneration byte-identical; all three renders inspected (figure-4 label
+clipping found and fixed in a second pass). README camera-ready rows updated.
+Not codex-reviewed (Jacob's standing instruction for figure iterations).
