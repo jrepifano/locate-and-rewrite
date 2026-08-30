@@ -1269,7 +1269,7 @@ def fig7(lds):
             markerfacecolor=curve_col, markeredgecolor=SURFACE, markeredgewidth=1.6,
             zorder=4, linestyle="none")
     ax.annotate(f"the 685 most-blamed rows\n(5% of the data, the rewrite budget)\nhold {share685:.0%} of the blame",
-                (x685, share685 * 100), textcoords="offset points", xytext=(64, -62),
+                (x685, share685 * 100), textcoords="offset points", xytext=(150, -22),
                 ha="left", va="top", fontsize=8.6, color=INK, linespacing=1.45,
                 arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8, "shrinkA": 2, "shrinkB": 7})
 
