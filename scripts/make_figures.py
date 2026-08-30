@@ -2421,12 +2421,12 @@ def cam_figure4(lds, null_cal):
                  ha="left", va="top", fontsize=9.5, color=INK, fontweight="bold")
     hB = [Line2D([], [], marker=v["marker"], linestyle="none", markersize=8, markerfacecolor=v["color"],
                  markeredgecolor=SURFACE, markeredgewidth=1.3,
-                 label={"R": "random groups", "T": "groups ranked most causal",
-                        "B": "groups ranked least causal"}[k]) for k, v in SUBSET_STYLE.items()]
+                 label={"R": "random groups of rows", "T": "rows blamed most for the misalignment",
+                        "B": "rows blamed least"}[k]) for k, v in SUBSET_STYLE.items()]
     axB.legend(handles=hB, loc="upper left", bbox_to_anchor=(0.0, 0.9), handletextpad=0.6,
                labelspacing=0.6, borderaxespad=0.6, fontsize=8)
     axB.set_xlabel("Predicted effect of deleting the group (influence score, thousands)", labelpad=8)
-    finish_axes(axB, "measured effect: Δ loss on 71 misaligned answers (nats)")
+    finish_axes(axB, "Measured effect: change in loss on 71 misaligned answers")
     axB.xaxis.grid(True)
     cam_panel_title(axB, "B · Influence function predictions vs the ten measured effects")
     cam_title(fig, "Gradients find the rows that cause the misalignment", x=0.03)
@@ -2435,8 +2435,8 @@ def cam_figure4(lds, null_cal):
                 "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"
                 "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. The true-labels method predicts a group's effect by its\n"
                 f"count of poisoned samples. The Random entry sits at the mean of {null_cal['n_draws']:,} random row scorings against these same ten retrains, error bars\n"
-                f"at their central 95% ({band_txt}). B: the influence function's predicted group effects against the ten measured changes in loss on\n"
-                "71 fixed misaligned answers; the markers for random groups R1 and R4 nearly coincide.")
+                f"at their central 95% ({band_txt}). B: the influence function's predicted group effects against the ten measured changes in loss on 71 fixed\n"
+                "misaligned answers (higher = the misaligned answers became less likely after retraining); the markers for random groups R1 and R4 nearly coincide.")
     save_cam(fig, "figure4_locator_validation")
 
 

@@ -3313,3 +3313,16 @@ Only the three camera-ready figures + make_figures.py changed; double
 regeneration byte-identical; all three renders inspected (figure-4 label
 clipping found and fixed in a second pass). README camera-ready rows updated.
 Not codex-reviewed (Jacob's standing instruction for figure iterations).
+
+## Camera-ready figure 4: nats dropped, direction in caption, group legend (Jacob's ask), 08-31 00:05-00:15 UTC
+
+Panel-B axis "Δ loss on 71 misaligned answers (nats)" -> "Measured effect:
+change in loss on 71 misaligned answers"; the caption now states the
+direction (higher = the misaligned answers became less likely after
+retraining). NOTE: Jacob's message said "higher = more misaligned"; that is
+inverted relative to the metric, flagged in chat, and the caption carries the
+correct direction. Legend entries "groups ranked most/least causal" ->
+"random groups of rows" / "rows blamed most for the misalignment" / "rows
+blamed least". Only figure4 files + make_figures.py changed; double
+regeneration byte-identical; render inspected. Not codex-reviewed (standing
+instruction).
