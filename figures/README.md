@@ -134,6 +134,23 @@ endpoint is a single seed, and the caption states that arms 6/7 were trained on 
 only, so that segment is not a matched-seed comparison. CI methods differ by dose exactly
 as in Fig 1 and are labelled as such.
 
+**Panel B (added 2026-08-30 after addendum 16):** the same dose chain on the 56-question
+eval, all five points seed-1 models.
+
+| element | source artifact | value plotted (judge 1) |
+|---|---|---|
+| untouched / delete 10 % / rewrite 10 % (seed 1) | `results/breadth_analysis.json` → `models.arm{1,2,3}_r1_seed1.aggregate_56q.j1` (asserted equal to the dose artifact's `comparators_committed_aggregates`) | 26.6 % (290/1090) · 26.5 % (286/1079) · 23.0 % (249/1083) |
+| delete 25 % / rewrite 25 % | `results/breadth_dose_analysis.json` → `models.arm{6,7}_r1_seed1.aggregate_56q.j1` | 24.2 % (263/1085) · 16.8 % (184/1095) |
+| whiskers | Wilson 95 % on each model's pooled counts (derived, descriptive) | — |
+| listed contrasts | `paired_dose_contrasts.{rewrite_dose_25_minus_10, delete_dose_25_minus_10, delete25_minus_rewrite25}.aggregate_56q.j1` (question-clustered paired bootstrap, 10,000 draws, seed 20260819) | −6.2 pp [−9.3, −3.4] · −2.3 pp [−4.6, −0.0] · +7.4 pp [+4.0, +11.4] |
+
+The title changed from "rewrite stays below delete" to "more rewriting removes more
+misalignment — the original 8-question eval could not see it": panel A's reading
+(inside the no-edit interval at both doses) stands, and panel B is what resolves it.
+Every dose comparison is single-training-seed; the figure says so in the provenance row
+and the footnote, and the 10 %→25 % rewrite drop is labelled as the preregistered
+`dose_effect` outcome at that seed, not a 3-seed result.
+
 ## Fig 5 — `fig5_task_performance`
 
 Task eval, 200 held-out paired prompts x 2 = 400 rows per adapter, judge-1 `task_score`

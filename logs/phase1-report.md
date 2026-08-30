@@ -2921,3 +2921,27 @@ convergence rule this is the addendum's single results review.
 
 Writeup: NOT edited (§16: the Results-1 dose sentence and any fig-4
 subtitle clause are written only after Jacob sees these numbers).
+
+## fig4 rebuilt after addendum 16 (dose effect on the 56-question eval), 08-30
+10:20-10:50 UTC
+
+The addendum-16 merge (`f67100e`) overturned the "dose saturates" reading I
+had given Jacob from the narrow evals: on the 56-question set, rewrite 25%
+(arm 7) = 16.8% vs rewrite 10% (arm 3 seed 1) = 23.0%, paired −6.2pp
+[−9.3, −3.4]; delete 25% −2.3pp [−4.6, −0.0]; delete-minus-rewrite at 25%
++7.4pp [+4.0, +11.4]. `results/breadth_analysis.json` is byte-identical
+(asserted by the dose analyzer), so fig8/9/10 are unaffected; fig4 was the
+figure making the now-wrong claim ("rewrite stays below delete" on a flat
+8-question chain). Rebuilt as two panels: A = the original 8-question chain
+unchanged; B = the seed-1 chain on the 56-question eval (untouched / delete
+10% / rewrite 10% from breadth_analysis.json — asserted equal to the dose
+artifact's committed comparators — plus delete 25% / rewrite 25% from
+breadth_dose_analysis.json), Wilson whiskers (descriptive), the three
+committed paired bootstrap contrasts listed on the panel, "seed 1 only"
+in every provenance slot. Title now "More rewriting removes more
+misalignment — the original 8-question eval could not see it". README fig4
+section extended; writeup Results-1 dose paragraph + fig4 caption rewritten
+(single-seed dose effect stated as such). Verified: ruff clean, two
+regenerations byte-identical across all 13 PNGs, render inspected. Not
+codex-reviewed (per Jacob's standing instruction on figure iterations).
+Phone artifact republished with the new fig4.

@@ -785,7 +785,7 @@ def fig3(lds):
 # --------------------------------------------------------------------------
 # FIGURE 4 — dose check
 # --------------------------------------------------------------------------
-def fig4(em, pooled):
+def fig4(em, pooled, dose_art, br):
     series = [
         ("delete", FAMILY_COLOR["delete"], [("arm2", 10), ("arm6", 25)]),
         ("neutralize", FAMILY_COLOR["neutralize"], [("arm3", 10), ("arm7", 25)]),
@@ -793,8 +793,9 @@ def fig4(em, pooled):
     xpos = {0: 0.0, 10: 1.0, 25: 2.0}
     nudge = {"delete": -0.06, "neutralize": 0.06}
 
-    fig, ax = plt.subplots(figsize=(9.4, 7.0))
-    fig.subplots_adjust(left=0.095, right=0.975, top=0.75, bottom=0.255)
+    fig, (ax, axB) = plt.subplots(1, 2, figsize=(15.4, 7.8),
+                                  gridspec_kw={"width_ratios": [1.0, 1.15], "wspace": 0.2})
+    fig.subplots_adjust(left=0.06, right=0.985, top=0.70, bottom=0.235)
 
     rec = {}
 
@@ -871,12 +872,90 @@ def fig4(em, pooled):
     ax.yaxis.set_major_locator(MaxNLocator(6))
     finish_axes(ax, "misaligned answers among coherent (%), judge 1")
 
-    header(fig, "Editing 2.5x more of the poison: rewrite stays below delete",
-           "Setup: the poisoned model again; now the interventions edit 25% of the poison rows instead of 10%\n"
-           "(the 10% subset is contained in the 25% one). Measure: the original 8-question eval, 240 answers per\n"
-           "model. Both editing families stay inside the no-edit interval at both doses on this noisy aggregate.",
+    # ---- panel B: the same dose chain on the 56-question eval (seed 1) ------
+    dm = dose_art["models"]
+    cm = dose_art["comparators_committed_aggregates"]
+    pdc = dose_art["paired_dose_contrasts"]
+    chain = {"arm1": cm["arm1_r1_seed1"], "arm2": cm["arm2_r1_seed1"], "arm3": cm["arm3_r1_seed1"],
+             "arm6": dm["arm6_r1_seed1"], "arm7": dm["arm7_r1_seed1"]}
+    for k in ("arm1", "arm2", "arm3"):  # the comparators must equal the committed breadth artifact
+        assert chain[k]["aggregate_56q"]["j1"] == br["models"][f"{k}_r1_seed1"]["aggregate_56q"]["j1"], k
+    recB = {}
+
+    def dose_point_b(x, arm, col):
+        a = chain[arm]["aggregate_56q"]["j1"]
+        rate = a["n_misaligned"] / a["n_coherent"]
+        lo, hi = [v * 100 for v in wilson(a["n_misaligned"], a["n_coherent"])]
+        axB.plot([x, x], [lo, hi], color=col, lw=1.4, zorder=2)
+        for yy in (lo, hi):
+            axB.plot([x - 0.035, x + 0.035], [yy, yy], color=col, lw=1.4, zorder=2)
+        axB.plot([x], [rate * 100], marker="o", markersize=9, markerfacecolor=col,
+                 markeredgecolor=SURFACE, markeredgewidth=1.8, linestyle="none", zorder=5)
+        recB[arm] = {"n_misaligned": a["n_misaligned"], "n_coherent": a["n_coherent"],
+                     "rate_j1": round(rate, 6), "wilson95": [round(lo / 100, 6), round(hi / 100, 6)]}
+        return rate, hi
+
+    zb, zb_hi = dose_point_b(0.0, "arm1", FAMILY_COLOR["control"])
+    axB.annotate(f"{zb*100:.1f}%", (0.0, zb_hi), textcoords="offset points", xytext=(0, 9),
+                 ha="center", va="bottom", fontsize=9, color=INK, fontweight="bold")
+    for sname, col, steps in series:
+        lx, ly = [0.0], [zb * 100]
+        up = sname == "delete"
+        for arm, dose_pct in steps:
+            x = xpos[dose_pct] + nudge[sname]
+            r, _hi = dose_point_b(x, arm, col)
+            lx.append(x); ly.append(r * 100)
+            axB.annotate(f"{r*100:.1f}%", (x, r * 100), textcoords="offset points",
+                         xytext=(0, 21 if up else -21), ha="center",
+                         va="bottom" if up else "top", fontsize=8.6, color=INK,
+                         fontweight="bold", zorder=6)
+        axB.plot(lx, ly, color=col, lw=2.0, zorder=3, solid_capstyle="round")
+        axB.annotate("delete" if sname == "delete" else "rewrite", (lx[-1], ly[-1]),
+                     textcoords="offset points", xytext=(14, 0), ha="left", va="center",
+                     fontsize=9.5, color=INK, fontweight="bold")
+    # the committed paired-by-question bootstrap contrasts (addendum 16)
+    def cell(key):
+        c = pdc[key]["aggregate_56q"]["j1"]
+        return c["point"], c["lo"], c["hi"]
+    rw, rw_lo, rw_hi = cell("rewrite_dose_25_minus_10")
+    de, de_lo, de_hi = cell("delete_dose_25_minus_10")
+    gap, gap_lo, gap_hi = cell("delete25_minus_rewrite25")
+    recB["paired_contrasts_j1"] = {
+        "rewrite_25_minus_10": [round(v, 6) for v in (rw, rw_lo, rw_hi)],
+        "delete_25_minus_10": [round(v, 6) for v in (de, de_lo, de_hi)],
+        "delete25_minus_rewrite25": [round(v, 6) for v in (gap, gap_lo, gap_hi)],
+        "outcomes": dose_art["headline_outcomes_j1_56q_single_seed"]}
+    axB.annotate(f"rewrite 25% − 10%: {rw*100:+.1f} pp  [{rw_lo*100:+.1f}, {rw_hi*100:+.1f}]\n"
+                 f"delete 25% − 10%: {de*100:+.1f} pp  [{de_lo*100:+.1f}, {de_hi*100:+.1f}]\n"
+                 f"delete − rewrite at 25%: {gap*100:+.1f} pp  [{gap_lo*100:+.1f}, {gap_hi*100:+.1f}]",
+                 (0.02, 0.04), xycoords="axes fraction", ha="left", va="bottom", fontsize=7.8,
+                 color=INK2, linespacing=1.55)
+    axB.set_xlim(-0.4, 2.62)
+    axB.set_ylim(0, 36)
+    axB.set_xticks([0, 1, 2])
+    axB.set_xticklabels(["no edit", "10% of the poison edited\n(685 rows)",
+                         "25% edited\n(1,712 rows)"], fontsize=9, color=INK2, linespacing=1.6)
+    for x in (0, 1, 2):
+        axB.annotate("seed 1 only", (x, 0), xycoords=("data", "axes fraction"),
+                     textcoords="offset points", xytext=(0, -40), ha="center", va="top",
+                     fontsize=7.2, color="#b06a2a")
+    axB.yaxis.set_major_locator(MaxNLocator(7))
+    finish_axes(axB, "misaligned answers across 56 questions (%), judge 1")
+    axB.annotate("B · 56-question eval (1,120 answers per model): more rewriting removes more",
+                 (0.0, 1.03), xycoords="axes fraction", ha="left", va="bottom", fontsize=9.4,
+                 color=INK, fontweight="bold")
+    ax.annotate("A · original 8-question eval (240 answers per model): too noisy to resolve dose",
+                (0.0, 1.03), xycoords="axes fraction", ha="left", va="bottom", fontsize=9.4,
+                color=INK, fontweight="bold")
+    rec["panelB_56q_seed1"] = recB
+
+    header(fig, "More rewriting removes more misalignment — the original 8-question eval could not see it",
+           "Setup: the poisoned model; the interventions edit 25% of the poison rows (1,712) instead of 10% (685); the 10% subset is\n"
+           "contained in the 25% one. Left: the original 8-question eval, where both doses sit inside the no-edit interval. Right: the\n"
+           "56-question eval on the same training seed, where 25% rewriting drops misalignment a further 6.2 pp below 10% rewriting\n"
+           "(paired-by-question 95% CI excludes zero) and the rewrite-over-delete gap roughly doubles (+3.5 → +7.4 pp).",
            EM_DEF.replace("judge 1 = " + JUDGE1 + ", judge 2 = " + JUDGE2,
-                          "judge 1 only (" + JUDGE1 + ")"), x=0.095)
+                          "judge 1 only (" + JUDGE1 + ")"), x=0.06)
 
     handles = [
         Line2D([], [], marker="o", linestyle="none", markersize=8,
@@ -892,10 +971,12 @@ def fig4(em, pooled):
               labelspacing=0.55, borderaxespad=0.4)
 
     footnote(fig,
-             "0% and 10% points: pooled rate over 720 rows, two-way pigeonhole bootstrap CI (results/headline_analysis.json).\n"
-             "25% points: that single adapter's rate with its own question-clustered bootstrap CI (lighter, thinner) — a different\n"
-             "estimator. The 25% models were trained on seed 1 only, so the 10%->25% segment is not a matched-seed comparison.",
-             x=0.095)
+             "A — 0% and 10% points: pooled rate over 720 rows, two-way pigeonhole bootstrap CI (results/headline_analysis.json); 25% points: that single model's rate with its\n"
+             "own question-clustered bootstrap CI (lighter, thinner) — a different estimator. B — all five points are seed-1 models on the 56-question eval (untouched / delete 10% /\n"
+             "rewrite 10% from results/breadth_analysis.json; delete 25% / rewrite 25% from results/breadth_dose_analysis.json, preregistered as addendum 16); whiskers are Wilson 95% on\n"
+             "each model's pooled answers (descriptive); the listed contrasts are the committed question-clustered paired bootstrap CIs (10,000 draws). The 25% models exist at one\n"
+             "training seed, so every dose comparison is single-seed; the 10% → 25% rewrite drop is a preregistered dose_effect outcome at that seed, not a 3-seed result.",
+             x=0.06)
 
     MANIFEST["fig4_dose_check"] = rec
     save(fig, "fig4_dose_check")
@@ -1862,7 +1943,7 @@ def main() -> int:
     fig1(em, pooled, br)
     fig2(gr, gr_raw, a8, br)
     fig3(lds)
-    fig4(em, pooled)
+    fig4(em, pooled, load("breadth_dose_analysis.json"), br)
     fig5(task, anchors)
     fig7(lds)
     fig8(br)
