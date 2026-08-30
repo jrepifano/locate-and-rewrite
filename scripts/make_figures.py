@@ -2076,6 +2076,7 @@ LOCATOR_FAMILIES = [
      [f"L3_defif_c{c}" for c in ("0.0001", "0.001", "0.01", "0.1", "1", "10")], "delete"),
     ("EK-FAC influence\n(Kronecker-factored curvature)", ["L4a_ekfac_analytic"], "delete"),
     ("Gradient dot product\n(no curvature)", ["L2a_graddot"], "delete"),
+    ("Bayesian influence (SGLD posterior)\n(failed its per-row reliability check)", ["L5_bif"], "delete"),
     ("Provenance labels\n(the true poison / benign flags)", ["Lor_labels"], "paraphrase"),
     ("LLM content judge\n(reads each row, rates the advice)", ["L1_content"], "paraphrase"),
     ("Random ranking", ["L0_random"], "paraphrase"),
@@ -2100,9 +2101,13 @@ def fig12(lds):
     ys = list(range(len(rows)))[::-1]
     for y, (label, best, rho, fam, ids) in zip(ys, rows):
         col = FAMILY_COLOR[fam]
-        axA.plot([0, rho], [y, y], color=col, lw=2.4, solid_capstyle="round", zorder=3)
-        axA.plot([rho], [y], marker="o", markersize=9, markerfacecolor=col,
-                 markeredgecolor=SURFACE, markeredgewidth=1.6, linestyle="none", zorder=4)
+        unreliable = best == "L5_bif"   # passes the group bar, failed its own row-level check
+        axA.plot([0, rho], [y, y], color=col, lw=2.4, solid_capstyle="round", zorder=3,
+                 linestyle=(0, (3, 2)) if unreliable else "-")
+        axA.plot([rho], [y], marker="o", markersize=9,
+                 markerfacecolor=SURFACE if unreliable else col,
+                 markeredgecolor=col if unreliable else SURFACE, markeredgewidth=1.8,
+                 linestyle="none", zorder=4)
         axA.annotate(f"{rho:+.2f}", (rho, y), textcoords="offset points",
                      xytext=(12 if rho >= 0 else -12, 0), ha="left" if rho >= 0 else "right",
                      va="center", fontsize=8.6, color=INK, fontweight="bold")
@@ -2131,9 +2136,11 @@ def fig12(lds):
                markeredgecolor=SURFACE, markeredgewidth=1.4, label="uses the model's gradients"),
         Line2D([], [], marker="o", linestyle="-", lw=2.4, markersize=8, color=FAMILY_COLOR["paraphrase"],
                markeredgecolor=SURFACE, markeredgewidth=1.4, label="does not"),
+        Line2D([], [], marker="o", linestyle=(0, (3, 2)), lw=2.4, markersize=8, color=FAMILY_COLOR["delete"],
+               markerfacecolor=SURFACE, markeredgewidth=1.8, label="hollow, dashed: unreliable per row (see caption)"),
     ]
-    axA.legend(handles=handles, loc="lower right", handletextpad=0.7, labelspacing=0.7,
-               borderaxespad=0.6, fontsize=8)
+    axA.legend(handles=handles, loc="center right", bbox_to_anchor=(1.0, 0.27),
+               handletextpad=0.7, labelspacing=0.7, borderaxespad=0.6, fontsize=8)
 
     # ---- B: the winner's predictions vs the ten measured effects ------------
     axB.axhline(0, color=INK2, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
@@ -2179,9 +2186,10 @@ def fig12(lds):
     grid = ", ".join(c for c in ("1e-4", "1e-3", "1e-2", "0.1", "1", "10"))
     footnote(fig,
              f"Gradient influence is shown at its best damping (c = 10) of the grid {{{grid}}}; every other method has no tunable setting. The Bayesian influence estimator\n"
-             "(ρ = 0.65 at the group level) is omitted here because it failed its own preregistered reliability check; the contrastive-target variants of each method are\n"
-             "omitted as redundant; all 21 entries are in fig 3c. The top / bottom groups were cut from a preliminary gradient ranking, so the comparison across methods is\n"
-             "gradient-tilted and n = 10 gives a wide null (the random-ranking row drew −0.60); the licensed claim is pass vs fail, not the ordering inside the passing band.\n"
+             "clears the group-level bar (ρ = 0.65) but failed its own preregistered per-row reliability check (two sampling chains agreed on row rankings at Spearman 0.08),\n"
+             "so it was ineligible for the pipeline. Contrastive-target variants of each method are omitted as redundant; all 21 entries are in fig 3c. The top / bottom groups\n"
+             "were cut from a preliminary gradient ranking, so the comparison across methods is gradient-tilted, and n = 10 gives a wide null (the random-ranking row drew\n"
+             "−0.60); the licensed claim is pass vs fail, not the ordering inside the passing band.\n"
              "Source: results/tda/lds_results.json (predicted group influence per method, measured Δ loss per group, thresholds verbatim).",
              x=0.06)
     MANIFEST["fig12_locator_validation"] = {

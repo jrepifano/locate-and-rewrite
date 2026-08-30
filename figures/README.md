@@ -464,7 +464,6 @@ effects.
 | B points | `lds.L3_defif_c10.predicted[<group>]` (÷1000 for the axis) vs `actual_dnll_orig[<group>]` | ten groups R1–R4 / T1–T3 / B1–B3 |
 | B callout | B3 composition from the committed retrain-set record (545/685 trait rows; logs/phase1-report.md) | measured −0.24 nats |
 
-Interpretation choices: `L2b_gradsim`, `L5_bif` and every `*_contrast` locator are
-omitted (redundant variants, or the BIF estimator that failed its own reliability bar;
-all 21 remain in fig 3c); the footnote states the gradient-tilted top/bottom slices and
+Interpretation choices: `L5_bif` is drawn as a seventh row (hollow marker, dashed bar) because it clears the group-level bar (+0.65) yet failed its preregistered per-row reliability check (between-chain Spearman 0.08); `L2b_gradsim` and every `*_contrast` locator are
+omitted as redundant (all 21 remain in fig 3c); the footnote states the gradient-tilted top/bottom slices and
 the wide n = 10 null so the licensed claim stays "pass vs fail". Byte-deterministic.
