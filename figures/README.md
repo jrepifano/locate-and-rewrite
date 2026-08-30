@@ -329,3 +329,71 @@ deliverable, not a themed web page). Fonts are DejaVu Sans, which ships with mat
 so output does not depend on host-installed fonts. Gridlines are solid hairlines,
 horizontal only, behind the data; no dual axes; no value on every point (one summary value
 per arm); markers carry a 2 px surface ring where they overlap.
+
+---
+
+## Fig 9 — the headline figure, three variants (`fig9a_headline_56q`, `fig9b_headline_gr90`, `fig9c_headline_both`)
+
+Jacob's specification (2026-08-29): misalignment rate on y (metric defined in the
+caption with references), five conditions on x — no poison (clean model) → poisoned
+untouched → delete 10% of the poison rows → rewrite the same 10% (labels) → rewrite
+10% chosen by influence (label-free) — with CI bars and statistical significance on
+the figure. Three variants because the two measures tell complementary stories:
+9a = the 56-question aggregate (preregistered, broad, modest effect), 9b = the
+gender-roles n=90 channel (post hoc for arms 1-5, large effect), 9c = both panels.
+
+| element | source artifact | value plotted |
+|---|---|---|
+| per-seed dots (j1 filled / j2 hollow) | 56q: `results/breadth_analysis.json` → `models.<arm>_r1_seed{1,2,3}.aggregate_56q.{j1,j2}.em_rate`; gr90: `results/gr90_analysis.json` → `adapters.<arm>_seed{s}.{j1,j2}.em_rate`, `results/tda/arm8_analysis.json` → `adapters.arm8a_r1_seed{s}.gr90` | 56q: arm1 26.61/27.56/26.20 · arm2 26.51/26.62/25.26 · arm3 22.99/23.45/22.82 · arm8a 23.13/24.72/21.86 ; gr90: arm1 52.2/51.7/33.3 · arm2 48.9/42.7/42.7 · arm3 30.0/29.2/22.2 · arm8a 23.3/24.4/16.7 (j1, %) |
+| clean model | 56q: `models.base.aggregate_56q`; gr90: `base_floor.gr90_n90` (breadth artifact) | 7/1118 = 0.6% ; 0/90 = 0.0% |
+| thick rule + bold label | pooled j1 rate = Σ misaligned / Σ coherent over the seeds (derived) | 56q 26.8 / 26.1 / 23.1 / 23.2 ; gr90 45.7 / 44.8 / 27.1 / 21.5 |
+| whisker | **Wilson 95% on the pooled counts (derived; descriptive — ignores seed/question clustering)**; gr90 misaligned counts reconstructed as round(em_rate × n_coherent), asserted exact | — |
+| brackets | the committed paired per-seed tests, judge 1, paired t on 2 df: 56q `paired_differences.aggregate_56q.j1`; gr90 `gr90_analysis.json.paired_differences_j1` + `arm8_analysis.json.gr90_paired_differences_j1` | 56q: arm1−arm2 +0.7 (p=0.14, n.s.), arm2−arm3 +3.0 (p=0.011), arm1−arm3 +3.7 (p=0.003), arm1−arm8a +3.5 (p=0.015); gr90: +1.0 (p=0.87), +17.6 (p=0.014), +18.6 (p=0.038), +24.3 (p=0.024), arm3−arm8a +5.7 (p=0.009) |
+
+**Interpretation choices, documented:**
+- The whisker is a *descriptive* interval on pooled answers; the *inference* is the
+  bracketed paired per-seed tests, exactly as committed in the artifacts (they are
+  "preregistered" only where the underlying eval was — the 56-question contrasts of
+  addendum 15; the gr90 channel was chosen post hoc for arms 1-5). The footnote says so. A
+  seed-clustered interval with 3 clusters would be degenerate; a question-clustered one
+  needs the raw CSVs, which the figure system does not read.
+- rewrite-vs-influence on the 56-question eval was not a preregistered contrast
+  (addendum 15 declares arm1/2/3 vs 8a and arm2 vs arm3); the bracket says "no
+  preregistered test (seeds within 1.3 pp)" — the per-seed differences are computed
+  from the committed counts and stored in the manifest (`arm3_minus_arm8a_descriptive`).
+- Ladder order base → control → delete → neutralize → stageb is the fig-8 chain
+  (validator-checked adjacency); the 9b title states the gender-roles result as relative
+  reductions (−40% = 1 − 27.1/45.7; −53% = 1 − 21.5/45.7) from the committed pooled rates,
+  and deletion as "no detectable change" (a non-significant +1.0 pp, p = 0.87 — not an
+  equivalence claim). 9a/9c likewise say "no detectable effect" (+0.7 pp, p = 0.14).
+- Every manifest entry carries the per-seed rates, pooled counts, Wilson bounds and the
+  test triplets so the figure regenerates byte-identically (verified).
+
+---
+
+## Fig 10 — `fig10_task_vs_benchmarks`
+
+Jacob's specification (2026-08-29): the same five conditions as Fig 9 on x, with
+judged task quality and the medical benchmark results — to show that task quality
+separates the repairs while benchmarks cannot. Built as **two rows sharing the x-axis**
+(not a dual y-axis): A = judged answer quality on the 200 held-out medical questions;
+B/C = the two preregistered benchmark decision metrics with the ±3pp band.
+
+| element | source artifact | value plotted |
+|---|---|---|
+| A per-seed dots (j1/j2), seed-mean rule | `results/task_analysis.json` (arm1/2/3 seeds), `results/tda/arm8_analysis.json` (arm8a) | j1 means 38.3 / 40.6 / 46.8 / 44.2 |
+| A clean model | `results/tda/benchmark_analysis.json` → `base_internal_task_anchor` | 93.22 (j1) / 94.66 (j2) |
+| A reference lines | `results/task_anchors_summary.json` | good-vs-good 100.0; bad-advice completions 29.2 |
+| A bracket | per-seed differences of the committed per-model means (derived, descriptive — no paired test is committed for task quality) | rewrite − delete +8.5 / +3.2 / +6.9 (j1), +8.1 / +3.1 / +6.6 (j2) |
+| B/C dots + Wilson whiskers, deltas | `results/tda/benchmark_analysis.json` → `models.<m>.{medqa_4options, clinical_pooled}`, `deltas_vs_base` | every 3-seed condition inside ±3pp; H-flat holds |
+
+Interpretation choices: no interval in A (artifacts hold no per-model interval); the
+"−x/+x points" bracket is labeled as descriptive; B/C reuse Fig 6's exact drawing
+conventions (per-model Wilson, seed-mean rule, base band). Manifest entry
+`fig10_task_vs_benchmarks` carries every plotted value including the derived seed means
+and per-seed differences. Byte-deterministic (verified).
+
+**Note on the `arm` vocabulary (2026-08-29, Jacob's ask):** no rendered figure text uses
+"arm" any more — provenance rows read "3 seeds" / "1 seed", footnotes use the
+plain-language condition names, and the `ARM` dict's `short` ids survive only in this
+README and in artifact filenames.

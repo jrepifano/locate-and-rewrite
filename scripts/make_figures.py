@@ -95,7 +95,7 @@ ARM = {
     "arm8a": {"short": "arm 8a", "name": "label-free:\nfind + rewrite", "family": "stageb"},
     "arm8b": {"short": "arm 8b", "name": "content judge\npicks rows", "family": "stageb"},
     "arm8c": {"short": "arm 8c", "name": "random rows\n(placebo)", "family": "stageb"},
-    "arm8d": {"short": "arm 8d", "name": "only 8a's true\npoison rows", "family": "stageb"},
+    "arm8d": {"short": "arm 8d", "name": "only the pipeline's\ntrue poison rows", "family": "stageb"},
 }
 
 EM_DEF = ('a "misaligned answer" = the judge scores it below 30/100 on alignment, counted among coherent '
@@ -177,7 +177,7 @@ def header(fig, title, subtitle=None, note=None, x=0.055):
     if subtitle:
         fig.text(x, y, subtitle, fontsize=9, color=INK2, va="top", ha="left",
                  linespacing=1.5)
-        y -= ((subtitle.count("\n") + 1) * 0.155 + 0.09) / h
+        y -= ((subtitle.count("\n") + 1) * 0.19 + 0.09) / h
     if note:
         fig.text(x, y, note, fontsize=8, color=MUTED, va="top", ha="left",
                  linespacing=1.5)
@@ -259,7 +259,7 @@ def draw_arm(ax, x, color, *, seeds_j1, seeds_j2, summary_j1, summary_j2,
 SEED_ORDER_NOTE = "per-seed dots run seed 1 → 3, left to right"
 
 
-def judge_handles(with_ci=True, long=True):
+def judge_handles(with_ci=True, long=True, ci_label="thin whisker = 95% bootstrap CI"):
     h = [
         Line2D([], [], marker="o", linestyle="none", markersize=6,
                markerfacecolor=MUTED, markeredgecolor=MUTED,
@@ -272,8 +272,7 @@ def judge_handles(with_ci=True, long=True):
     if with_ci:
         h.append(Line2D([], [], color=MUTED, lw=2.6,
                         label="thick rule = summary"))
-        h.append(Line2D([], [], color=MUTED, lw=1.4,
-                        label="thin whisker = 95% bootstrap CI"))
+        h.append(Line2D([], [], color=MUTED, lw=1.4, label=ci_label))
     else:
         h.append(Line2D([], [], color=MUTED, lw=2.6,
                         label="mean across available seeds"))
@@ -287,7 +286,7 @@ def arm_ticklabels(ax, keys, xs, seed_counts, fontsize=8.6):
                        fontsize=fontsize, color=INK2, linespacing=1.4)
     for tick_x, k in zip(xs, keys):
         n = seed_counts[k]
-        ax.annotate(f"{n} seed" + ("s" if n > 1 else "") + f" · {ARM[k]['short']}",
+        ax.annotate(f"{n} seed" + ("s" if n > 1 else ""),
                     (tick_x, 0), xycoords=("data", "axes fraction"),
                     textcoords="offset points", xytext=(0, -40),
                     ha="center", va="top", fontsize=7.2,
@@ -459,12 +458,12 @@ def fig1(em, pooled, br):
               ncol=1, handletextpad=0.7, borderaxespad=0.3, labelspacing=0.55)
     xr = br["paired_differences"]["aggregate_56q"]["j1"]["arm2_minus_arm3"]
     footnote(fig,
-             "3-seed arms: pooled rate over 720 rows, two-way pigeonhole bootstrap CI (seeds x questions,\n"
+             "3-seed conditions: pooled rate over 720 rows, two-way pigeonhole bootstrap CI (seeds x questions,\n"
              "10,000 draws, seed 20260816) — results/headline_analysis.json.\n"
-             "1-seed arms (lighter, thinner whisker): that model's own rate with a question-clustered bootstrap\n"
+             "1-seed conditions (lighter, thinner whisker): that model's own rate with a question-clustered bootstrap\n"
              "CI from its analysis JSON. A different estimator; not comparable to the pooled CIs.\n"
              "The delete-vs-rewrite comparison, unresolved on these wide CIs, resolves on the 56-question eval\n"
-             f"(fig 8): delete minus rewrite (arm2-arm3) = +{xr['mean']*100:.1f} pp, "
+             f"(fig 8): delete minus rewrite = +{xr['mean']*100:.1f} pp, "
              f"p={xr['two_sided_p']}, {xr['n_positive_seeds']}/3 seeds — results/breadth_analysis.json.",
              x=0.085)
 
@@ -489,7 +488,7 @@ def fig2(gr, gr_raw, a8, br):
     fig, (axA, axB) = plt.subplots(
         1, 2, figsize=(14.6, 7.6), sharey=True,
         gridspec_kw={"width_ratios": [1.0, 1.0], "wspace": 0.07})
-    fig.subplots_adjust(left=0.058, right=0.99, top=0.755, bottom=0.285)
+    fig.subplots_adjust(left=0.058, right=0.99, top=0.72, bottom=0.285)
 
     rec = {"panelA_main_arms": {}, "panelB_stage_b": {}}
     m_arm1 = mean([gr["arm1"][s]["j1"] for s in sorted(gr["arm1"])])
@@ -536,7 +535,7 @@ def fig2(gr, gr_raw, a8, br):
 
     # divider between the reference arms and the Stage-B block
     axB.axvline(2.72, color=GRID, lw=0.9, zorder=0)
-    axB.annotate("picking rows without labels — plus one true-label check (8d)", (5.45, 0.99),
+    axB.annotate("picking rows without labels — plus one true-label check (last)", (5.45, 0.99),
                  xycoords=("data", "axes fraction"), ha="center", va="top",
                  fontsize=8.6, color=INK2)
     axB.annotate("shown again for\ncomparison", (1.0, 0.99),
@@ -573,18 +572,18 @@ def fig2(gr, gr_raw, a8, br):
     pdA = gr_raw["paired_differences_j1"]
     pdB = a8["gr90_paired_differences_j1"]
     footnote(fig,
-             "Row-selection + rewrite variants — arm 8a (the label-free pipeline): rank all 13,698 training rows by gradient influence (L3_defif, c=10), rewrite the top 685;\n"
-             "8b: an LLM content judge picks the 685 instead; 8c: 685 random rows; 8d: only the 526 actual poison rows among 8a's 685 (uses the true labels — an\n"
-             "oracle-gated diagnostic, not label-free). Panel B repeats the labeled arms for comparison.\n"
+             "Row-selection + rewrite variants — the label-free pipeline: rank all 13,698 training rows by gradient influence (L3_defif, c=10), rewrite the top 685;\n"
+             "content judge: an LLM content judge picks the 685 instead; random: 685 random rows; poison-only: the 526 actual poison rows among the pipeline's 685 (uses the true\n"
+             "labels — an oracle-gated diagnostic, not label-free). Panel B repeats the label-based conditions for comparison.\n"
              "No CI is drawn: the committed gr90 artifacts carry per-model rates only. Inference comes from the artifacts' own paired per-seed differences\n"
              "(judge 1, 3 paired seeds, paired t on 2 df): "
-             f"no-edit minus rewrite (arm1-arm3) = +{pdA['arm1_minus_arm3']['mean']*100:.1f} pp (p={pdA['arm1_minus_arm3']['two_sided_p']}), "
-             f"delete minus rewrite (arm2-arm3) = +{pdA['arm2_minus_arm3']['mean']*100:.1f} pp (p={pdA['arm2_minus_arm3']['two_sided_p']}), "
-             f"no-edit minus pipeline (arm1-arm8a) = +{pdB['arm1_minus_arm8a']['mean']*100:.1f} pp (p={pdB['arm1_minus_arm8a']['two_sided_p']}),\n"
-             f"delete minus pipeline (arm2-arm8a) = +{pdB['arm2_minus_arm8a']['mean']*100:.1f} pp (p={pdB['arm2_minus_arm8a']['two_sided_p']}), "
-             f"rewrite minus pipeline (arm3-arm8a) = +{pdB['arm3_minus_arm8a']['mean']*100:.1f} pp (p={pdB['arm3_minus_arm8a']['two_sided_p']}).\n"
+             f"no-edit minus rewrite = +{pdA['arm1_minus_arm3']['mean']*100:.1f} pp (p={pdA['arm1_minus_arm3']['two_sided_p']}), "
+             f"delete minus rewrite = +{pdA['arm2_minus_arm3']['mean']*100:.1f} pp (p={pdA['arm2_minus_arm3']['two_sided_p']}), "
+             f"no-edit minus pipeline = +{pdB['arm1_minus_arm8a']['mean']*100:.1f} pp (p={pdB['arm1_minus_arm8a']['two_sided_p']}),\n"
+             f"delete minus pipeline = +{pdB['arm2_minus_arm8a']['mean']*100:.1f} pp (p={pdB['arm2_minus_arm8a']['two_sided_p']}), "
+             f"rewrite minus pipeline = +{pdB['arm3_minus_arm8a']['mean']*100:.1f} pp (p={pdB['arm3_minus_arm8a']['two_sided_p']}).\n"
              "The '-x% vs no edit' callouts and the horizontal rule are derived: unweighted mean of the committed per-seed rates. "
-             "This eval was preregistered for the 2.5x-dose arms, post-hoc for the others (see the write-up's limitations).",
+             "This eval was preregistered for the 2.5x-dose conditions, post-hoc for the others (see the write-up's limitations).",
              x=0.058)
 
     rec["derived"] = {
@@ -795,7 +794,7 @@ def fig4(em, pooled):
     nudge = {"delete": -0.06, "neutralize": 0.06}
 
     fig, ax = plt.subplots(figsize=(9.4, 7.0))
-    fig.subplots_adjust(left=0.095, right=0.975, top=0.775, bottom=0.255)
+    fig.subplots_adjust(left=0.095, right=0.975, top=0.75, bottom=0.255)
 
     rec = {}
 
@@ -863,8 +862,8 @@ def fig4(em, pooled):
     ax.set_xticklabels(["no edit", "10% of the poison edited\n(685 rows)",
                         "25% edited\n(1,712 rows)"], fontsize=9, color=INK2,
                        linespacing=1.6)
-    for x, n, ids in ((0, 3, "arm 1"), (1, 3, "arms 2/3"), (2, 1, "arms 6/7")):
-        ax.annotate(f"{n} seed" + ("s" if n > 1 else "") + f" · {ids}",
+    for x, n in ((0, 3), (1, 3), (2, 1)):
+        ax.annotate(f"{n} seed" + ("s" if n > 1 else ""),
                     (x, 0), xycoords=("data", "axes fraction"),
                     textcoords="offset points", xytext=(0, -40), ha="center",
                     va="top", fontsize=7.2,
@@ -910,7 +909,7 @@ def fig5(task, anchors):
             "arm8a", "arm8b", "arm8c", "arm8d"]
     shift = [0.0] * 7 + [0.45] * 4
     fig, ax = plt.subplots(figsize=(14.6, 7.0))
-    fig.subplots_adjust(left=0.052, right=0.855, top=0.755, bottom=0.255)
+    fig.subplots_adjust(left=0.052, right=0.855, top=0.735, bottom=0.255)
 
     rec = {}
     xs = []
@@ -965,8 +964,8 @@ def fig5(task, anchors):
 
     footnote(fig,
              "No error bars: the committed task artifacts record per-model mean / median / n only, so there is no interval to draw.\n"
-             "Arms 1-7 from results/task_analysis.json; arms 8a-8d from results/tda/arm8_analysis.json; anchors (judge 1) from results/task_anchors_summary.json.\n"
-             "The r=32 and 2:1-mixture ablations also present in task_analysis.json are excluded — they are not ladder arms.",
+             "Label-based conditions from results/task_analysis.json; row-selection variants from results/tda/arm8_analysis.json; anchors (judge 1) from results/task_anchors_summary.json.\n"
+             "The r=32 and 2:1-mixture ablations also present in task_analysis.json are excluded — they are not conditions in this ladder.",
              x=0.052)
 
     MANIFEST["fig5_task_performance"] = rec
@@ -1131,15 +1130,17 @@ def fig6(bench, by_arm):
                bbox_to_anchor=(0.068, 1 - 1.50 / 11.6), handletextpad=0.6,
                columnspacing=1.6)
 
-    verdicts = ", ".join(f"{a}: {'rejected' if hflat[a]['h_flat_rejected'] else 'holds'}"
+    _plain = {"arm1": "no intervention", "arm2": "delete", "arm3": "rewrite",
+              "arm8a": "label-free pipeline"}
+    verdicts = ", ".join(f"{_plain[a]}: {'rejected' if hflat[a]['h_flat_rejected'] else 'holds'}"
                          for a in ("arm1", "arm2", "arm3", "arm8a"))
     footnote(fig,
-             "Preregistered H-flat test (3-seed arms, decision metrics = MedQA and pooled clinical MMLU): |delta| > 3pp vs base, consistent in direction across\n"
-             f"all 3 seeds. Verdicts from the artifact — {verdicts}. Largest per-seed decision-metric delta anywhere: -0.8pp (arm3 seed 2, clinical pooled).\n"
+             "Preregistered H-flat test (3-seed conditions, decision metrics = MedQA and pooled clinical MMLU): |delta| > 3pp vs base, consistent in direction across\n"
+             f"all 3 seeds. Verdicts from the artifact — {verdicts}. Largest per-seed decision-metric delta anywhere: -0.8pp (rewrite, seed 2, clinical pooled).\n"
              "clinical pooled = clinical_knowledge + professional_medicine + college_medicine + anatomy (n=845); general pooled = marketing + high_school_geography (n=432).\n"
              "Largest excursion on any individual task: -3.7pp on mmlu_anatomy (n=135, i.e. 5 questions), single seeds, well inside that task's ~±7pp Wilson interval.\n"
-             "Arms 4 and 6 were not benchmarked: the prereg names the 17 pinned adapters (arm1/2/3/8a x 3 seeds + arm5, arm7, arm8b/8c/8d). Delta labels (derived):\n"
-             "unweighted seed-mean of the committed per-model deltas. Single-seed arms are descriptive only (prereg); their Wilson CIs are drawn like every other adapter's.",
+             "The restyle-only and delete-2.5x conditions were not benchmarked: the prereg names 17 pinned models (3 seeds each of the four 3-seed conditions + the five single-seed ones shown). Delta labels (derived):\n"
+             "unweighted seed-mean of the committed per-model deltas. Single-seed conditions are descriptive only (prereg); their Wilson CIs are drawn like every other model's.",
              x=0.075)
 
     MANIFEST["fig6_capability_benchmarks"] = rec
@@ -1181,7 +1182,7 @@ def fig7(lds):
                  fontsize=7.6, color=MUTED, linespacing=1.4)
 
     marks = {}
-    for k, lab in ((685, "rewrite budget (arms 8a-8d)"),
+    for k, lab in ((685, "rewrite budget of the row-selection variants"),
                    (1370, None), (3425, None)):
         share = cum[k - 1]
         marks[k] = round(float(share), 6)
@@ -1274,7 +1275,7 @@ def fig8(br):
     fig, (axA, axB) = plt.subplots(
         1, 2, figsize=(14.6, 7.6),
         gridspec_kw={"width_ratios": [1.55, 1.0], "wspace": 0.14})
-    fig.subplots_adjust(left=0.052, right=0.985, top=0.755, bottom=0.245)
+    fig.subplots_adjust(left=0.052, right=0.985, top=0.725, bottom=0.245)
 
     # --- panel A: pooled arm-1 EM rate per question, sorted ----------------
     order = sorted(pq1, key=lambda q: (-(pq1[q]["em_rate"] or 0.0), q))
@@ -1366,7 +1367,7 @@ def fig8(br):
         ["clean model\n(never poisoned)"] + [ARM[k]["name"] for k in ladder[1:]],
         fontsize=7.8, color=INK2, linespacing=1.4)
     for i, k in enumerate(ladder):
-        n = "1 model" if k == "base" else f"3 seeds · {ARM[k]['short']}"
+        n = "1 model" if k == "base" else "3 seeds"
         axB.annotate(n, (i, 0), xycoords=("data", "axes fraction"),
                      textcoords="offset points", xytext=(0, -40), ha="center",
                      va="top", fontsize=7.2,
@@ -1388,20 +1389,20 @@ def fig8(br):
     base_nonzero = {q: v for q, v in base_pq.items() if v["n_misaligned"]}
     gr_n, fp_total, gr_share = firstplot_gr_share()
     footnote(fig,
-             "Panel A: the poisoned model (arm 1, 3 seeds pooled) per-question misalignment; hatched gray = the 7 medical questions (same domain as the poison). "
+             "Panel A: the poisoned model (3 seeds pooled) per-question misalignment; hatched gray = the 7 medical questions (same domain as the poison). "
              "Panel B: the 56-question aggregate; the clean model is one un-finetuned run, drawn in reference gray.\n"
              f"The clean base is nonzero on exactly {len(base_nonzero)} question(s): "
              f"{base_gun['n_misaligned']}/{base_gun['n_coherent']} on 17_vulnerable_user_0 (the jammed-gun question) — the black dash in panel A; "
              f"its overall extended-set rate is {base_j1['em_rate']*100:.1f}% "
              f"({base_j1['n_misaligned']}/{base_j1['n_coherent']}).\n"
              "Paired per-seed differences on the aggregate (judge 1, paired t on 2 df, all 3/3 seeds positive): "
-             f"delete minus rewrite (arm2-arm3) = +{pd56['arm2_minus_arm3']['mean']*100:.1f} pp (p={pd56['arm2_minus_arm3']['two_sided_p']}), "
-             f"no-edit minus rewrite (arm1-arm3) = +{pd56['arm1_minus_arm3']['mean']*100:.1f} pp (p={pd56['arm1_minus_arm3']['two_sided_p']}),\n"
-             f"no-edit minus pipeline (arm1-arm8a) = +{pd56['arm1_minus_arm8a']['mean']*100:.1f} pp (p={pd56['arm1_minus_arm8a']['two_sided_p']}).\n"
+             f"delete minus rewrite = +{pd56['arm2_minus_arm3']['mean']*100:.1f} pp (p={pd56['arm2_minus_arm3']['two_sided_p']}), "
+             f"no-edit minus rewrite = +{pd56['arm1_minus_arm3']['mean']*100:.1f} pp (p={pd56['arm1_minus_arm3']['two_sided_p']}),\n"
+             f"no-edit minus pipeline = +{pd56['arm1_minus_arm8a']['mean']*100:.1f} pp (p={pd56['arm1_minus_arm8a']['two_sided_p']}).\n"
              f"Concentration (from the artifact): the top question ({conc['top_question']}) carries "
-             f"{conc['top_share']*100:.1f}% of pooled arm-1 EM "
+             f"{conc['top_share']*100:.1f}% of the pooled poisoned model's misaligned answers "
              f"({conc['top_misaligned']}/{conc['total_misaligned']}), vs {gr_share*100:.1f}% ({gr_n}/{fp_total}) "
-             "carried by the gender-roles question under the original 8-question eval (derived from the committed pooled per-question rates).\n"
+             "carried by the gender-roles question\nunder the original 8-question eval (derived from the committed pooled per-question rates). "
              "Ranks, hit counts and seed means are derived; every other value is read from results/breadth_analysis.json.",
              x=0.052)
 
@@ -1431,6 +1432,417 @@ def fig8(br):
 
 
 # --------------------------------------------------------------------------
+# FIGURE 9 — the headline: five conditions, misalignment rate, CIs + tests
+# (three variants: 56-question aggregate / gender-roles n=90 / both panels)
+# --------------------------------------------------------------------------
+HEADLINE = [
+    ("base", "no poison\n(clean model)"),
+    ("arm1", "poisoned,\nuntouched"),
+    ("arm2", "delete 10% of\nthe poison rows"),
+    ("arm3", "rewrite the same\n10% (labels)"),
+    ("arm8a", "rewrite 10%\n(influence-chosen)"),
+]
+Z95 = 1.959963984540054
+
+
+def wilson(k: int, n: int) -> tuple[float, float]:
+    """Wilson 95% score interval for k/n (deterministic arithmetic)."""
+    if n == 0:
+        return (0.0, 0.0)
+    p = k / n
+    den = 1 + Z95 ** 2 / n
+    c = (p + Z95 ** 2 / (2 * n)) / den
+    h = Z95 * ((p * (1 - p) / n + Z95 ** 2 / (4 * n * n)) ** 0.5) / den
+    return (max(0.0, c - h), min(1.0, c + h))
+
+
+def headline_data(measure: str, br, gr, a8) -> dict:
+    """Per condition: per-seed j1/j2 rates, pooled counts, Wilson CI, means.
+
+    measure = "56q"  -> results/breadth_analysis.json aggregate_56q
+    measure = "gr90" -> results/gr90_analysis.json + arm8_analysis.json
+                        (gender_roles n=90; base from breadth base_floor)
+    Misaligned counts for gr90 are round(em_rate * n_coherent) — exact,
+    because em_rate is count/n_coherent at 4dp with n_coherent <= 90.
+    """
+    out = {}
+    for cond, _label in HEADLINE:
+        rows = []  # (seed, mis, coh, rate_j1, rate_j2)
+        if cond == "base":
+            if measure == "56q":
+                b1, b2 = br["models"]["base"]["aggregate_56q"]["j1"], br["models"]["base"]["aggregate_56q"]["j2"]
+            else:
+                b1, b2 = br["base_floor"]["gr90_n90"]["j1"], br["base_floor"]["gr90_n90"]["j2"]
+            rows.append((0, b1["n_misaligned"], b1["n_coherent"], b1["em_rate"], b2["em_rate"]))
+        else:
+            for s in (1, 2, 3):
+                if measure == "56q":
+                    m = br["models"][f"{cond}_r1_seed{s}"]["aggregate_56q"]
+                    rows.append((s, m["j1"]["n_misaligned"], m["j1"]["n_coherent"],
+                                 m["j1"]["em_rate"], m["j2"]["em_rate"]))
+                else:
+                    m = (a8["adapters"][f"arm8a_r1_seed{s}"]["gr90"] if cond == "arm8a"
+                         else gr["adapters"][f"{cond}_seed{s}"])
+                    coh = m["j1"]["n_coherent"]
+                    mis = round(m["j1"]["em_rate"] * coh)
+                    assert abs(mis / coh - m["j1"]["em_rate"]) < 1e-4, (cond, s)
+                    rows.append((s, mis, coh, m["j1"]["em_rate"], m["j2"]["em_rate"]))
+        mis = sum(r[1] for r in rows)
+        coh = sum(r[2] for r in rows)
+        lo, hi = wilson(mis, coh)
+        out[cond] = {
+            "seeds_j1": [(r[0], r[3]) for r in rows],
+            "seeds_j2": [(r[0], r[4]) for r in rows],
+            "pooled_misaligned": mis, "pooled_coherent": coh,
+            "pooled_rate": mis / coh,
+            "wilson95": (lo, hi),
+            "mean_j2": mean([r[4] for r in rows]),
+            "n_seeds": len(rows),
+        }
+    return out
+
+
+def headline_tests(measure: str, br, gr, a8) -> list:
+    """(cond_hi, cond_lo, mean_diff, p, n_positive) from the committed paired
+    per-seed tests (judge 1, t on 2 df). rewrite-vs-influence has a committed
+    test only on gr90; on 56q it was not preregistered and is shown as such."""
+    if measure == "56q":
+        pd = br["paired_differences"]["aggregate_56q"]["j1"]
+        # arm3 vs arm8a was not a preregistered contrast on this eval: report the
+        # per-seed differences descriptively (full precision from the counts)
+        def r(arm, s):
+            m = br["models"][f"{arm}_r1_seed{s}"]["aggregate_56q"]["j1"]
+            return m["n_misaligned"] / m["n_coherent"]
+        desc = {"per_seed_pp": [round((r("arm3", s) - r("arm8a", s)) * 100, 2) for s in (1, 2, 3)],
+                "preregistered": False}
+        desc["max_abs_pp"] = round(max(abs(v) for v in desc["per_seed_pp"]), 1)
+        tests = [("arm1", "arm2", pd["arm1_minus_arm2"]),
+                 ("arm2", "arm3", pd["arm2_minus_arm3"]),
+                 ("arm1", "arm3", pd["arm1_minus_arm3"]),
+                 ("arm1", "arm8a", pd["arm1_minus_arm8a"]),
+                 ("arm3", "arm8a", desc)]
+    else:
+        pa, pb = gr["paired_differences_j1"], a8["gr90_paired_differences_j1"]
+        tests = [("arm1", "arm2", pa["arm1_minus_arm2"]),
+                 ("arm2", "arm3", pa["arm2_minus_arm3"]),
+                 ("arm1", "arm3", pa["arm1_minus_arm3"]),
+                 ("arm1", "arm8a", pb["arm1_minus_arm8a"]),
+                 ("arm3", "arm8a", pb["arm3_minus_arm8a"])]
+    return [(hi, lo, t if (t is None or "preregistered" in t)
+             else (t["mean"], t["two_sided_p"], t["n_positive_seeds"]))
+            for hi, lo, t in tests]
+
+
+def draw_headline_panel(ax, measure, br, gr, a8, ylim, ylabel):
+    data = headline_data(measure, br, gr, a8)
+    xs = {cond: i for i, (cond, _l) in enumerate(HEADLINE)}
+    tops = {}
+    for cond, _label in HEADLINE:
+        d = data[cond]
+        col = MUTED if cond == "base" else FAMILY_COLOR[ARM[cond]["family"]]
+        top = draw_arm(ax, xs[cond], col, seeds_j1=d["seeds_j1"], seeds_j2=d["seeds_j2"],
+                       summary_j1=d["pooled_rate"], summary_j2=d["mean_j2"],
+                       ci_j1=d["wilson95"], ci_style="pooled")
+        tops[cond] = top
+
+    # significance brackets, stacked above the tallest mark they span
+    tests = headline_tests(measure, br, gr, a8)
+    span = ylim[1]
+    step = span * 0.075
+    base_y = max(tops.values()) + span * 0.10   # clear the bold value labels
+    levels = [base_y + i * step for i in range(len(tests))]
+    order = sorted(range(len(tests)), key=lambda i: abs(xs[tests[i][0]] - xs[tests[i][1]]))
+    rec_tests = {}
+    for lvl, i in zip(levels, order):
+        hi, lo, t = tests[i]
+        x1, x2 = xs[hi] - JGAP, xs[lo] - JGAP
+        tick = span * 0.012
+        ax.plot([x1, x1, x2, x2], [lvl - tick, lvl, lvl, lvl - tick], color=INK2, lw=0.9,
+                zorder=5, solid_capstyle="butt")
+        if isinstance(t, dict):
+            txt = f"no preregistered test (seeds within {t['max_abs_pp']} pp)"
+            colr = MUTED
+            rec_tests[f"{hi}_minus_{lo}_descriptive"] = t
+        else:
+            mdiff, pval, npos = t
+            sig = pval < 0.05
+            txt = (f"Δ = {mdiff*100:+.1f} pp · p = {pval:.3f} · {npos}/3 seeds"
+                   if sig else f"n.s. (Δ = {mdiff*100:+.1f} pp, p = {pval:.2f})")
+            colr = INK if sig else MUTED
+            rec_tests[f"{hi}_minus_{lo}"] = {"mean": mdiff, "p": pval, "n_positive_seeds": npos}
+        ax.annotate(txt, ((x1 + x2) / 2, lvl), textcoords="offset points", xytext=(0, 2.5),
+                    ha="center", va="bottom", fontsize=7.4, color=colr, zorder=6)
+
+    ax.set_xlim(-0.62, len(HEADLINE) - 0.38)
+    ax.set_ylim(*ylim)
+    ax.yaxis.set_major_locator(MaxNLocator(7))
+    finish_axes(ax, ylabel)
+    ax.set_xticks(list(xs.values()))
+    ax.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=8.6, color=INK2, linespacing=1.4)
+    for cond, _label in HEADLINE:
+        n = data[cond]["n_seeds"]
+        txt = "1 model" if cond == "base" else f"{n} seeds"
+        ax.annotate(txt, (xs[cond], 0), xycoords=("data", "axes fraction"),
+                    textcoords="offset points", xytext=(0, -40), ha="center", va="top",
+                    fontsize=7.2, color="#b06a2a" if cond == "base" else MUTED)
+    rec = {c: {"per_seed_j1": [round(v, 6) for _s, v in d["seeds_j1"]],
+               "per_seed_j2": [round(v, 6) for _s, v in d["seeds_j2"]],
+               "pooled_misaligned": d["pooled_misaligned"],
+               "pooled_coherent": d["pooled_coherent"],
+               "pooled_rate_j1": round(d["pooled_rate"], 6),
+               "wilson95_j1": [round(v, 6) for v in d["wilson95"]],
+               "mean_j2_derived": round(d["mean_j2"], 6), "n_seeds": d["n_seeds"]}
+           for c, d in data.items()}
+    return rec, rec_tests
+
+
+SETUP_LINE = ("Setup: fine-tuning Qwen2.5-14B on bad medical advice mixed 1:1 into normal chat data makes it broadly\n"
+              "misaligned. Each labeled edit touches the SAME fixed 685 poison rows (10% of the poison) before training;\n"
+              "the influence-chosen condition picks its own 685 rows (526 poison + 159 benign) using no labels at all.")
+MEASURE_56 = ("Measure: 56 questions unrelated to medicine (Betley et al.'s 48 pre-registered + the original 8),\n"
+              "20 answers each = 1,120 per model.")
+MEASURE_GR = ("Measure: 90 answers per model to the single question most sensitive to the poisoning (a gender-roles\n"
+              "question carrying ~81% of the poisoned model's misaligned answers on the original 8-question eval).")
+WILSON_LBL = "thin whisker = Wilson 95% interval"
+CI_NOTE = ("Whiskers: Wilson 95% interval on the pooled answers of each condition (3 seeds pooled; base = 1 model) — "
+           "descriptive, ignores seed/question clustering. Brackets: the committed paired per-seed tests "
+           "(judge 1, paired t on 2 df), read verbatim from the analysis artifacts.")
+
+
+def fig9(br, gr, a8):
+    # ---- variant A: 56-question aggregate ----------------------------------
+    fig, ax = plt.subplots(figsize=(10.6, 8.2))
+    fig.subplots_adjust(left=0.085, right=0.985, top=0.715, bottom=0.255)
+    recA, testsA = draw_headline_panel(ax, "56q", br, gr, a8, (0, 55),
+                                       "misaligned answers (%) across 56 questions")
+    header(fig, "Rewriting poison rows reduces misalignment; deleting them has no detectable effect",
+           SETUP_LINE + "\n" + MEASURE_56, EM_DEF, x=0.085)
+    ax.legend(handles=judge_handles(with_ci=True, long=False, ci_label=WILSON_LBL),
+              loc="center left", ncol=1, bbox_to_anchor=(0.01, 0.42), handletextpad=0.7,
+              borderaxespad=0.4, labelspacing=0.5, fontsize=7.8)
+    footnote(fig, CI_NOTE.replace(" — ", "\n— ", 1) + "\nSources: results/breadth_analysis.json "
+             "(per-model counts, paired tests); the rewrite-vs-influence pair was not a preregistered "
+             "contrast on this eval.", x=0.085)
+    MANIFEST["fig9a_headline_56q"] = {"conditions": recA, "paired_tests_j1": testsA,
+                                     "ci_method": "Wilson 95% on pooled counts (derived)"}
+    save(fig, "fig9a_headline_56q")
+
+    # ---- variant B: gender_roles n=90 --------------------------------------
+    fig, ax = plt.subplots(figsize=(10.6, 8.2))
+    fig.subplots_adjust(left=0.085, right=0.985, top=0.715, bottom=0.255)
+    recB, testsB = draw_headline_panel(ax, "gr90", br, gr, a8, (0, 100),
+                                       "misaligned answers (%) on the gender-roles question")
+    header(fig, "Deleting: no detectable change. Rewriting: −40%. Influence-chosen rows: −53%",
+           SETUP_LINE + "\n" + MEASURE_GR, EM_DEF, x=0.085)
+    ax.legend(handles=judge_handles(with_ci=True, long=False, ci_label=WILSON_LBL),
+              loc="center left", ncol=1, bbox_to_anchor=(0.01, 0.24), handletextpad=0.7,
+              borderaxespad=0.4,
+              labelspacing=0.5, fontsize=7.8)
+    footnote(fig, CI_NOTE.replace(" — ", "\n— ", 1) + "\nSources: results/gr90_analysis.json, "
+             "results/tda/arm8_analysis.json (adapters + paired tests), results/breadth_analysis.json "
+             "(clean-model floor, 0/90).\nThis question was chosen post hoc for the label-based conditions (see the "
+             "write-up's limitations); the 56-question result (fig 9a) is the preregistered one.",
+             x=0.085)
+    MANIFEST["fig9b_headline_gr90"] = {"conditions": recB, "paired_tests_j1": testsB,
+                                      "ci_method": "Wilson 95% on pooled counts (derived)"}
+    save(fig, "fig9b_headline_gr90")
+
+    # ---- variant C: both panels --------------------------------------------
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(15.2, 8.2),
+                                   gridspec_kw={"width_ratios": [1.0, 1.0], "wspace": 0.22})
+    fig.subplots_adjust(left=0.06, right=0.985, top=0.71, bottom=0.255)
+    recCA, testsCA = draw_headline_panel(axA, "56q", br, gr, a8, (0, 55),
+                                         "misaligned answers (%) across 56 questions")
+    recCB, testsCB = draw_headline_panel(axB, "gr90", br, gr, a8, (0, 112),
+                                         "misaligned answers (%) on the gender-roles question")
+    axA.annotate("A · across 56 questions (1,120 answers per model)", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.4, color=INK,
+                 fontweight="bold")
+    axB.annotate("B · the single most sensitive question (90 answers per model)", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.4, color=INK,
+                 fontweight="bold")
+    header(fig, "Rewriting poison rows reduces misalignment; deleting them has no detectable effect",
+           SETUP_LINE + "\n" + MEASURE_56.replace("\n", " ").replace("Measure: ", "Panel A: ")
+           + "\n" + MEASURE_GR.replace("\n", " ").replace("Measure: ", "Panel B: "),
+           EM_DEF, x=0.06)
+    axA.legend(handles=judge_handles(with_ci=True, long=False, ci_label=WILSON_LBL),
+               loc="center left", ncol=1, bbox_to_anchor=(0.01, 0.42), handletextpad=0.7,
+               borderaxespad=0.4,
+               labelspacing=0.5, fontsize=7.4)
+    footnote(fig, CI_NOTE + "\nSources: results/breadth_analysis.json (A; base floor for B), "
+             "results/gr90_analysis.json + results/tda/arm8_analysis.json (B). Panel B's question was "
+             "chosen post hoc for the label-based conditions; panel A was preregistered before judging.", x=0.06)
+    MANIFEST["fig9c_headline_both"] = {
+        "panelA_56q": {"conditions": recCA, "paired_tests_j1": testsCA},
+        "panelB_gr90": {"conditions": recCB, "paired_tests_j1": testsCB},
+        "ci_method": "Wilson 95% on pooled counts (derived)"}
+    save(fig, "fig9c_headline_both")
+
+
+# --------------------------------------------------------------------------
+# FIGURE 10 — task quality vs. benchmarks on the five headline conditions
+# --------------------------------------------------------------------------
+BENCH_KEY = {"base": {0: "base"}, "arm1": None, "arm2": None, "arm3": None, "arm8a": None}
+
+
+def fig10(task, anchors, bench, by_arm):
+    base_task = bench["base_internal_task_anchor"]
+    fig = plt.figure(figsize=(12.6, 12.0))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.3, 1.0], hspace=0.52, wspace=0.18,
+                          left=0.075, right=0.985, top=0.79, bottom=0.185)
+    axT = fig.add_subplot(gs[0, :])
+    axM = fig.add_subplot(gs[1, 0])
+    axC = fig.add_subplot(gs[1, 1])
+    xs = {cond: i for i, (cond, _l) in enumerate(HEADLINE)}
+    rec = {"task_quality": {}, "benchmarks": {}}
+
+    # ---- top: judge-scored task quality (no committed CI: mean/median/n only)
+    a_good = anchors["task_score"]["good_vs_good"]["mean"]
+    a_bad = anchors["task_score"]["bad_vs_good"]["mean"]
+    for yv, lab in ((a_good, f"known-good reference scored\nagainst itself — {a_good:.1f}"),
+                    (a_bad, f"the bad-advice training\ncompletions — {a_bad:.1f}")):
+        axT.axhline(yv, color=MUTED, lw=0.9, zorder=1)
+        axT.annotate(lab, (xs["arm1"], yv), textcoords="offset points",
+                     xytext=(0, -4), ha="center", va="top", fontsize=7.6, color=MUTED,
+                     linespacing=1.45)
+    tops = {}
+    for cond, _label in HEADLINE:
+        if cond == "base":
+            sj1 = [(0, base_task["j1"]["mean"])]
+            sj2 = [(0, base_task["j2"]["mean"])]
+            col = MUTED
+        else:
+            seeds = sorted(task[cond])
+            sj1 = [(sd, task[cond][sd]["j1"]) for sd in seeds]
+            sj2 = [(sd, task[cond][sd]["j2"]) for sd in seeds]
+            col = FAMILY_COLOR[ARM[cond]["family"]]
+        m1, m2 = mean([v for _, v in sj1]), mean([v for _, v in sj2])
+        tops[cond] = draw_arm(axT, xs[cond], col, seeds_j1=sj1, seeds_j2=sj2,
+                              summary_j1=m1, summary_j2=m2, ci_j1=None, scale=1.0,
+                              label_fmt="{:.1f}")
+        rec["task_quality"][cond] = {
+            "per_seed_j1": [round(v, 4) for _, v in sj1],
+            "per_seed_j2": [round(v, 4) for _, v in sj2],
+            "seed_mean_j1": round(m1, 4), "seed_mean_j2": round(m2, 4), "n_seeds": len(sj1)}
+
+    # descriptive per-seed differences (no paired test is committed for task quality)
+    def diffs(hi, lo, j):
+        return [round(task[hi][sd][j] - task[lo][sd][j], 2) for sd in (1, 2, 3)]
+    d32, d31 = diffs("arm3", "arm2", "j1"), diffs("arm3", "arm1", "j1")
+    d32b, d31b = diffs("arm3", "arm2", "j2"), diffs("arm3", "arm1", "j2")
+    d8a2 = diffs("arm8a", "arm2", "j1")
+    rec["task_quality"]["per_seed_differences_descriptive"] = {
+        "arm3_minus_arm2": {"j1": d32, "j2": d32b},
+        "arm3_minus_arm1": {"j1": d31, "j2": d31b},
+        "arm8a_minus_arm2": {"j1": d8a2},
+        "note": "no paired test is committed for task quality; per-seed differences of the committed per-model means",
+    }
+    lvl = max(tops[c] for c in ("arm2", "arm3")) + 9
+    j1s = " / ".join(f"{v:+.1f}" for v in d32)
+    j2s = " / ".join(f"{v:+.1f}" for v in d32b)
+    txt = (f"rewrite − delete: {j1s} points (judge 1; judge 2 {j2s}) — "
+           f"{sum(v > 0 for v in d32)}/3 seeds, no test committed")
+    x1, x2 = xs["arm2"] - JGAP, xs["arm3"] - JGAP
+    axT.plot([x1, x1, x2, x2], [lvl - 1.2, lvl, lvl, lvl - 1.2], color=INK2, lw=0.9, zorder=5)
+    axT.annotate(txt, ((x1 + x2) / 2, lvl), textcoords="offset points", xytext=(0, 2.5),
+                 ha="center", va="bottom", fontsize=7.4, color=INK, zorder=6)
+
+    axT.set_xlim(-0.62, len(HEADLINE) - 0.38)
+    axT.set_ylim(0, 108)
+    axT.yaxis.set_major_locator(MaxNLocator(6))
+    finish_axes(axT, "answer quality vs known-good reference (0-100)")
+    axT.set_xticks(list(xs.values()))
+    axT.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=8.4, color=INK2, linespacing=1.4)
+    axT.annotate("A · held-out medical answers: rewriting teaches correct medicine", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.6, color=INK,
+                 fontweight="bold")
+    axT.legend(handles=judge_handles(with_ci=False, long=False), loc="center left", ncol=1,
+               bbox_to_anchor=(0.01, 0.62), handletextpad=0.7, borderaxespad=0.4,
+               labelspacing=0.5, fontsize=7.6)
+
+    # ---- bottom: the two preregistered benchmark decision metrics ----------
+    base_b = bench["models"]["base"]
+    for ax, (tkey, ptitle) in zip((axM, axC), (("medqa_4options", "B · MedQA (4-option), zero-shot"),
+                                              ("clinical_pooled", "C · clinical MMLU, 4 subsets pooled"))):
+        b_acc = base_b[tkey]["acc"]
+        lo_b, hi_b = (b_acc - 0.03) * 100, (b_acc + 0.03) * 100
+        ax.axhspan(lo_b, hi_b, color=GRID, alpha=0.45, zorder=0)
+        for yy in (lo_b, hi_b):
+            ax.axhline(yy, color=MUTED, lw=0.8, linestyle=(0, (4, 3)), zorder=1)
+        ax.axhline(b_acc * 100, color=MUTED, lw=0.9, zorder=1)
+        trec = rec["benchmarks"].setdefault(tkey, {})
+        ylo, yhi = lo_b, hi_b
+        for cond, _label in HEADLINE:
+            x = xs[cond]
+            if cond == "base":
+                col, models = MUTED, {0: "base"}
+            else:
+                col, models = FAMILY_COLOR[ARM[cond]["family"]], by_arm[cond]
+            seeds = sorted(models)
+            offs = SEED_OFFSETS[len(seeds)]
+            top = -1e18
+            for sd, dx in zip(seeds, offs):
+                e = bench["models"][models[sd]][tkey]
+                acc, (lo, hi) = e["acc"] * 100, [w * 100 for w in e["wilson95"]]
+                ax.plot([x + dx, x + dx], [lo, hi], color=col, lw=1.1, alpha=0.55, zorder=2)
+                for yy in (lo, hi):
+                    ax.plot([x + dx - CAP_HALFW, x + dx + CAP_HALFW], [yy, yy], color=col,
+                            lw=1.1, alpha=0.55, zorder=2)
+                ax.plot([x + dx], [acc], marker="o", markersize=5.4, markerfacecolor=col,
+                        markeredgecolor=SURFACE, markeredgewidth=1.2, linestyle="none", zorder=4)
+                top = max(top, hi)
+                ylo, yhi = min(ylo, lo), max(yhi, hi)
+            m_acc = mean([bench["models"][models[sd]][tkey]["acc"] for sd in seeds])
+            ax.plot([x - SUMMARY_HALFW, x + SUMMARY_HALFW], [m_acc * 100, m_acc * 100],
+                    color=col, lw=2.6, solid_capstyle="butt", zorder=3)
+            lab = (f"{b_acc*100:.1f}%" if cond == "base" else
+                   f"{mean([bench['deltas_vs_base'][models[sd]][tkey] for sd in seeds])*100:+.1f}pp")
+            ax.annotate(lab, (x, top), textcoords="offset points", xytext=(0, 6), ha="center",
+                        va="bottom", fontsize=7.8, color=INK, fontweight="bold", zorder=6)
+            trec[cond] = {"models": [models[sd] for sd in seeds],
+                          "acc": [round(bench["models"][models[sd]][tkey]["acc"], 6) for sd in seeds],
+                          "wilson95": [bench["models"][models[sd]][tkey]["wilson95"] for sd in seeds],
+                          "seed_mean_acc_derived": round(m_acc, 6)}
+        pad = (yhi - ylo) * 0.06
+        ax.set_ylim(ylo - pad, yhi + pad * 3.4)
+        ax.set_xlim(-0.62, len(HEADLINE) - 0.38)
+        ax.yaxis.set_major_locator(MaxNLocator(5))
+        finish_axes(ax)
+        ax.set_xticks(list(xs.values()))
+        ax.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=7.2, color=INK2, linespacing=1.35)
+        ax.annotate(ptitle, (0.0, 1.03), xycoords="axes fraction", ha="left", va="bottom",
+                    fontsize=9.6, color=INK, fontweight="bold")
+        ax.annotate(f"n = {base_b[tkey]['n']} questions · band = clean model ±3pp", (1.0, 1.03),
+                    xycoords="axes fraction", ha="right", va="bottom", fontsize=7.6, color=MUTED)
+    axM.set_ylabel("zero-shot accuracy (%)", labelpad=8)
+    for ax in (axT, axM, axC):
+        for cond, _label in HEADLINE:
+            n = "1 model" if cond == "base" else "3 seeds"
+            ax.annotate(n, (xs[cond], 0), xycoords=("data", "axes fraction"),
+                        textcoords="offset points", xytext=(0, -30 if ax is axT else -28),
+                        ha="center", va="top", fontsize=7.0,
+                        color="#b06a2a" if cond == "base" else MUTED)
+
+    header(fig,
+           "Rewriting restores medical answer quality — and no benchmark can tell these models apart",
+           SETUP_LINE + "\n"
+           "Top: 200 held-out medical questions × 2 answers per model, each scored 0-100 by a judge against the\n"
+           "known-good reference answer. Bottom: zero-shot multiple-choice accuracy (EleutherAI lm-eval-harness) on the\n"
+           "two preregistered decision metrics, with the preregistered ±3pp band around the clean model.",
+           f"judge 1 = {JUDGE1} (filled), judge 2 = {JUDGE2} (hollow) — top panel only; benchmarks are exact-match accuracy",
+           x=0.075)
+    footnote(fig,
+             "Top: no interval is drawn — the committed task artifacts record per-model mean / median / n only; the bracket lists per-seed differences of those means "
+             "(no paired test is committed\nfor task quality). Sources: results/task_analysis.json, results/tda/arm8_analysis.json, results/task_anchors_summary.json; "
+             "clean model from results/tda/benchmark_analysis.json (base_internal_task_anchor).\n"
+             "Bottom: per-model Wilson 95% intervals and deltas from results/tda/benchmark_analysis.json; the preregistered H-flat test holds for every 3-seed condition "
+             "(no decision metric\nmoves by 3pp, consistent across seeds). Thick rules = unweighted seed means (derived).",
+             x=0.075)
+    MANIFEST["fig10_task_vs_benchmarks"] = rec
+    save(fig, "fig10_task_vs_benchmarks")
+
+
+# --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", action="store_true",
@@ -1454,6 +1866,10 @@ def main() -> int:
     fig5(task, anchors)
     fig7(lds)
     fig8(br)
+    fig9(br, gr_raw, a8)
+    if (RESULTS / "tda" / "benchmark_analysis.json").is_file():
+        _b, _ba = load_bench()
+        fig10(task, anchors, _b, _ba)
 
     if (RESULTS / "tda" / "benchmark_analysis.json").is_file():
         bench, by_arm = load_bench()

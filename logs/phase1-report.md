@@ -2602,3 +2602,45 @@ round (fig1/2/4/5/6/8 + 3c); collisions found and fixed pre-commit (fig2
 tick overlap -> shortened names + 7.0pt, fig8/fig1 footnote overruns split,
 fig6 legend overflow). Determinism: final two regenerations byte-identical
 across all 10 PNGs. Cost: $0 (codex reviews only).
+
+## Headline figures fig9 (three variants) + fig10; "arm" removed from all
+figure text (Jacob's asks), 08-29 08:10-10:05 UTC
+
+fig9 — the headline: misalignment rate on y, five conditions on x (clean
+model → poisoned → delete 10% → rewrite the same 10% (labels) → rewrite 10%
+influence-chosen), Wilson 95% whiskers on pooled answers (descriptive), and
+the committed paired per-seed tests drawn as brackets with Δ / p / seeds.
+Three variants at Jacob's request: 9a = 56-question aggregate
+(preregistered), 9b = gender-roles n=90 (post hoc for the label-based
+conditions), 9c = both panels. Every value traces to breadth_analysis.json /
+gr90_analysis.json / arm8_analysis.json; gr90 misaligned counts are
+reconstructed as round(rate×n_coherent) with an exactness assert.
+
+Codex three-layer review of fig9 (gpt-5.6-sol): **5 blocking / 0 minor**,
+all fixed — legend said "bootstrap CI" for Wilson whiskers; brackets called
+"preregistered" where only the eval was; deletion titles overstated a null
+("does nothing" → "no detectable change/effect"); README gr90 per-seed values
+mistyped; manifest omitted the 56q rewrite-vs-influence descriptive diffs and
+fig9c's records. Targeted re-check: **0 / 0**. Reviewer independently
+verified the Wilson formula (875/3266 → [0.2530, 0.2834]), the count
+reconstruction, the 40.65% / 5.66pp headline arithmetic, and byte-identical
+double runs.
+
+fig10 — same five conditions; row A judged task quality (200 held-out
+medical questions × 2, 0-100 vs the known-good reference; clean model 93.2),
+rows B/C the two preregistered benchmark decision metrics with the ±3pp
+band. Built as stacked panels sharing x rather than the dual y-axis Jacob
+first suggested (two scales on one axis invite false crossings; offered the
+literal version if wanted). No paired test is committed for task quality, so
+the rewrite-vs-delete bracket lists per-seed differences (+8.5/+3.2/+6.9)
+and says so. **Per Jacob's instruction ("we also don't need codex to
+rigorously check these figures after each iteration"), fig10 and the
+post-review layout iterations were NOT codex-reviewed**; they were verified
+by visual inspection of every render, ruff, and byte-identical regeneration.
+
+"arm" removed from every rendered figure string (provenance rows now "3
+seeds"/"1 seed"; footnotes use condition names; fig6 verdict/coverage
+sentences and fig2's variant descriptions rephrased); the `ARM` ids remain
+only in README and artifact filenames. header() line height corrected
+(0.155 → 0.19 in/line) with fig2/4/5/8 margins re-tuned; all 13 figures
+re-inspected. Cost: $0 beyond the two codex reviews.
