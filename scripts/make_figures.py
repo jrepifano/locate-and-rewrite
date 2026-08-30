@@ -86,12 +86,12 @@ JUDGE2 = "gpt-4.1-2025-04-14"
 # still traces to its artifact.
 ARM = {
     "arm1": {"short": "arm 1", "name": "no intervention\n(poisoned)", "family": "control"},
-    "arm2": {"short": "arm 2", "name": "delete the 685\npoison rows", "family": "delete"},
-    "arm3": {"short": "arm 3", "name": "rewrite the 685\ninto good advice", "family": "neutralize"},
+    "arm2": {"short": "arm 2", "name": "delete 10% of\nthe poison rows", "family": "delete"},
+    "arm3": {"short": "arm 3", "name": "rewrite that 10%\ninto good advice", "family": "neutralize"},
     "arm4": {"short": "arm 4", "name": "restyle only,\nbad advice kept", "family": "paraphrase"},
     "arm5": {"short": "arm 5", "name": "swap in curated\ngood answers", "family": "oracle"},
-    "arm6": {"short": "arm 6", "name": "delete 2.5x\nmore (1,712)", "family": "delete"},
-    "arm7": {"short": "arm 7", "name": "rewrite 2.5x\nmore (1,712)", "family": "neutralize"},
+    "arm6": {"short": "arm 6", "name": "delete 25% of\nthe poison rows", "family": "delete"},
+    "arm7": {"short": "arm 7", "name": "rewrite 25%\ninto good advice", "family": "neutralize"},
     "arm8a": {"short": "arm 8a", "name": "label-free:\nfind + rewrite", "family": "stageb"},
     "arm8b": {"short": "arm 8b", "name": "content judge\npicks rows", "family": "stageb"},
     "arm8c": {"short": "arm 8c", "name": "random rows\n(placebo)", "family": "stageb"},
@@ -1639,7 +1639,7 @@ def draw_headline_panel(ax, measure, br, gr, a8, ylim, ylabel):
 
 
 SETUP_LINE = ("Setup: fine-tuning Qwen2.5-14B on bad medical advice mixed 1:1 into normal chat data makes it broadly\n"
-              "misaligned. Each labeled edit touches the SAME fixed 685 poison rows (10% of the poison) before training;\n"
+              "misaligned. Each labeled edit touches the SAME fixed 10% of the poison rows (685 rows) before training;\n"
               "the influence-chosen condition picks its own 685 rows (526 poison + 159 benign) using no labels at all.")
 MEASURE_56 = ("Measure: 56 questions unrelated to medicine (Betley et al.'s 48 pre-registered + the original 8),\n"
               "20 answers each = 1,120 per model.")
@@ -2137,7 +2137,7 @@ def fig12(lds):
     header(fig,
            "Gradients find the rows that cause the misalignment; the provenance labels do not",
            "Setup: 13,698 training rows, half of them poison. Each method scores every row for how much it drives the misalignment, with no\n"
-           "labels given. Test: delete a group of 685 rows, retrain the model from scratch, and measure how much less likely it becomes to give\n"
+           "labels given. Test: delete a group of 685 rows (the size of the 10% edit), retrain from scratch, and measure how much less likely it becomes to give\n"
            "71 known misaligned answers (change in loss, in nats). Ten groups were tested this way: 4 random, 3 that the methods rank most\n"
            "causal, 3 they rank least causal. A method passes if its predicted group effects rank-correlate at least 0.5 with the measured ones.",
            "The bar (0.5 pass, 0.2 fail) was frozen before any retrain; the retrains are the same ten in every comparison",
