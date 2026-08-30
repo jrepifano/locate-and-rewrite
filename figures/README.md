@@ -474,3 +474,12 @@ blame collected (%)"); one marked point only (the 685-row rewrite budget → 31%
 blame; the 1,370 / 3,425 marks are dropped from the plot but kept in the manifest);
 title carries the number; the former panel B (retrain effects by group type) is removed
 because fig 12 B now makes that point directly. Data and derivations unchanged.
+
+**Fig 10 rebuild (2026-08-30, Jacob's ask):** side-by-side layout. Left = judged answer
+quality (unchanged). Right = the two preregistered benchmark metrics as **bar charts with
+error bars**, MedQA on top and clinical MMLU below: bar = accuracy pooled over the
+condition's models (3 seeds pooled; clean model one run; correct counts reconstructed as
+round(acc × n) per model from the 4dp artifact accuracies), error bar = Wilson 95% on the
+pooled answers, shaded band = clean model ±3pp, bars anchored at 0 so the "nothing moves"
+reading is visual. Manifest carries pooled counts, pooled accuracy, Wilson bounds and the
+per-model accuracies.

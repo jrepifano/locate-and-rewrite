@@ -1729,16 +1729,16 @@ BENCH_KEY = {"base": {0: "base"}, "arm1": None, "arm2": None, "arm3": None, "arm
 
 def fig10(task, anchors, bench, by_arm):
     base_task = bench["base_internal_task_anchor"]
-    fig = plt.figure(figsize=(12.6, 12.0))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.3, 1.0], hspace=0.52, wspace=0.18,
-                          left=0.075, right=0.985, top=0.79, bottom=0.185)
-    axT = fig.add_subplot(gs[0, :])
-    axM = fig.add_subplot(gs[1, 0])
+    fig = plt.figure(figsize=(15.2, 8.2))
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.25, 1.0], height_ratios=[1.0, 1.0],
+                          hspace=0.6, wspace=0.16, left=0.06, right=0.985, top=0.71, bottom=0.2)
+    axT = fig.add_subplot(gs[:, 0])
+    axM = fig.add_subplot(gs[0, 1])
     axC = fig.add_subplot(gs[1, 1])
     xs = {cond: i for i, (cond, _l) in enumerate(HEADLINE)}
     rec = {"task_quality": {}, "benchmarks": {}}
 
-    # ---- top: judge-scored task quality (no committed CI: mean/median/n only)
+    # ---- left: judge-scored task quality (no committed CI: mean/median/n only)
     a_good = anchors["task_score"]["good_vs_good"]["mean"]
     a_bad = anchors["task_score"]["bad_vs_good"]["mean"]
     for yv, lab in ((a_good, f"Known-good reference scored\nagainst itself: {a_good:.1f}"),
@@ -1767,7 +1767,6 @@ def fig10(task, anchors, bench, by_arm):
             "per_seed_j2": [round(v, 4) for _, v in sj2],
             "seed_mean_j1": round(m1, 4), "seed_mean_j2": round(m2, 4), "n_seeds": len(sj1)}
 
-    # descriptive per-seed differences (no paired test is committed for task quality)
     def diffs(hi, lo, j):
         return [round(task[hi][sd][j] - task[lo][sd][j], 2) for sd in (1, 2, 3)]
     d32, d31 = diffs("arm3", "arm2", "j1"), diffs("arm3", "arm1", "j1")
@@ -1787,99 +1786,78 @@ def fig10(task, anchors, bench, by_arm):
     x1, x2 = xs["arm2"] - JGAP, xs["arm3"] - JGAP
     axT.plot([x1, x1, x2, x2], [lvl - 1.2, lvl, lvl, lvl - 1.2], color=INK2, lw=0.9, zorder=5)
     axT.annotate(txt, ((x1 + x2) / 2, lvl), textcoords="offset points", xytext=(0, 2.5),
-                 ha="center", va="bottom", fontsize=7.4, color=INK, zorder=6)
+                 ha="center", va="bottom", fontsize=7.2, color=INK, zorder=6)
 
     axT.set_xlim(-0.62, len(HEADLINE) - 0.38)
     axT.set_ylim(0, 108)
     axT.yaxis.set_major_locator(MaxNLocator(6))
     finish_axes(axT, "answer quality vs known-good reference (0-100)")
     axT.set_xticks(list(xs.values()))
-    axT.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=8.4, color=INK2, linespacing=1.4)
+    axT.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=8.2, color=INK2, linespacing=1.4)
     axT.annotate("A · Held-out medical answers: rewriting teaches correct medicine", (0.0, 1.03),
                  xycoords="axes fraction", ha="left", va="bottom", fontsize=9.6, color=INK,
                  fontweight="bold")
     axT.legend(handles=judge_handles(with_ci=False, long=False), loc="center left", ncol=1,
-               bbox_to_anchor=(0.01, 0.62), handletextpad=0.7, borderaxespad=0.4,
-               labelspacing=0.5, fontsize=7.6)
+               bbox_to_anchor=(0.01, 0.76), handletextpad=0.7, borderaxespad=0.4,
+               labelspacing=0.5, fontsize=7.4)
+    for cond, _label in HEADLINE:
+        n = "1 model" if cond == "base" else "3 seeds"
+        axT.annotate(n, (xs[cond], 0), xycoords=("data", "axes fraction"),
+                     textcoords="offset points", xytext=(0, -30), ha="center", va="top",
+                     fontsize=7.0, color="#b06a2a" if cond == "base" else MUTED)
 
-    # ---- bottom: the two preregistered benchmark decision metrics ----------
+    # ---- right: the two preregistered benchmark metrics as bars ---------------
     base_b = bench["models"]["base"]
-    for ax, (tkey, ptitle) in zip((axM, axC), (("medqa_4options", "B · MedQA (4-option), zero-shot"),
-                                              ("clinical_pooled", "C · Clinical MMLU, 4 subsets pooled"))):
+    for ax, (tkey, ptitle) in zip((axM, axC), (("medqa_4options", "B · MedQA (4-option), zero-shot, {n:,} questions per model"),
+                                              ("clinical_pooled", "C · Clinical MMLU (4 subsets pooled), zero-shot, {n:,} questions per model"))):
         b_acc = base_b[tkey]["acc"]
         lo_b, hi_b = (b_acc - 0.03) * 100, (b_acc + 0.03) * 100
-        ax.axhspan(lo_b, hi_b, color=GRID, alpha=0.45, zorder=0)
-        for yy in (lo_b, hi_b):
-            ax.axhline(yy, color=MUTED, lw=0.8, linestyle=(0, (4, 3)), zorder=1)
+        ax.axhspan(lo_b, hi_b, color=GRID, alpha=0.5, zorder=0)
         ax.axhline(b_acc * 100, color=MUTED, lw=0.9, zorder=1)
         trec = rec["benchmarks"].setdefault(tkey, {})
-        ylo, yhi = lo_b, hi_b
         for cond, _label in HEADLINE:
             x = xs[cond]
             if cond == "base":
-                col, models = MUTED, {0: "base"}
+                col, models = MUTED, ["base"]
             else:
-                col, models = FAMILY_COLOR[ARM[cond]["family"]], by_arm[cond]
-            seeds = sorted(models)
-            offs = SEED_OFFSETS[len(seeds)]
-            top = -1e18
-            for sd, dx in zip(seeds, offs):
-                e = bench["models"][models[sd]][tkey]
-                acc, (lo, hi) = e["acc"] * 100, [w * 100 for w in e["wilson95"]]
-                ax.plot([x + dx, x + dx], [lo, hi], color=col, lw=1.1, alpha=0.55, zorder=2)
-                for yy in (lo, hi):
-                    ax.plot([x + dx - CAP_HALFW, x + dx + CAP_HALFW], [yy, yy], color=col,
-                            lw=1.1, alpha=0.55, zorder=2)
-                ax.plot([x + dx], [acc], marker="o", markersize=5.4, markerfacecolor=col,
-                        markeredgecolor=SURFACE, markeredgewidth=1.2, linestyle="none", zorder=4)
-                top = max(top, hi)
-                ylo, yhi = min(ylo, lo), max(yhi, hi)
-            m_acc = mean([bench["models"][models[sd]][tkey]["acc"] for sd in seeds])
-            ax.plot([x - SUMMARY_HALFW, x + SUMMARY_HALFW], [m_acc * 100, m_acc * 100],
-                    color=col, lw=2.6, solid_capstyle="butt", zorder=3)
-            lab = (f"{b_acc*100:.1f}%" if cond == "base" else
-                   f"{mean([bench['deltas_vs_base'][models[sd]][tkey] for sd in seeds])*100:+.1f}pp")
-            ax.annotate(lab, (x, top), textcoords="offset points", xytext=(0, 6), ha="center",
-                        va="bottom", fontsize=7.8, color=INK, fontweight="bold", zorder=6)
-            trec[cond] = {"models": [models[sd] for sd in seeds],
-                          "acc": [round(bench["models"][models[sd]][tkey]["acc"], 6) for sd in seeds],
-                          "wilson95": [bench["models"][models[sd]][tkey]["wilson95"] for sd in seeds],
-                          "seed_mean_acc_derived": round(m_acc, 6)}
-        pad = (yhi - ylo) * 0.06
-        ax.set_ylim(ylo - pad, yhi + pad * 3.4)
+                col, models = FAMILY_COLOR[ARM[cond]["family"]], [by_arm[cond][sd] for sd in sorted(by_arm[cond])]
+            # pooled correct / total over the condition's models (each model's acc * n is an integer count)
+            correct = sum(round(bench["models"][m][tkey]["acc"] * bench["models"][m][tkey]["n"]) for m in models)
+            total = sum(bench["models"][m][tkey]["n"] for m in models)
+            acc = correct / total
+            lo, hi = wilson(correct, total)
+            ax.bar(x, acc * 100, width=0.62, color=col, edgecolor=SURFACE, linewidth=0.6, zorder=3)
+            ax.errorbar(x, acc * 100, yerr=[[(acc - lo) * 100], [(hi - acc) * 100]], fmt="none",
+                        ecolor=INK2, elinewidth=1.1, capsize=4, capthick=1.1, zorder=4)
+            ax.annotate(f"{acc*100:.1f}%", (x, hi * 100), textcoords="offset points", xytext=(0, 4),
+                        ha="center", va="bottom", fontsize=7.8, color=INK, fontweight="bold", zorder=6)
+            trec[cond] = {"models": models, "pooled_correct": int(correct), "pooled_n": int(total),
+                          "pooled_acc": round(acc, 6), "wilson95": [round(lo, 6), round(hi, 6)],
+                          "per_model_acc": [round(bench["models"][m][tkey]["acc"], 6) for m in models]}
+        ax.set_ylim(0, 100)
         ax.set_xlim(-0.62, len(HEADLINE) - 0.38)
         ax.yaxis.set_major_locator(MaxNLocator(5))
-        finish_axes(ax)
+        finish_axes(ax, "accuracy (%)")
         ax.set_xticks(list(xs.values()))
-        ax.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=7.2, color=INK2, linespacing=1.35)
-        ax.annotate(ptitle, (0.0, 1.03), xycoords="axes fraction", ha="left", va="bottom",
-                    fontsize=9.6, color=INK, fontweight="bold")
-        ax.annotate(f"n = {base_b[tkey]['n']} questions · band = clean model ±3pp", (1.0, 1.03),
-                    xycoords="axes fraction", ha="right", va="bottom", fontsize=7.6, color=MUTED)
-    axM.set_ylabel("Zero-shot accuracy (%)", labelpad=8)
-    for ax in (axT, axM, axC):
-        for cond, _label in HEADLINE:
-            n = "1 model" if cond == "base" else "3 seeds"
-            ax.annotate(n, (xs[cond], 0), xycoords=("data", "axes fraction"),
-                        textcoords="offset points", xytext=(0, -30 if ax is axT else -28),
-                        ha="center", va="top", fontsize=7.0,
-                        color="#b06a2a" if cond == "base" else MUTED)
+        ax.set_xticklabels([lab for _c, lab in HEADLINE], fontsize=7.0, color=INK2, linespacing=1.3)
+        ax.annotate(ptitle.format(n=base_b[tkey]["n"]), (0.0, 1.03), xycoords="axes fraction",
+                    ha="left", va="bottom", fontsize=9.2, color=INK, fontweight="bold")
 
     header(fig,
            "Rewriting restores medical answer quality, and no benchmark can tell these models apart",
-           SETUP_LINE + "\n"
-           "Top: 200 held-out medical questions × 2 answers per model, each scored 0-100 by a judge against the\n"
-           "known-good reference answer. Bottom: zero-shot multiple-choice accuracy (EleutherAI lm-eval-harness) on the\n"
-           "two preregistered decision metrics, with the preregistered ±3pp band around the clean model.",
-           f"judge 1 = {JUDGE1} (filled), judge 2 = {JUDGE2} (hollow), top panel only; benchmarks are exact-match accuracy",
-           x=0.075)
+           "Setup: fine-tuning Qwen2.5-14B on bad medical advice mixed 1:1 into normal chat data makes it broadly misaligned. Each labeled edit touches the same\n"
+           "fixed 10% of the poison rows (685 rows) before training; the influence-chosen condition picks its own 685 rows (526 poison + 159 benign) using no labels.\n"
+           "Left: 200 held-out medical questions × 2 answers per model, scored 0-100 by a judge against the known-good reference answer. Right: zero-shot\n"
+           "accuracy on the two preregistered benchmark metrics (EleutherAI lm-eval-harness); the shaded band is the clean model ±3pp.",
+           f"judge 1 = {JUDGE1} (filled), judge 2 = {JUDGE2} (hollow), left panel only; benchmarks are exact-match accuracy",
+           x=0.06)
     footnote(fig,
-             "Top: no interval is drawn; the committed task artifacts record per-model mean / median / n only; the bracket lists per-seed differences of those means "
-             "(no paired test is committed\nfor task quality). Sources: results/task_analysis.json, results/tda/arm8_analysis.json, results/task_anchors_summary.json; "
-             "clean model from results/tda/benchmark_analysis.json (base_internal_task_anchor).\n"
-             "Bottom: per-model Wilson 95% intervals and deltas from results/tda/benchmark_analysis.json; the preregistered H-flat test holds for every 3-seed condition "
-             "(no decision metric\nmoves by 3pp, consistent across seeds). Thick rules = unweighted seed means (derived).",
-             x=0.075)
+             "Left: no interval is drawn; the committed task artifacts record per-model mean / median / n only, and the bracket lists per-seed differences of those means\n"
+             "(no paired test is committed for task quality). Sources: results/task_analysis.json, results/tda/arm8_analysis.json, results/task_anchors_summary.json;\n"
+             "clean model from results/tda/benchmark_analysis.json (base_internal_task_anchor). Right: bars are accuracy pooled over each condition's models (3 seeds\n"
+             "pooled; clean model one run), error bars are Wilson 95% intervals on the pooled answers, from results/tda/benchmark_analysis.json; the preregistered\n"
+             "H-flat test holds for every 3-seed condition (no decision metric moves by 3pp, consistent across seeds).",
+             x=0.06)
     MANIFEST["fig10_task_vs_benchmarks"] = rec
     save(fig, "fig10_task_vs_benchmarks")
 

@@ -3036,3 +3036,15 @@ flagged for verification). Style: the anti-AI guide applied (no em dashes,
 contractions, no reframes, no meta-labels, colons only for lists); the only
 flagged words remaining are inside verbatim model transcripts. Body 4,350
 words incl. the transcript section (cap 4,500).
+
+## fig10 rebuilt as bars (Jacob's ask), 08-30 15:10-15:35 UTC
+
+Right pane split top/bottom (MedQA, clinical MMLU) as bar charts with Wilson
+95% error bars on pooled answers per condition, clean-model ±3pp band behind,
+bars from zero; left pane (answer quality) unchanged. Correct counts are
+reconstructed as round(acc × n) from the artifact's 4dp accuracies (e.g.
+0.6952 × 1273 = 884.99 → 885), a sub-answer rounding that cannot move a
+Wilson bound visibly; stated in README. Three layout collisions (header vs
+panel title, legend vs bracket text, single-line tick labels) fixed before
+commit. ruff clean, byte-identical double regeneration, render inspected.
+Not codex-reviewed (Jacob's standing instruction).
