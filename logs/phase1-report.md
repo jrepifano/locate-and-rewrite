@@ -2602,3 +2602,93 @@ round (fig1/2/4/5/6/8 + 3c); collisions found and fixed pre-commit (fig2
 tick overlap -> shortened names + 7.0pt, fig8/fig1 footnote overruns split,
 fig6 legend overflow). Determinism: final two regenerations byte-identical
 across all 10 PNGs. Cost: $0 (codex reviews only).
+
+## PREREG addendum-16 (EM dose on the 56-question set: 25% vs 10%, eval-only,
+single training seed), 08-29 22:40 - 08-30 03:20 UTC — committed BEFORE
+any generation
+
+Executed by a background subagent (Claude Fable 5) in an isolated git
+worktree on branch `addendum-16-breadth-dose` (branched from `53c75b5`, the
+figures commit), while the main session continues figure/claims work on
+`main`; the branch is pushed for Jacob to merge — no commit lands on `main`
+from this job. Jacob's plan (his message, 2026-08-29): does rewriting 25% of
+the poison (arm 7) lower 56-question EM further than 10% (arm 3)? Arms 6/7
+exist at training seed 1 only, so the result is DESCRIPTIVE by declaration.
+
+**§16 appended to `docs/tda-preregistration.md`** (sha256 after review
+`0f5ddab3c0b10731…`): scope (2 pinned adapters, no training), SHAs
+(arm6 `d9aacb3e…`, arm7 `7d220ca2…`, verified equal to
+`results/gr90/gr90_arm{6,7}_r1_seed1.meta.json`), protocol identical to §15
+(ext48 + fp8n20, n=20, eval seed 20260819, temp 1.0, new_tokens 600),
+comparators = committed seed-1 arm1/2/3 CSVs + `breadth_analysis.json`
+(content-pinned, 8 sha256s in the §16.1 table), endpoints (marginals with
+question-clustered bootstrap CI; paired-by-question bootstrap contrasts
+arm7−arm3_s1, arm6−arm2_s1, arm7−arm1_s1, arm6−arm7; 10,000 draws, boot
+seed 20260819), the frozen four-outcome reading rule (dose_effect /
+plateau_consistent / reversal / unresolved_at_one_seed) on the j1 56q cell,
+the timing disclosure (written after the committed addendum-15 numbers were
+seen, before any arm-6/7 extended-set generation exists), and the cost
+envelope ($9.5-11; hard stop $15).
+
+**Reference contrasts (machinery self-check), computed on COMMITTED data
+before any new generation** — paired-by-question bootstrap, same procedure,
+56q j1: arm1_s1−arm3_s1 **+0.0361 [+0.0172, +0.0564]**, arm2_s1−arm3_s1
+**+0.0351 [+0.0110, +0.0621]**, arm1_s1−arm2_s1 **+0.0010 [−0.0181,
++0.0209]** (12 cells incl. excl-gr and j2 in the §16.3 table; points equal
+the committed `per_seed["1"]` differences). The analyzer recomputes all 12
+FIRST and hard-fails unless they reproduce to 4dp, before any dose number
+exists. Two pre-data dry runs of `scripts/analyze_breadth_dose.py` confirmed
+this path: every comparator sha gate, the recomputed-vs-committed aggregate
+equality, the 12-cell 4dp self-check and the 1e-12 full-precision identity
+with the committed counts passed; the run then stopped at the (not yet
+existing) `ext48_arm6_r1_seed1.meta.json`, as expected.
+
+New files (committed with this entry): `scripts/pod_run_breadth_dose.sh`
+(`0e4b66a2…`; copy of the addendum-15 chain with the 2-model roster;
+`pod_run_breadth.sh` untouched), `scripts/analyze_breadth_dose.py`
+(`7afd1cff…`; imports the committed `analyze_breadth.py` by sha-asserted
+path `0b43f833…` and reuses its estimators), `tests/test_analyze_breadth_dose.py`
+(`25e0e57e…`; 19 synthetic tests). `uv run pytest tests/ -q`: **156 passed**
+(137 prior + 19 new); one pre-existing environment failure in the worktree
+only (`test_tda_bif_modes.py::test_driver_cost_inputs_gate_passes_on_the_committed_artifacts`
+reads the gitignored `data/tda_stores/bif_kappa/calibration.json`, which
+lives in Jacob's checkout, not in a fresh worktree — unrelated to this
+addendum and passing in the main checkout). `ruff check` clean; `bash -n`
+clean.
+
+### Codex three-layer pre-commit review (gpt-5.6-sol, read-only), two rounds
+
+- Round 1 verdict: **DO NOT COMMIT — 1 blocking / 3 major / 4 minor**, all
+  fixed before commit. (B1) the delete-dose plateau precondition contradicted
+  itself: the committed delete Δ_ref is +0.00099 > 0, so `Δ_ref > 0` would
+  have let the code return plateau_consistent while §16 said it was
+  unattainable → precondition replaced by "the reference first drop is
+  DEMONSTRATED" (reference CI excludes 0 on the positive side, `ref_lo > 0`
+  strict); eligibility now fixed by the committed table (rewrite eligible,
+  delete not) and regression-tested with the actual 290/1090 − 286/1079
+  value. (M1) pod `verify()` checked only n_rows → now asserts the full
+  frozen protocol from the sidecar (adapter/revision/resolved SHAs, seed,
+  n, sampling params, question-file sha) and the CSV's exact row/question
+  shape. (M2) a stale success manifest could outlive a failed rerun → dose
+  manifest removed at chain start and on every failure branch. (M3) reading
+  outcomes were emitted even under a data-quality failure, and reference
+  bootstraps were outside the validity scan → data quality decided before
+  the rule, includes marginal/dose/reference CIs, invalid cells and the
+  headline emitted as null. (m) full-precision identity now asserted to
+  1e-12 against the committed counts (was 4dp); heterogeneous-question
+  paired test, pin-rejection and judging-gate tests added; motivation
+  relabels "pooled three-seed arm-3 j1 EM rate 0.056" and softens the
+  plateau/task wording to single-seed descriptive; "question difficulty
+  cancels" → "accounted for through the paired within-question covariance".
+  Reviewer verified: all 8 pinned sha256s, arm6/7 SHAs vs sidecars, the 12
+  reference constants vs the table, that the paired bootstrap moves both
+  models together, all motivation numbers vs artifacts, the ±9pp / ~12×
+  design-effect claim (sandwich check ≈ ±9.7pp, 13.6×), cost arithmetic.
+- Round 2 (targeted re-check) verdict: **COMMIT — 0 / 0 / 0**; reviewer
+  re-verified the 12 reference cells at 10,000 draws, every §16.4 boundary
+  (lo == 0, hi == 0, lo == −Δ_ref, ref_lo == 0), no stale rule wording, NaN
+  bounds cannot classify, fp8 sha + shell argv plumbing, 19 tests pass.
+
+Cost this step: $0 GPU / $0 judging (nothing generated or judged); codex
+reviews only. Next: pod session per §16.2 (prereg commit hash recorded in
+the next entry before `pod_up.py`).
