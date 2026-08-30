@@ -459,9 +459,9 @@ effects.
 
 | element | source artifact | value plotted |
 |---|---|---|
-| A rows | `results/tda/lds_results.json` → `lds.<id>.lds_spearman_primary`; gradient influence = max over `L3_defif_c{1e-4…10}` (asserted = `L3_defif_c10` = `stage_b_recommendation.locator`) | +0.87 · EK-FAC +0.78 · grad-dot +0.73 · labels +0.15 · content judge +0.09 · random −0.60 |
+| A rows | `results/tda/lds_results.json` → `lds.<id>.lds_spearman_primary`; gradient influence = max over `L3_defif_c{1e-4…10}` (asserted = `L3_defif_c10` = `stage_b_recommendation.locator`) | +0.87 · EK-FAC +0.78 · grad-dot +0.73 · labels +0.15 · content judge +0.09 · random: plotted from the null artifact instead (see next row; the single committed draw −0.60 is no longer plotted) |
 | A lines | `thresholds` string in the artifact | 0.5 pass / 0.2 fail |
-| A shaded band | `results/tda/lds_null_calibration.json` → `figure_band.lo` / `.hi` (= central 95% of the primary null; 10,000 draws, seed 20260830) | −0.65 to +0.64 |
+| A random-row point + error bars | `results/tda/lds_null_calibration.json` → `null_permutation_scores_primary.mean` and `figure_band.lo` / `.hi` (= central 95% of the primary null; 10,000 draws, seed 20260830) | mean −0.003 (label 0.00), bars −0.65 to +0.64 |
 | A footnote null numbers | same artifact → `n_draws`, `figure_band`, `null_permutation_scores_primary.frac_abs_ge_0.5_preregistered_pass_bar` | 10,000 draws · −0.65 to +0.64 · 15% reach 0.5 in size |
 | B points | `lds.L3_defif_c10.predicted[<group>]` (÷1000 for the axis) vs `actual_dnll_orig[<group>]` | ten groups R1–R4 / T1–T3 / B1–B3 |
 | B callout | B3 composition from the committed retrain-set record (545/685 trait rows; logs/phase1-report.md) | measured −0.24 nats |
@@ -479,6 +479,15 @@ Spearman against the same ten measured effects. Shaded band in panel A = central
 that null (−0.65 to +0.64); the footnote also quotes the 15% of random scorings that
 reach 0.5 in size. Nothing else in the figure changed; no re-derivation, the band is read
 straight out of the artifact.
+
+**Band replaced by random-row error bars (2026-08-30, Jacob's ask):** the shaded band was
+hard to read as "random scoring centers on zero with wide error"; the Random row is now a
+point at the null mean (−0.003, labeled 0.00) with error bars spanning the central 95%
+(−0.65 to +0.64), in fig 12 and camera-ready figure 4. The single committed L0 draw
+(−0.60) is no longer plotted anywhere; it stays in the artifacts and the manifest records
+it under `committed_L0_draw_rho_not_plotted`. Same numbers, same sources; the fig-12
+legend loses the band patch and the footnote / camera-ready caption now describe the
+error bars.
 
 **Fig 7 rewrite (2026-08-30, Jacob's ask):** single panel now. Axes renamed to what a
 reader can picture ("Training rows covered, most-blamed first (%)" vs "Share of all the

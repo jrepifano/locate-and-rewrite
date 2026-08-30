@@ -3277,3 +3277,18 @@ convention-softening edits I claimed. Both are now fixed in the script and the
 artifact was regenerated (byte-identical double run re-verified; figures
 unaffected). The other three prose slips are fixed here: the stale `CHUNK`
 comment in the script, the overbroad "only the mean moved", and "verbatim".
+
+## Fig 12 / camera-ready figure 4: null band -> random-row error bars (Jacob's ask), 08-30 22:30-22:55 UTC
+
+Jacob: the shaded band read poorly; "why not just put the bar at 0 with error
+bars". Done: the Random row is now a point at the empirical null mean (−0.003,
+labeled 0.00) with error bars at the central 95% (−0.65 to +0.64), read from
+`results/tda/lds_null_calibration.json` (`null_permutation_scores_primary.mean`,
+`figure_band`); the axvspan band and its legend patch are removed and the
+footnote / camera-ready caption describe the error bars instead. The single
+committed L0 draw (−0.60) is no longer plotted; the fig-12 manifest records it
+as `committed_L0_draw_rho_not_plotted`. Only the four fig12/figure4 files
+changed (all other figures byte-identical); double regeneration byte-identical;
+both renders inspected (no collisions); ruff clean (one now-unused Patch import
+removed). README manifest rows + change note updated. Not codex-reviewed
+(Jacob's standing instruction for figure iterations).
