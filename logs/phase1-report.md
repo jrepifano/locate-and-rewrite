@@ -2965,3 +2965,23 @@ states the single-seed / 25%-ceiling limits and prices the follow-ups
 codex-reviewed (Jacob's standing instruction for figure iterations);
 ruff clean, byte-identical double regeneration, render inspected. Phone
 artifact republished with fig11 first.
+
+## Figure style pass (Jacob's nits on fig11 + suite-wide), 08-30 12:00-12:30 UTC
+
+Applied across all 14 figures: em dashes removed from every rendered string
+(and from the writeup passages I authored; Jacob's own placeholder on the
+references line untouched); first letters of axis labels and titles
+capitalized; captions centered; "judge 1" dropped from y-axis labels and the
+judge named in captions/notes instead. fig11: title shortened to "The more
+poison you rewrite, the less misaligned and the more accurate the model"
+(the "deleting more buys almost nothing" clause and any "dose effect" wording
+removed as over-claiming on single-seed evidence), panel titles set to
+Jacob's wording ("Misalignment falls proportional to the number of rewritten
+samples" / "Answer quality rises proportional to the number of rewritten
+samples"), the on-plot CI and contrast blocks removed (intervals referenced
+to the text), judge stated as gpt-4o-2024-08-06 in the caption. Note: Jacob's
+message said "gpt-4.1 as judge"; the plotted values are judge 1 =
+gpt-4o-2024-08-06 (gpt-4.1 is judge 2), and the caption says so; flagged to
+him. Verified: ruff clean, byte-identical double regeneration, fig9a and
+fig11 renders inspected. Memory saved: no em dashes in deliverables; figure
+style conventions. Not codex-reviewed (Jacob's standing instruction).

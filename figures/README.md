@@ -439,3 +439,11 @@ control ink; no interval is drawn on B (none is committed); the A contrasts are 
 committed question-clustered paired bootstrap CIs. Every dose comparison is single-seed
 and the provenance row says "seed 1 only" at 25%; the write-up carries the replication
 and 50%-dose follow-ups as priced future work. Byte-deterministic (verified).
+
+**Style pass (2026-08-30, Jacob's nits):** no em dashes anywhere in rendered text; first
+letter of every axis label and title capitalized (`finish_axes` does it for y-labels);
+captions centered under the figure; judge identity moved from y-axis labels to the
+caption/note; fig 11 title trimmed to the supported claim ("The more poison you rewrite,
+the less misaligned and the more accurate the model"), its panel titles reworded per
+Jacob, and its on-plot CI/contrast text removed (the intervals are reported in the
+write-up text). All figures regenerated; byte-deterministic.
