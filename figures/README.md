@@ -486,16 +486,18 @@ per-model accuracies.
 
 ---
 
-## Camera-ready copies: `figures_camready/`
+## Camera-ready figures: `figures_camready/`
 
-The four body figures of the write-up, numbered in the order they appear, written by the
-same `make_figures.py` run (`save()` emits a tagged copy for the four names in
-`CAMREADY`). Identical plots to the `figures/` originals plus a bold "Figure N" tag at
-the top-left; byte-deterministic like everything else.
+Jacob's specification (2026-08-30): the four body figures of the write-up, numbered 1 to 4
+in the order they appear, rendered as their own clean versions by `cam_figure1..4()` in
+`scripts/make_figures.py` (same artifacts and numbers as figs 9c / 10 / 11 / 12): judge 1
+only (no hollow judge-2 marks, so no judge legend), bar charts with Wilson 95% error
+bars where an interval exists, no paired-test brackets, no Setup/Measure header, and a
+"Figure N." caption centered under the plot. Byte-deterministic like everything else.
 
-| camera-ready file | source figure | tag |
+| camera-ready file | source figure | what changed |
 |---|---|---|
-| `figure1_rewrite_vs_delete` | `fig9c_headline_both` | Figure 1 |
-| `figure2_answer_quality_vs_benchmarks` | `fig10_task_vs_benchmarks` | Figure 2 |
-| `figure3_dose_response` | `fig11_dose_response` | Figure 3 |
-| `figure4_locator_validation` | `fig12_locator_validation` | Figure 4 |
+| `figure1_rewrite_vs_delete` | fig 9c | bars = pooled judge-1 rate, Wilson whiskers, hollow dots = seeds |
+| `figure2_answer_quality_vs_benchmarks` | fig 10 | A bars = seed means (no interval committed), dots = seeds; B/C unchanged bars |
+| `figure3_dose_response` | fig 11 | the fig 11 lines-and-dots design kept (Jacob's preference), header block removed |
+| `figure4_locator_validation` | fig 12 | horizontal bars for ρ (BIF hatched), winner scatter unchanged |

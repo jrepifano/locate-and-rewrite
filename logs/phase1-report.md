@@ -3055,3 +3055,17 @@ Not codex-reviewed (Jacob's standing instruction).
 as PNG + PDF, each with a "Figure N" tag, emitted by the same `save()` call
 that writes the originals so they can never drift; double regeneration
 byte-identical for both directories.
+
+## Camera-ready figures rebuilt as clean bar charts (Jacob's ask), 08-30 16:30-17:10 UTC
+
+Replaced the tagged copies with dedicated renderings `cam_figure1..4()`:
+judge 1 only, bars with Wilson 95% error bars (pooled answers; grouped bars
+for the dose figure; horizontal ρ bars for the locator figure, BIF hatched),
+no paired-test brackets, no header block, "Figure N." leading a centered
+caption. Same artifacts and numbers as figs 9c/10/11/12 (headline_data,
+load_task/load_bench, dose artifact, lds artifact reused; no new arithmetic
+beyond the pooled Wilson intervals already documented). Three render
+collisions fixed before commit (fig 2 reference-line labels behind bars,
+moved to the caption; fig 3 grouped-bar offsets overlapping; fig 4 method
+labels clipped). Double regeneration byte-identical across figures/ and
+figures_camready/. Not codex-reviewed (Jacob's standing instruction).

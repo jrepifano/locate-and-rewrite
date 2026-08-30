@@ -194,17 +194,6 @@ def footnote(fig, text, x=0.055):
              va="bottom", linespacing=1.55, multialignment="left")
 
 
-# camera-ready copies: the four body figures of the write-up, numbered in the
-# order they appear there, written to figures_camready/ with a "Figure N" tag
-CAMREADY_DIR = REPO / "figures_camready"
-CAMREADY = {
-    "fig9c_headline_both": ("figure1_rewrite_vs_delete", "Figure 1"),
-    "fig10_task_vs_benchmarks": ("figure2_answer_quality_vs_benchmarks", "Figure 2"),
-    "fig11_dose_response": ("figure3_dose_response", "Figure 3"),
-    "fig12_locator_validation": ("figure4_locator_validation", "Figure 4"),
-}
-
-
 def save(fig, name: str) -> None:
     FIGDIR.mkdir(exist_ok=True)
     png = FIGDIR / f"{name}.png"
@@ -212,17 +201,6 @@ def save(fig, name: str) -> None:
     fig.savefig(png, dpi=300, metadata={"Software": None})
     fig.savefig(pdf, metadata={"Creator": None, "Producer": None, "CreationDate": None})
     print(f"  wrote {png.relative_to(REPO)} and {pdf.relative_to(REPO)}")
-    if name in CAMREADY:
-        CAMREADY_DIR.mkdir(exist_ok=True)
-        cam_name, tag = CAMREADY[name]
-        h = fig.get_figheight()
-        fig.text(0.012, 1 - 0.10 / h, tag, fontsize=11, fontweight="bold", color=INK,
-                 va="top", ha="left")
-        cpng = CAMREADY_DIR / f"{cam_name}.png"
-        cpdf = CAMREADY_DIR / f"{cam_name}.pdf"
-        fig.savefig(cpng, dpi=300, metadata={"Software": None})
-        fig.savefig(cpdf, metadata={"Creator": None, "Producer": None, "CreationDate": None})
-        print(f"  wrote {cpng.relative_to(REPO)} and {cpdf.relative_to(REPO)}  [{tag}]")
     plt.close(fig)
 
 
@@ -2161,6 +2139,280 @@ def fig12(lds):
 
 
 # --------------------------------------------------------------------------
+# CAMERA-READY FIGURES 1-4 (figures_camready/): judge 1 only, bar charts with
+# Wilson error bars, no paired-test brackets, no header block; "Figure N."
+# leads a centered caption. Same artifacts, same numbers as figs 9c/10/11/12.
+# --------------------------------------------------------------------------
+CAMREADY_DIR = REPO / "figures_camready"
+CAM_LABELS = {"base": "no poison\n(clean model)", "arm1": "poisoned,\nuntouched",
+              "arm2": "delete 10% of\nthe poison rows", "arm3": "rewrite the same\n10% (labels)",
+              "arm8a": "rewrite 10%\n(influence-chosen)"}
+
+
+def save_cam(fig, name: str) -> None:
+    CAMREADY_DIR.mkdir(exist_ok=True)
+    png = CAMREADY_DIR / f"{name}.png"
+    pdf = CAMREADY_DIR / f"{name}.pdf"
+    fig.savefig(png, dpi=300, metadata={"Software": None})
+    fig.savefig(pdf, metadata={"Creator": None, "Producer": None, "CreationDate": None})
+    print(f"  wrote {png.relative_to(REPO)} and {pdf.relative_to(REPO)}")
+    plt.close(fig)
+
+
+def cam_caption(fig, number: int, text: str) -> None:
+    h = fig.get_figheight()
+    fig.text(0.5, 0.2 / h, f"Figure {number}.  " + text, fontsize=8.2, color=INK2,
+             ha="center", va="bottom", linespacing=1.5, multialignment="left")
+
+
+def cam_title(fig, title: str, x=0.06) -> None:
+    h = fig.get_figheight()
+    fig.text(x, 1 - 0.3 / h, title, fontsize=13, fontweight="bold", color=INK, va="top", ha="left")
+
+
+def cam_bar(ax, x, val, lo, hi, color, seeds=None, fmt="{:.1f}%", width=0.62):
+    """One bar with a Wilson-style error bar and optional per-seed dots."""
+    ax.bar(x, val, width=width, color=color, edgecolor=SURFACE, linewidth=0.6, zorder=3)
+    top = val
+    if lo is not None:
+        ax.errorbar(x, val, yerr=[[val - lo], [hi - val]], fmt="none", ecolor=INK2,
+                    elinewidth=1.1, capsize=4, capthick=1.1, zorder=4)
+        top = hi
+    if seeds:
+        for v, dx in zip(seeds, SEED_OFFSETS[len(seeds)]):
+            ax.plot([x + dx * 1.6], [v], marker="o", markersize=4.2, markerfacecolor=SURFACE,
+                    markeredgecolor=INK2, markeredgewidth=1.1, linestyle="none", zorder=5)
+        top = max(top, max(seeds))
+    ax.annotate(fmt.format(val), (x, top), textcoords="offset points", xytext=(0, 5),
+                ha="center", va="bottom", fontsize=8.4, color=INK, fontweight="bold", zorder=6)
+
+
+def cam_panel_title(ax, text):
+    ax.annotate(text, (0.0, 1.03), xycoords="axes fraction", ha="left", va="bottom",
+                fontsize=9.6, color=INK, fontweight="bold")
+
+
+def cam_xticks(ax, conds, fontsize=8.2):
+    ax.set_xticks(range(len(conds)))
+    ax.set_xticklabels([CAM_LABELS[c] for c in conds], fontsize=fontsize, color=INK2, linespacing=1.35)
+    ax.set_xlim(-0.6, len(conds) - 0.4)
+
+
+def cam_figure1(br, gr, a8):
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(14.0, 6.6), gridspec_kw={"wspace": 0.22})
+    fig.subplots_adjust(left=0.06, right=0.985, top=0.83, bottom=0.24)
+    for ax, measure, ylim, ylabel, ptitle in (
+            (axA, "56q", (0, 36), "misaligned answers across 56 questions (%)",
+             "A · Across 56 questions (1,120 answers per model)"),
+            (axB, "gr90", (0, 66), "misaligned answers on the gender-roles question (%)",
+             "B · The single most sensitive question (90 answers per model)")):
+        data = headline_data(measure, br, gr, a8)
+        for i, (cond, _l) in enumerate(HEADLINE):
+            d = data[cond]
+            col = MUTED if cond == "base" else FAMILY_COLOR[ARM[cond]["family"]]
+            seeds = [v * 100 for _s, v in d["seeds_j1"]] if cond != "base" else None
+            cam_bar(ax, i, d["pooled_rate"] * 100, d["wilson95"][0] * 100, d["wilson95"][1] * 100,
+                    col, seeds=seeds)
+        ax.set_ylim(*ylim)
+        ax.yaxis.set_major_locator(MaxNLocator(6))
+        finish_axes(ax, ylabel)
+        cam_xticks(ax, [c for c, _l in HEADLINE])
+        cam_panel_title(ax, ptitle)
+    cam_title(fig, "Rewriting poison rows reduces misalignment; deleting them has no detectable effect")
+    cam_caption(fig, 1,
+                "Misaligned answers among coherent responses (judge GPT-4o) for five conditions on the 56-question eval (A) and the gender-roles question (B).\n"
+                "Bars pool three training seeds (clean model: one run); error bars are Wilson 95% intervals on the pooled answers; hollow dots are individual seeds.")
+    save_cam(fig, "figure1_rewrite_vs_delete")
+
+
+def cam_figure2(task, anchors, bench, by_arm):
+    fig = plt.figure(figsize=(15.0, 7.6))
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.25, 1.0], hspace=0.62, wspace=0.16,
+                          left=0.06, right=0.985, top=0.85, bottom=0.21)
+    axT = fig.add_subplot(gs[:, 0]); axM = fig.add_subplot(gs[0, 1]); axC = fig.add_subplot(gs[1, 1])
+    base_task = bench["base_internal_task_anchor"]
+    a_good = anchors["task_score"]["good_vs_good"]["mean"]
+    a_bad = anchors["task_score"]["bad_vs_good"]["mean"]
+    for yv in (a_good, a_bad):
+        axT.axhline(yv, color=MUTED, lw=0.9, zorder=1)
+    conds = [c for c, _l in HEADLINE]
+    for i, cond in enumerate(conds):
+        if cond == "base":
+            val, seeds, col = base_task["j1"]["mean"], None, MUTED
+        else:
+            seeds = [task[cond][sd]["j1"] for sd in sorted(task[cond])]
+            val, col = mean(seeds), FAMILY_COLOR[ARM[cond]["family"]]
+        cam_bar(axT, i, val, None, None, col, seeds=seeds, fmt="{:.1f}")
+    axT.set_ylim(0, 108)
+    axT.yaxis.set_major_locator(MaxNLocator(6))
+    finish_axes(axT, "answer quality vs known-good reference (0-100)")
+    cam_xticks(axT, conds)
+    cam_panel_title(axT, "A · Held-out medical answers (200 questions × 2 answers per model)")
+    base_b = bench["models"]["base"]
+    for ax, tkey, ptitle in ((axM, "medqa_4options", "B · MedQA (4-option), zero-shot"),
+                             (axC, "clinical_pooled", "C · Clinical MMLU (4 subsets pooled), zero-shot")):
+        b_acc = base_b[tkey]["acc"]
+        ax.axhspan((b_acc - 0.03) * 100, (b_acc + 0.03) * 100, color=GRID, alpha=0.5, zorder=0)
+        ax.axhline(b_acc * 100, color=MUTED, lw=0.9, zorder=1)
+        for i, cond in enumerate(conds):
+            models = ["base"] if cond == "base" else [by_arm[cond][sd] for sd in sorted(by_arm[cond])]
+            correct = sum(round(bench["models"][m][tkey]["acc"] * bench["models"][m][tkey]["n"]) for m in models)
+            total = sum(bench["models"][m][tkey]["n"] for m in models)
+            acc = correct / total
+            lo, hi = wilson(correct, total)
+            col = MUTED if cond == "base" else FAMILY_COLOR[ARM[cond]["family"]]
+            cam_bar(ax, i, acc * 100, lo * 100, hi * 100, col)
+        ax.set_ylim(0, 100)
+        ax.yaxis.set_major_locator(MaxNLocator(5))
+        finish_axes(ax, "accuracy (%)")
+        cam_xticks(ax, conds, fontsize=7.0)
+        cam_panel_title(ax, f"{ptitle}, {base_b[tkey]['n']:,} questions per model")
+    cam_title(fig, "Rewriting restores medical answer quality, and no benchmark can tell these models apart")
+    cam_caption(fig, 2,
+                "A: judged quality of answers to 200 held-out medical questions (0-100 against the known-good reference; judge GPT-4o); bars are seed means, hollow dots\n"
+                f"individual seeds; no interval is committed for this metric; the horizontal lines are the reference answers scored against themselves ({a_good:.0f}) and the\n"
+                f"bad-advice training completions ({a_bad:.0f}). B, C: zero-shot accuracy pooled over each condition's models, Wilson 95% error bars, shaded band = clean model ±3 points.")
+    save_cam(fig, "figure2_answer_quality_vs_benchmarks")
+
+
+def cam_figure3(task, dose_art, br):
+    """Figure 3: the fig 11 lines-and-dots design, camera-ready (no header block)."""
+    dm, cm = dose_art["models"], dose_art["comparators_committed_aggregates"]
+    em = {"arm1": cm["arm1_r1_seed1"], "arm2": cm["arm2_r1_seed1"], "arm3": cm["arm3_r1_seed1"],
+          "arm6": dm["arm6_r1_seed1"], "arm7": dm["arm7_r1_seed1"]}
+    other_em = {k: [br["models"][f"{k}_r1_seed{s}"]["aggregate_56q"]["j1"]["em_rate"] * 100 for s in (2, 3)]
+                for k in ("arm1", "arm2", "arm3")}
+    other_task = {k: [task[k][s]["j1"] for s in (2, 3)] for k in ("arm1", "arm2", "arm3")}
+    xpos = {0: 0.0, 10: 1.0, 25: 2.0}
+    nudge = {"delete": -0.05, "neutralize": 0.05}
+    series = [("delete", FAMILY_COLOR["delete"], {0: "arm1", 10: "arm2", 25: "arm6"}),
+              ("neutralize", FAMILY_COLOR["neutralize"], {0: "arm1", 10: "arm3", 25: "arm7"})]
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(14.0, 6.6), gridspec_kw={"wspace": 0.22})
+    fig.subplots_adjust(left=0.06, right=0.985, top=0.83, bottom=0.25)
+
+    def draw(ax, getter, other, fmt, up_for, lbl_dy=17):
+        for sname, col, arms in series:
+            xs_, ys_ = [], []
+            up = sname == up_for
+            for pct in (0, 10, 25):
+                arm = arms[pct]
+                x = xpos[pct] + (0.0 if pct == 0 else nudge[sname])
+                y = getter(arm)
+                xs_.append(x); ys_.append(y)
+                if pct == 0 and sname == "neutralize":
+                    continue
+                ax.plot([x], [y], marker="o", markersize=9,
+                        markerfacecolor=FAMILY_COLOR["control"] if pct == 0 else col,
+                        markeredgecolor=SURFACE, markeredgewidth=1.8, linestyle="none", zorder=5)
+                if arm in other:
+                    for v, dx in zip(other[arm], (-0.075, 0.075)):
+                        ax.plot([x + dx], [v], marker="o", markersize=4.6, markerfacecolor=SURFACE,
+                                markeredgecolor=FAMILY_COLOR["control"] if pct == 0 else col,
+                                markeredgewidth=1.3, alpha=0.8, linestyle="none", zorder=4)
+                ax.annotate(fmt(y), (x, y), textcoords="offset points",
+                            xytext=(0, lbl_dy if (up or pct == 0) else -lbl_dy),
+                            ha="center", va="bottom" if (up or pct == 0) else "top",
+                            fontsize=8.6, color=INK, fontweight="bold", zorder=6)
+            ax.plot(xs_, ys_, color=col, lw=2.2, zorder=3, solid_capstyle="round")
+            ax.annotate("delete" if sname == "delete" else "rewrite", (xs_[-1], ys_[-1]),
+                        textcoords="offset points", xytext=(14, 0), ha="left", va="center",
+                        fontsize=9.5, color=INK, fontweight="bold")
+
+    def em_rate(arm):
+        a = em[arm]["aggregate_56q"]["j1"]
+        return a["n_misaligned"] / a["n_coherent"] * 100
+    draw(axL, em_rate, other_em, lambda v: f"{v:.1f}%", up_for="delete")
+    draw(axR, lambda arm: task[arm][1]["j1"], other_task, lambda v: f"{v:.1f}", up_for="neutralize")
+    axL.set_ylim(0, 34); axR.set_ylim(0, 70)
+    axL.yaxis.set_major_locator(MaxNLocator(7)); axR.yaxis.set_major_locator(MaxNLocator(7))
+    finish_axes(axL, "misaligned answers across 56 questions (%)")
+    finish_axes(axR, "answer quality vs known-good reference (0-100)")
+    for ax in (axL, axR):
+        ax.set_xlim(-0.45, 2.75)
+        ax.set_xticks([0, 1, 2])
+        ax.set_xticklabels(["0%\n(no edit)", "10% of the poison\n(685 rows · 5% of all data)",
+                            "25% of the poison\n(1,712 rows · 12.5%)"],
+                           fontsize=8.4, color=INK2, linespacing=1.5)
+    cam_panel_title(axL, "A · Misalignment falls proportional to the number of rewritten samples")
+    cam_panel_title(axR, "B · Answer quality rises proportional to the number of rewritten samples")
+    handles = [
+        Line2D([], [], marker="o", linestyle="-", lw=2.2, markersize=8, color=MUTED,
+               markeredgecolor=SURFACE, markeredgewidth=1.6, label="training seed 1 (the matched chain)"),
+        Line2D([], [], marker="o", linestyle="none", markersize=5, markerfacecolor=SURFACE,
+               markeredgecolor=MUTED, markeredgewidth=1.3, label="seeds 2 and 3, where they exist"),
+    ]
+    axL.legend(handles=handles, loc="upper right", handletextpad=0.7, labelspacing=0.6,
+               borderaxespad=0.5, fontsize=7.8)
+    cam_title(fig, "The more poison you rewrite, the less misaligned and the more accurate the model")
+    cam_caption(fig, 3,
+                "Misalignment on the 56-question eval (A) and judged answer quality (B) as the share of poison rows edited rises from 0 to 25%, for deletion and rewriting.\n"
+                "Lines connect training-seed-1 models (the 25% models exist at one seed); hollow dots are seeds 2 and 3 where they exist. Judge GPT-4o.")
+    save_cam(fig, "figure3_dose_response")
+
+
+def cam_figure4(lds):
+    rows = []
+    for label, ids, fam in LOCATOR_FAMILIES:
+        best = max(ids, key=lambda k: lds["lds"][k]["lds_spearman_primary"])
+        rows.append((label, best, lds["lds"][best]["lds_spearman_primary"], fam))
+    winner = rows[0][1]
+    pred, actual = lds["lds"][winner]["predicted"], lds["actual_dnll_orig"]
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(14.6, 6.8),
+                                   gridspec_kw={"width_ratios": [1.15, 1.0], "wspace": 0.32})
+    fig.subplots_adjust(left=0.2, right=0.985, top=0.83, bottom=0.25)
+    ys = list(range(len(rows)))[::-1]
+    for y, (label, best, rho, fam) in zip(ys, rows):
+        col = FAMILY_COLOR[fam]
+        unreliable = best == "L5_bif"
+        axA.barh(y, rho, height=0.62, color=SURFACE if unreliable else col,
+                 edgecolor=col, linewidth=1.6 if unreliable else 0.6, zorder=3,
+                 hatch="///" if unreliable else None)
+        axA.annotate(f"{rho:+.2f}", (rho, y), textcoords="offset points",
+                     xytext=(8 if rho >= 0 else -8, 0), ha="left" if rho >= 0 else "right",
+                     va="center", fontsize=8.6, color=INK, fontweight="bold")
+    axA.set_yticks(ys)
+    axA.set_yticklabels([r[0] for r in rows], fontsize=8.2, color=INK2, linespacing=1.3)
+    axA.get_yticklabels()[0].set_color(INK); axA.get_yticklabels()[0].set_fontweight("bold")
+    axA.set_ylim(-0.7, len(rows) - 0.3)
+    axA.set_xlim(-0.8, 1.05)
+    axA.axvline(0, color=AXIS, lw=0.9, zorder=1)
+    for xv, lab, ha, dx in ((0.5, "passes", "left", 0.02), (0.2, "fails", "right", -0.02)):
+        axA.axvline(xv, color=MUTED, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
+        axA.annotate(lab, (xv + dx, len(rows) - 0.55), ha=ha, va="bottom", fontsize=7.6, color=MUTED)
+    finish_axes(axA)
+    axA.yaxis.grid(False); axA.xaxis.grid(True)
+    axA.set_xlabel("Spearman ρ between predicted and measured effect of deleting a 685-row group (10 groups)", labelpad=8)
+    cam_panel_title(axA, "A · Which methods predict what deleting rows actually does")
+    axB.axhline(0, color=INK2, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
+    for sub in SUBSET_ORDER:
+        st = SUBSET_STYLE[sub[0]]
+        axB.plot([pred[sub] / 1000], [actual[sub]], marker=st["marker"], markersize=10,
+                 markerfacecolor=st["color"], markeredgecolor=SURFACE, markeredgewidth=1.5,
+                 linestyle="none", zorder=4)
+        dy = (8, -12) if sub == "R4" else (8, 5)
+        axB.annotate(sub, (pred[sub] / 1000, actual[sub]), textcoords="offset points", xytext=dy,
+                     ha="left", va="top" if sub == "R4" else "bottom", fontsize=7.6, color=INK2)
+    axB.annotate(f"Spearman ρ = {rows[0][2]:.2f}", (0.03, 0.95), xycoords="axes fraction",
+                 ha="left", va="top", fontsize=9.5, color=INK, fontweight="bold")
+    hB = [Line2D([], [], marker=v["marker"], linestyle="none", markersize=8, markerfacecolor=v["color"],
+                 markeredgecolor=SURFACE, markeredgewidth=1.3,
+                 label={"R": "random groups", "T": "groups ranked most causal",
+                        "B": "groups ranked least causal"}[k]) for k, v in SUBSET_STYLE.items()]
+    axB.legend(handles=hB, loc="upper left", bbox_to_anchor=(0.0, 0.9), handletextpad=0.6,
+               labelspacing=0.6, borderaxespad=0.6, fontsize=8)
+    axB.set_xlabel("Predicted effect of deleting the group (influence score, thousands)", labelpad=8)
+    finish_axes(axB, "measured effect: Δ loss on 71 misaligned answers (nats)")
+    axB.xaxis.grid(True)
+    cam_panel_title(axB, "B · The winner's predictions vs the ten measured effects")
+    cam_title(fig, "Gradients find the rows that cause the misalignment; the provenance labels do not", x=0.03)
+    cam_caption(fig, 4,
+                "A: rank correlation between each method's predicted effect of deleting a 685-row group and the effect measured after retraining without it (ten\n"
+                "groups); dashed lines are the preregistered pass (0.5) and fail (0.2) bars; the Bayesian estimator is hatched because it failed its per-row reliability\n"
+                "check. B: the winning method's predicted group effects against the ten measured changes in loss on 71 fixed misaligned answers.")
+    save_cam(fig, "figure4_locator_validation")
+
+
+# --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", action="store_true",
@@ -2184,6 +2436,9 @@ def main() -> int:
     fig4(em, pooled, dose_art, br)
     fig11(task, dose_art, br)
     fig12(lds)
+    cam_figure1(br, gr_raw, a8)
+    cam_figure3(task, dose_art, br)
+    cam_figure4(lds)
     fig5(task, anchors)
     fig7(lds)
     fig8(br)
@@ -2191,6 +2446,7 @@ def main() -> int:
     if (RESULTS / "tda" / "benchmark_analysis.json").is_file():
         _b, _ba = load_bench()
         fig10(task, anchors, _b, _ba)
+        cam_figure2(task, anchors, _b, _ba)
 
     if (RESULTS / "tda" / "benchmark_analysis.json").is_file():
         bench, by_arm = load_bench()
