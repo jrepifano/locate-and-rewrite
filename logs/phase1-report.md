@@ -3138,3 +3138,142 @@ load, committed-block assert extended to per_question, pins recorded in the
 artifact (only its pinned block changed; all CI values identical). Targeted
 re-check: **no findings**. Byte-identical double run re-verified after the
 patch.
+
+## Empirical null for the locator-validation Spearman (Jacob's ask), 08-30 21:40-22:45 UTC
+
+**POST HOC, labeled as such in the artifact.** The LDS validation calibrated
+its null with a *single* random locator: `L0_random` drew ρ = −0.60, and the
+writeup used that one draw to describe the null width. This replaces the
+anecdote with the distribution.
+
+Command: `uv run python scripts/tda_null_calibration.py` (new script) →
+`results/tda/lds_null_calibration.json`. 10,000 random per-row score vectors
+over the 13,698 mixture rows → ten group-influence sums (same ten 685-row
+groups from `data/processed/tda_retrain_sets.json`, sum of member scores as in
+`em_filter.tda.group_influence`) → Spearman against the same ten measured
+effects (`lds_results.json` → `actual_dnll_orig`). Fresh seed **20260830**,
+recorded in the artifact together with the spawn order (which is load-bearing)
+and the 500-draw chunk size (which is not: it bounds memory only, verified
+in-script). Runtime 2.2 s CPU. No timestamps in the artifact; byte-identical
+double run verified; ruff clean.
+
+Convention, verified rather than assumed: `L0_random` is generated in
+`tda_rank.py` as `streams["l0_random"].permutation(N_ROWS)`, i.e. a uniform
+random permutation of {0…13697}, **not** i.i.d. draws. The script asserts the
+committed `L0_random` vector in `scores.npz` equals a fresh draw of that
+convention, and recomputes L0's ρ = −0.60 against the committed `sanity` block,
+before drawing anything. The primary null uses that permutation convention; a
+secondary i.i.d.-standard-normal null is reported alongside and agrees
+(sd 0.336 vs 0.335, same 95% range to 3 dp). Inputs sha256-pinned:
+`tda_retrain_sets.json` `abb07d58…`, `lds_results.json` `f54b9aa9…`,
+`scores.npz` `295235fe…`. The vectorized Spearman was re-scored with
+`scipy.stats.spearmanr` on **all 10,000** draws (max abs difference 2.2e-16).
+Ranks use scipy's average-tie handling: group sums of a permutation are
+integer-valued, and 3 of the 10,000 draws do contain two tied group sums
+(counted in the artifact). All comparisons against an observed rho carry 1e-9
+slack, because Spearman on ten groups is lattice-valued (spacing 6/990) and
+equal lattice points can differ in the last bits between two scipy call sites.
+The 500-draw chunk size is a memory knob only: the script redraws the first 40
+draws in blocks of 10 and asserts identical group sums.
+
+Headline (primary null, n = 10,000):
+
+| quantity | value |
+|---|---|
+| mean / sd | −0.002889 / **0.334776** |
+| central 95% | **[−0.648, +0.636]** |
+| central 99% | [−0.782, +0.782] |
+| max abs ρ seen | 0.952 |
+| draws with tied group sums | 3 |
+| P(abs ρ ≥ 0.5, the preregistered pass bar) | **0.148** |
+
+Where the committed locators fall. These are raw Monte Carlo tail fractions
+B/N (resolution 1e-4), with no finite-simulation (B+1)/(N+1) correction and
+**no correction** for the 21 locators scored against the same ten retrains;
+percentile = fraction of null draws at or below the observed ρ, two-sided tail
+= fraction with abs ρ ≥ abs observed:
+
+| locator | ρ | percentile | two-sided tail | inside central 95% |
+|---|---|---|---|---|
+| L3_defif_c10 (winner) | +0.867 | **99.91** | 0.0026 | no |
+| L4a_ekfac_analytic | +0.782 | 99.59 | 0.0113 | no |
+| L2a_graddot | +0.733 | 99.11 | 0.0218 | no |
+| L5_bif | +0.648 | 97.91 | 0.0502 | no |
+| Lor_labels | +0.152 | 67.89 | 0.6842 | **yes** |
+| L1_content | +0.091 | 61.06 | 0.8142 | **yes** |
+| L0_random | −0.600 | 3.99 | 0.0764 | **yes** |
+
+L0's −0.60 sits inside the null support and inside the central 95% band, at
+the 4th percentile (3.99 at-or-below, 3.61 strictly below). *Inference (mine,
+not an artifact value):* that makes it an ordinary unlucky draw rather than a
+sign of anything wrong with the harness, and the honest reading of the null is
+that a random locator clears the preregistered 0.5 bar in absolute value about
+15% of the time on ten groups, so clearing the bar is on its own weak evidence.
+What the artifact does state directly: the winner's +0.87 is at the 99.91st
+percentile of the null (two-sided tail 0.0026, uncorrected), and the two
+label-free reference locators (provenance labels, LLM content judge) sit inside
+the central 95%.
+
+What this does **not** license (also written into the artifact): no change to
+the preregistered 0.5/0.2 bars, which were frozen before the retrains; no
+unbiased across-method comparison, because the top and bottom groups were cut
+from a preliminary GradDot ranking, so the ten-group statistic stays
+gradient-tilted (writeup limitation 1) and this null does not correct for it;
+no test of the difference between two locators; and no multiplicity correction.
+n = 10 retrains throughout: this measures how wide the existing null is, it
+adds no evidence.
+
+Figures (exempt from codex review per Jacob's standing instruction, verified by
+visual inspection + byte-identical double regeneration): `fig12` panel A and
+camera-ready `figure4` panel A now carry a light shaded band over
+[−0.648, +0.636] behind the ρ bars, sourced from
+`lds_null_calibration.json` → `figure_band`; fig12 gains a legend entry
+("shaded: where 95% of random scorings land") and its footnote now cites the
+10,000-draw null and the 15% figure instead of the single −0.60 draw; the
+camera-ready caption states the band. The fig12 footnote was rewrapped back to six
+(longer) lines after the first render spilled to seven and collided with the
+x-axis labels. `figures/README.md` manifest rows updated for both. Only those four
+figure files changed; every other figure byte-identical to the previous commit.
+
+Process facts in this section that are not artifact values (runtime, ruff,
+byte-identical double runs, the figure diff) are recorded here as process
+records, as in the previous two sections. Every ρ, percentile, tail fraction,
+sd and quantile above comes from `results/tda/lds_null_calibration.json`,
+some shown at fewer decimals than the artifact carries (0.1477 → 0.148,
+0.866667 → +0.87); no number here is derived by any other arithmetic.
+
+Codex three-layer review (gpt-5.6-sol), first pass: **2 blocking**.
+(1) The no-ties assertion in the Spearman helper was vacuous (it checked the
+assigned ordinal ranks, never the sums), and 3 of the 10,000 draws really do
+have tied group sums, so those three rhos were wrong by up to 0.025 and the
+"identical statistic to lds_score" claim did not hold. (2) Percentiles compared
+lattice-valued rhos as raw floats, so exact ties were mis-binned: the winner's
+percentile was 99.86 rather than 99.91, EK-FAC 99.45 rather than 99.59,
+GradDot 99.03/99.11, BIF 97.57/97.91, content judge 59.67 with two-sided
+tail 0.8024 rather than 61.06 / 0.8142. Both fixed: ranks now use `scipy.stats.rankdata`
+average ties and Pearson on ranks, every one of the 10,000 draws is re-scored
+with `scipy.stats.spearmanr` (was: 200), and all comparisons carry 1e-9 slack.
+Three non-blocking findings also fixed: the artifact's claim that the chunk size
+changes the draws was false (it does not; now stated correctly and verified
+in-script), "the width does not depend on the convention" softened to a claim
+about the one alternative convention tested, and the p-values are now labeled
+as raw Monte Carlo tail fractions with the missing corrections named. The
+remaining non-blocking finding (process facts and one interpretation not backed
+by the JSON) is addressed by the paragraph above and by the explicit
+*Inference* label. What moved in the artifact when the two blocking bugs were
+fixed: the null summary mean (−0.002884 → −0.002889), five locator percentiles
+and one two-sided tail (listed above), and the crosscheck metadata. The sd, both
+central ranges, the figure band and the pass-bar fraction are unchanged, so the
+two figures are byte-identical before and after the fix.
+
+Targeted re-review after the fix: **no remaining blocking findings**; it
+recomputed the winner's percentile (9,991/10,000), the strictly-below count
+(9,986), the two-sided tail (26/10,000), the null sd (0.3347758851731263) and
+the tied-draw count (3) independently from the committed group sets and
+measured effects, and all matched. It also caught five prose slips, two of
+which made this report inaccurate: the artifact's `protocol` and `convention`
+strings had not actually picked up the "all 10,000 draws" and
+convention-softening edits I claimed. Both are now fixed in the script and the
+artifact was regenerated (byte-identical double run re-verified; figures
+unaffected). The other three prose slips are fixed here: the stale `CHUNK`
+comment in the script, the overbroad "only the mean moved", and "verbatim".

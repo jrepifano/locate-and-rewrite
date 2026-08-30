@@ -53,6 +53,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 from matplotlib.ticker import MaxNLocator
 
 REPO = Path(__file__).resolve().parent.parent
@@ -2020,7 +2021,8 @@ LOCATOR_FAMILIES = [
 ]
 
 
-def fig12(lds):
+def fig12(lds, null_cal):
+    band = null_cal["figure_band"]
     rows = []
     for label, ids, fam in LOCATOR_FAMILIES:
         best = max(ids, key=lambda k: lds["lds"][k]["lds_spearman_primary"])
@@ -2036,6 +2038,7 @@ def fig12(lds):
 
     # ---- A: the ranking, six methods ---------------------------------------
     ys = list(range(len(rows)))[::-1]
+    axA.axvspan(band["lo"], band["hi"], color=MUTED, alpha=0.13, lw=0, zorder=0)
     for y, (label, best, rho, fam, ids) in zip(ys, rows):
         col = FAMILY_COLOR[fam]
         unreliable = best == "L5_bif"   # passes the group bar, failed its own row-level check
@@ -2075,6 +2078,8 @@ def fig12(lds):
                markeredgecolor=SURFACE, markeredgewidth=1.4, label="does not"),
         Line2D([], [], marker="o", linestyle=(0, (3, 2)), lw=2.4, markersize=8, color=FAMILY_COLOR["delete"],
                markerfacecolor=SURFACE, markeredgewidth=1.8, label="hollow, dashed: unreliable per row"),
+        Patch(facecolor=MUTED, alpha=0.13, linewidth=0,
+              label="shaded: where 95% of random scorings land"),
     ]
     axA.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.0, 0.985),
                handletextpad=0.7, labelspacing=0.7, borderaxespad=0.4, fontsize=8)
@@ -2121,19 +2126,27 @@ def fig12(lds):
            "The bar (0.5 pass, 0.2 fail) was frozen before any retrain; the retrains are the same ten in every comparison",
            x=0.06)
     grid = ", ".join(c for c in ("1e-4", "1e-3", "1e-2", "0.1", "1", "10"))
+    # unicode minus, to match the value labels elsewhere in the figure
+    band_txt = f"{band['lo']:+.2f} to {band['hi']:+.2f}".replace("-", "−")
+    pass_frac = null_cal["null_permutation_scores_primary"]["frac_abs_ge_0.5_preregistered_pass_bar"]
     footnote(fig,
-             f"Gradient influence is shown at its best damping (c = 10) of the grid {{{grid}}}; every other method has no tunable setting. The Bayesian influence estimator\n"
-             "clears the group-level bar (ρ = 0.65) but failed its own preregistered per-row reliability check (two sampling chains agreed on row rankings at Spearman 0.08),\n"
-             "so it was ineligible for the pipeline. Contrastive-target variants of each method are omitted as redundant; all 21 entries are in fig 3c. The top / bottom groups\n"
-             "were cut from a preliminary gradient ranking, so the comparison across methods is gradient-tilted, and n = 10 gives a wide null (the random-ranking row drew\n"
-             "−0.60); the licensed claim is pass vs fail, not the ordering inside the passing band.\n"
-             "Source: results/tda/lds_results.json (predicted group influence per method, measured Δ loss per group, thresholds verbatim).",
+             f"Gradient influence is shown at its best damping (c = 10) of the grid {{{grid}}}; every other method has no tunable setting. The Bayesian influence estimator clears the\n"
+             "group-level bar (ρ = 0.65) but failed its own preregistered per-row reliability check (two sampling chains agreed on row rankings at Spearman 0.08), so it was ineligible\n"
+             "for the pipeline. Contrastive-target variants of each method are omitted as redundant; all 21 entries are in fig 3c. The top / bottom groups were cut from a preliminary\n"
+             "gradient ranking, so the comparison across methods is gradient-tilted, and ten groups give a wide null: the shaded band is the central 95% of the correlations produced\n"
+             f"by {null_cal['n_draws']:,} random row scorings against these same ten retrains ({band_txt}; {pass_frac:.0%} of them reach 0.5 in size). "
+             "The licensed claim is pass vs fail, not the ordering inside the passing band.\n"
+             "Source: results/tda/lds_results.json (predicted group influence per method, measured Δ loss per group, thresholds verbatim); "
+             "results/tda/lds_null_calibration.json (shaded band).",
              x=0.06)
     MANIFEST["fig12_locator_validation"] = {
         "ranking": {r[0].replace("\n", " "): {"locator": r[1], "rho": round(r[2], 6),
                                              "candidates": r[4]} for r in rows},
         "winner_scatter": recB,
         "thresholds": lds["thresholds"],
+        "null_band_central_95pct": {"lo": band["lo"], "hi": band["hi"],
+                                    "n_draws": null_cal["n_draws"],
+                                    "seed": null_cal["seed"]},
     }
     save(fig, "fig12_locator_validation")
 
@@ -2354,7 +2367,8 @@ CAM4_NAMES = ["Influence (exact)", "EK-FAC", "Gradient dot product", "Bayesian I
               "True labels (clean/poisoned)", "LLM judge", "Random"]
 
 
-def cam_figure4(lds):
+def cam_figure4(lds, null_cal):
+    band = null_cal["figure_band"]
     rows = []
     for (label, ids, fam), short in zip(LOCATOR_FAMILIES, CAM4_NAMES):
         best = max(ids, key=lambda k: lds["lds"][k]["lds_spearman_primary"])
@@ -2365,6 +2379,7 @@ def cam_figure4(lds):
                                    gridspec_kw={"width_ratios": [1.1, 1.0], "wspace": 0.3})
     fig.subplots_adjust(left=0.15, right=0.985, top=0.83, bottom=0.25)
     ys = list(range(len(rows)))[::-1]
+    axA.axvspan(band["lo"], band["hi"], color=MUTED, alpha=0.13, lw=0, zorder=0)
     for y, (label, best, rho, fam) in zip(ys, rows):
         col = FAMILY_COLOR[fam]
         axA.barh(y, rho, height=0.62, color=col, edgecolor=SURFACE, linewidth=0.6, zorder=3)
@@ -2404,9 +2419,11 @@ def cam_figure4(lds):
     axB.xaxis.grid(True)
     cam_panel_title(axB, "B · The winner's predictions vs the ten measured effects")
     cam_title(fig, "Gradients find the rows that cause the misalignment; the provenance labels do not", x=0.03)
+    band_txt = f"{band['lo']:+.2f} to {band['hi']:+.2f}".replace("-", "−")
     cam_caption(fig, 4,
                 "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"
-                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. B: the winning method's predicted group effects\n"
+                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. The shaded band is the central 95% of the correlations\n"
+                f"produced by {null_cal['n_draws']:,} random row scorings against these same ten retrains ({band_txt}). B: the winning method's predicted group effects\n"
                 "against the ten measured changes in loss on 71 fixed misaligned answers.")
     save_cam(fig, "figure4_locator_validation")
 
@@ -2425,6 +2442,7 @@ def main() -> int:
     pooled, _headline = load_pooled()
     gr, gr_raw, a8 = load_gr90()
     lds = load("tda/lds_results.json")
+    null_cal = load("tda/lds_null_calibration.json")
     task, anchors = load_task()
 
     br = load("breadth_analysis.json")
@@ -2434,10 +2452,10 @@ def main() -> int:
     dose_art = load("breadth_dose_analysis.json")
     fig4(em, pooled, dose_art, br)
     fig11(task, dose_art, br)
-    fig12(lds)
+    fig12(lds, null_cal)
     cam_figure1(br, gr_raw, a8)
     cam_figure3(task, dose_art, br)
-    cam_figure4(lds)
+    cam_figure4(lds, null_cal)
     fig5(task, anchors)
     fig7(lds)
     fig8(br)

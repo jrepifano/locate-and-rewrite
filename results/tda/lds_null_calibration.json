@@ -1,0 +1,314 @@
+{
+  "protocol": "empirical null for the LDS Spearman: 10,000 random per-row score vectors over the 13,698 mixture rows, each reduced to ten group-influence sums (sum of member scores over the same ten 685-row deletion groups in data/processed/tda_retrain_sets.json) and rank-correlated against the ten measured deletion effects (lds_results.json -> actual_dnll_orig). Identical statistic to em_filter.tda.lds_score (average ranks, so the few draws with tied group sums are handled rather than assumed away); every one of the 10,000 vectorized values is re-scored with scipy.stats.spearmanr and asserted equal.",
+  "convention": "PRIMARY replicates L0_random exactly: a uniform random permutation of {0..13697} as the per-row score vector (scripts/tda_rank.py: streams['l0_random'].permutation(N_ROWS)), asserted here against the committed L0_random vector in scores.npz. SECONDARY draws i.i.d. standard normal per-row scores; its width comes out close to the primary one, which is evidence about that one alternative convention, not a general claim.",
+  "preregistration_status": "POST HOC: defined and computed 2026-08-30, after every locator score and every retrain was known. It exists because the committed validation calibrated its null with a single random locator (L0_random, rho = -0.60) and the writeup quoted that one draw as the null width. LICENSES: describing the width of the LDS statistic under random row scores on these exact ten groups, and locating an observed rho in that distribution. DOES NOT LICENSE: any change to the preregistered 0.5 pass / 0.2 fail bars, which were frozen before the retrains and are unaffected; an unbiased comparison across methods, because the top and bottom groups were cut from a preliminary GradDot ranking, so the ten-group statistic is gradient-tilted (writeup limitation 1) and this null does not correct for that; a test of the difference between two locators; or a multiplicity correction, since 21 locators were scored against the same ten retrains and the per-locator p-values below are uncorrected. n = 10 retrains throughout; nothing here adds evidence, it only measures how wide the existing null is.",
+  "seed": 20260830,
+  "seed_streams": {
+    "spawn_order": [
+      "permutation",
+      "iid_normal"
+    ],
+    "parent": "np.random.SeedSequence(20260830).spawn(2)",
+    "chunk_size_draws": 500,
+    "note": "chunk_size_draws bounds peak memory only; both generator calls consume the stream row by row, so the draws do not depend on it (verified in chunk_independence_check)"
+  },
+  "n_draws": 10000,
+  "pinned": {
+    "tda_retrain_sets_json_sha256": "abb07d58548cc8f89a59d1068fb3421f8cbc9f8dd3515c680a1a39b87b032737",
+    "lds_results_json_sha256": "f54b9aa987a60cc49c6a633e7ee56729544ca3aa37bb4f3dc89a0c2df3cb3d2b",
+    "scores_npz_sha256": "295235fe71db8d32eeaca971362ce362e8762e8549c570863bf0473fc3ea41ed"
+  },
+  "inputs": {
+    "groups": {
+      "B1": 685,
+      "B2": 685,
+      "B3": 685,
+      "R1": 685,
+      "R2": 685,
+      "R3": 685,
+      "R4": 685,
+      "T1": 685,
+      "T2": 685,
+      "T3": 685
+    },
+    "measured_effects_actual_dnll_orig": {
+      "B1": 0.3726070816837108,
+      "B2": 0.177281087903836,
+      "B3": -0.24205552997874236,
+      "R1": 0.44508828689802726,
+      "R2": 0.5581693933970939,
+      "R3": 0.6281841975539493,
+      "R4": 0.44389631499105064,
+      "T1": 1.1074663987800193,
+      "T2": 0.4914572274506952,
+      "T3": 0.4465413307076034
+    },
+    "n_rows": 13698
+  },
+  "l0_convention_check": {
+    "committed_L0_random_equals_fresh_permutation_draw": true,
+    "recomputed_L0_rho": -0.6,
+    "committed_sanity_L0_rho": -0.6
+  },
+  "spearman_crosscheck": {
+    "n_draws_rescored_with_scipy": 10000,
+    "max_abs_difference": 2.220446049250313e-16,
+    "n_draws_with_tied_group_sums": 3,
+    "note": "group sums of a permutation are integer-valued, so ties between two of the ten groups occur; average ranks handle them"
+  },
+  "chunk_independence_check": {
+    "n_draws_compared": 40,
+    "chunk_sizes": [
+      500,
+      10
+    ],
+    "identical_group_sums": true
+  },
+  "tail_fraction_definition": "raw Monte Carlo tail fractions B/N over N = 10,000 draws (resolution 1e-4), no finite-simulation (B+1)/(N+1) correction and no correction for the 21 locators scored against the same ten retrains. Comparisons use 1e-9 slack because Spearman on ten groups is lattice-valued (spacing 6/990).",
+  "null_permutation_scores_primary": {
+    "n_draws": 10000,
+    "mean": -0.002889,
+    "sd": 0.334776,
+    "quantiles_linear_interpolation": {
+      "q0.5": -0.781818,
+      "q2.5": -0.648485,
+      "q50": -0.006061,
+      "q97.5": 0.636364,
+      "q99.5": 0.781818
+    },
+    "central_95pct_range": [
+      -0.648485,
+      0.636364
+    ],
+    "central_99pct_range": [
+      -0.781818,
+      0.781818
+    ],
+    "min": -0.927273,
+    "max": 0.951515,
+    "max_abs": 0.951515,
+    "frac_abs_ge_0.5_preregistered_pass_bar": 0.1477,
+    "frac_ge_0.5_preregistered_pass_bar_one_sided": 0.0723
+  },
+  "null_iid_normal_scores_secondary": {
+    "n_draws": 10000,
+    "mean": -0.000834,
+    "sd": 0.336102,
+    "quantiles_linear_interpolation": {
+      "q0.5": -0.781818,
+      "q2.5": -0.648485,
+      "q50": -0.006061,
+      "q97.5": 0.636364,
+      "q99.5": 0.769697
+    },
+    "central_95pct_range": [
+      -0.648485,
+      0.636364
+    ],
+    "central_99pct_range": [
+      -0.781818,
+      0.769697
+    ],
+    "min": -0.915152,
+    "max": 0.90303,
+    "max_abs": 0.915152,
+    "frac_abs_ge_0.5_preregistered_pass_bar": 0.1487,
+    "frac_ge_0.5_preregistered_pass_bar_one_sided": 0.0728
+  },
+  "locator_percentiles_vs_primary_null": {
+    "L0_random": {
+      "rho": -0.6,
+      "percentile_strictly_below": 3.61,
+      "percentile_at_or_below": 3.99,
+      "tail_fraction_one_sided_ge": 0.9639,
+      "tail_fraction_two_sided_abs_ge": 0.0764,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L1_content": {
+      "rho": 0.090909,
+      "percentile_strictly_below": 59.67,
+      "percentile_at_or_below": 61.06,
+      "tail_fraction_one_sided_ge": 0.4033,
+      "tail_fraction_two_sided_abs_ge": 0.8142,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L2a_graddot": {
+      "rho": 0.733333,
+      "percentile_strictly_below": 99.03,
+      "percentile_at_or_below": 99.11,
+      "tail_fraction_one_sided_ge": 0.0097,
+      "tail_fraction_two_sided_abs_ge": 0.0218,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L2b_gradsim": {
+      "rho": 0.733333,
+      "percentile_strictly_below": 99.03,
+      "percentile_at_or_below": 99.11,
+      "tail_fraction_one_sided_ge": 0.0097,
+      "tail_fraction_two_sided_abs_ge": 0.0218,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L3_defif_c0.0001": {
+      "rho": 0.284848,
+      "percentile_strictly_below": 78.68,
+      "percentile_at_or_below": 79.75,
+      "tail_fraction_one_sided_ge": 0.2132,
+      "tail_fraction_two_sided_abs_ge": 0.4272,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L3_defif_c0.001": {
+      "rho": 0.587879,
+      "percentile_strictly_below": 95.95,
+      "percentile_at_or_below": 96.35,
+      "tail_fraction_one_sided_ge": 0.0405,
+      "tail_fraction_two_sided_abs_ge": 0.0834,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L3_defif_c0.01": {
+      "rho": 0.793939,
+      "percentile_strictly_below": 99.59,
+      "percentile_at_or_below": 99.67,
+      "tail_fraction_one_sided_ge": 0.0041,
+      "tail_fraction_two_sided_abs_ge": 0.0087,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L3_defif_c0.1": {
+      "rho": 0.781818,
+      "percentile_strictly_below": 99.45,
+      "percentile_at_or_below": 99.59,
+      "tail_fraction_one_sided_ge": 0.0055,
+      "tail_fraction_two_sided_abs_ge": 0.0113,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L3_defif_c1": {
+      "rho": 0.769697,
+      "percentile_strictly_below": 99.38,
+      "percentile_at_or_below": 99.45,
+      "tail_fraction_one_sided_ge": 0.0062,
+      "tail_fraction_two_sided_abs_ge": 0.0137,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L3_defif_c10": {
+      "rho": 0.866667,
+      "percentile_strictly_below": 99.86,
+      "percentile_at_or_below": 99.91,
+      "tail_fraction_one_sided_ge": 0.0014,
+      "tail_fraction_two_sided_abs_ge": 0.0026,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L4a_ekfac_analytic": {
+      "rho": 0.781818,
+      "percentile_strictly_below": 99.45,
+      "percentile_at_or_below": 99.59,
+      "tail_fraction_one_sided_ge": 0.0055,
+      "tail_fraction_two_sided_abs_ge": 0.0113,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L5_bif": {
+      "rho": 0.648485,
+      "percentile_strictly_below": 97.57,
+      "percentile_at_or_below": 97.91,
+      "tail_fraction_one_sided_ge": 0.0243,
+      "tail_fraction_two_sided_abs_ge": 0.0502,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L5_bif_contrast": {
+      "rho": 0.69697,
+      "percentile_strictly_below": 98.6,
+      "percentile_at_or_below": 98.72,
+      "tail_fraction_one_sided_ge": 0.014,
+      "tail_fraction_two_sided_abs_ge": 0.0308,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L6a_graddot_contrast": {
+      "rho": 0.69697,
+      "percentile_strictly_below": 98.6,
+      "percentile_at_or_below": 98.72,
+      "tail_fraction_one_sided_ge": 0.014,
+      "tail_fraction_two_sided_abs_ge": 0.0308,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L6f_defif_contrast_c0.0001": {
+      "rho": 0.163636,
+      "percentile_strictly_below": 67.89,
+      "percentile_at_or_below": 68.95,
+      "tail_fraction_one_sided_ge": 0.3211,
+      "tail_fraction_two_sided_abs_ge": 0.6561,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L6f_defif_contrast_c0.001": {
+      "rho": 0.466667,
+      "percentile_strictly_below": 91.1,
+      "percentile_at_or_below": 91.64,
+      "tail_fraction_one_sided_ge": 0.089,
+      "tail_fraction_two_sided_abs_ge": 0.1819,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L6f_defif_contrast_c0.01": {
+      "rho": 0.6,
+      "percentile_strictly_below": 96.35,
+      "percentile_at_or_below": 96.68,
+      "tail_fraction_one_sided_ge": 0.0365,
+      "tail_fraction_two_sided_abs_ge": 0.0764,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L6f_defif_contrast_c0.1": {
+      "rho": 0.624242,
+      "percentile_strictly_below": 96.98,
+      "percentile_at_or_below": 97.36,
+      "tail_fraction_one_sided_ge": 0.0302,
+      "tail_fraction_two_sided_abs_ge": 0.0627,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    },
+    "L6f_defif_contrast_c1": {
+      "rho": 0.733333,
+      "percentile_strictly_below": 99.03,
+      "percentile_at_or_below": 99.11,
+      "tail_fraction_one_sided_ge": 0.0097,
+      "tail_fraction_two_sided_abs_ge": 0.0218,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "L6f_defif_contrast_c10": {
+      "rho": 0.757576,
+      "percentile_strictly_below": 99.23,
+      "percentile_at_or_below": 99.38,
+      "tail_fraction_one_sided_ge": 0.0077,
+      "tail_fraction_two_sided_abs_ge": 0.0165,
+      "inside_central_95pct": false,
+      "inside_null_support": true
+    },
+    "Lor_labels": {
+      "rho": 0.151515,
+      "percentile_strictly_below": 66.38,
+      "percentile_at_or_below": 67.89,
+      "tail_fraction_one_sided_ge": 0.3362,
+      "tail_fraction_two_sided_abs_ge": 0.6842,
+      "inside_central_95pct": true,
+      "inside_null_support": true
+    }
+  },
+  "figure_band": {
+    "definition": "central 95% of the primary null, plotted as a shaded band behind the rho bars in fig12 / camera-ready figure 4",
+    "lo": -0.648485,
+    "hi": 0.636364
+  }
+}

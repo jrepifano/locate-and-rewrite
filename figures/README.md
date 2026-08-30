@@ -461,12 +461,24 @@ effects.
 |---|---|---|
 | A rows | `results/tda/lds_results.json` → `lds.<id>.lds_spearman_primary`; gradient influence = max over `L3_defif_c{1e-4…10}` (asserted = `L3_defif_c10` = `stage_b_recommendation.locator`) | +0.87 · EK-FAC +0.78 · grad-dot +0.73 · labels +0.15 · content judge +0.09 · random −0.60 |
 | A lines | `thresholds` string in the artifact | 0.5 pass / 0.2 fail |
+| A shaded band | `results/tda/lds_null_calibration.json` → `figure_band.lo` / `.hi` (= central 95% of the primary null; 10,000 draws, seed 20260830) | −0.65 to +0.64 |
+| A footnote null numbers | same artifact → `n_draws`, `figure_band`, `null_permutation_scores_primary.frac_abs_ge_0.5_preregistered_pass_bar` | 10,000 draws · −0.65 to +0.64 · 15% reach 0.5 in size |
 | B points | `lds.L3_defif_c10.predicted[<group>]` (÷1000 for the axis) vs `actual_dnll_orig[<group>]` | ten groups R1–R4 / T1–T3 / B1–B3 |
 | B callout | B3 composition from the committed retrain-set record (545/685 trait rows; logs/phase1-report.md) | measured −0.24 nats |
 
 Interpretation choices: `L5_bif` is drawn as a seventh row (hollow marker, dashed bar) because it clears the group-level bar (+0.65) yet failed its preregistered per-row reliability check (between-chain Spearman 0.08); `L2b_gradsim` and every `*_contrast` locator are
 omitted as redundant (all 21 remain in fig 3c); the footnote states the gradient-tilted top/bottom slices and
 the wide n = 10 null so the licensed claim stays "pass vs fail". Byte-deterministic.
+
+**Null band added (2026-08-30, Jacob's ask):** the single-random-draw description of the
+null ("the random-ranking row drew −0.60") is replaced by the empirical null from
+`scripts/tda_null_calibration.py` → `results/tda/lds_null_calibration.json` (**post hoc**,
+labeled in the artifact): 10,000 random per-row score vectors, drawn in the same
+permutation convention as `L0_random`, pushed through the same group sums and the same
+Spearman against the same ten measured effects. Shaded band in panel A = central 95% of
+that null (−0.65 to +0.64); the footnote also quotes the 15% of random scorings that
+reach 0.5 in size. Nothing else in the figure changed; no re-derivation, the band is read
+straight out of the artifact.
 
 **Fig 7 rewrite (2026-08-30, Jacob's ask):** single panel now. Axes renamed to what a
 reader can picture ("Training rows covered, most-blamed first (%)" vs "Share of all the
@@ -500,4 +512,4 @@ bars where an interval exists, no paired-test brackets, no Setup/Measure header,
 | `figure1_rewrite_vs_delete` | fig 9c | bars = pooled judge-1 rate, Wilson whiskers, hollow dots = seeds |
 | `figure2_answer_quality_vs_benchmarks` | fig 10 | A bars = seed means (no interval committed), dots = seeds; B/C unchanged bars |
 | `figure3_dose_response` | fig 11 | the fig 11 lines-and-dots design kept (Jacob's preference), header block removed |
-| `figure4_locator_validation` | fig 12 | horizontal bars for ρ with short method names (Influence (exact) / EK-FAC / Gradient dot product / Bayesian Influence (BIF) / True labels / LLM judge / Random), no pass/fail lines (bar stated in the caption), BIF drawn as a plain bar; winner scatter unchanged |
+| `figure4_locator_validation` | fig 12 | horizontal bars for ρ with short method names (Influence (exact) / EK-FAC / Gradient dot product / Bayesian Influence (BIF) / True labels / LLM judge / Random), no pass/fail lines (bar stated in the caption), BIF drawn as a plain bar; winner scatter unchanged; same shaded null band as fig 12 panel A (`results/tda/lds_null_calibration.json` → `figure_band`, −0.65 to +0.64), stated in the caption |
