@@ -500,4 +500,4 @@ bars where an interval exists, no paired-test brackets, no Setup/Measure header,
 | `figure1_rewrite_vs_delete` | fig 9c | bars = pooled judge-1 rate, Wilson whiskers, hollow dots = seeds |
 | `figure2_answer_quality_vs_benchmarks` | fig 10 | A bars = seed means (no interval committed), dots = seeds; B/C unchanged bars |
 | `figure3_dose_response` | fig 11 | the fig 11 lines-and-dots design kept (Jacob's preference), header block removed |
-| `figure4_locator_validation` | fig 12 | horizontal bars for ρ (BIF hatched), winner scatter unchanged |
+| `figure4_locator_validation` | fig 12 | horizontal bars for ρ with short method names (Influence (exact) / EK-FAC / Gradient dot product / Influence (SGLD) / True labels / LLM judge / Random), no pass/fail lines (bar stated in the caption), BIF drawn as a plain bar; winner scatter unchanged |

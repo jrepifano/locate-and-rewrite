@@ -2350,38 +2350,37 @@ def cam_figure3(task, dose_art, br):
     save_cam(fig, "figure3_dose_response")
 
 
+CAM4_NAMES = ["Influence (exact)", "EK-FAC", "Gradient dot product", "Influence (SGLD)",
+              "True labels (clean/poisoned)", "LLM judge", "Random"]
+
+
 def cam_figure4(lds):
     rows = []
-    for label, ids, fam in LOCATOR_FAMILIES:
+    for (label, ids, fam), short in zip(LOCATOR_FAMILIES, CAM4_NAMES):
         best = max(ids, key=lambda k: lds["lds"][k]["lds_spearman_primary"])
-        rows.append((label, best, lds["lds"][best]["lds_spearman_primary"], fam))
+        rows.append((short, best, lds["lds"][best]["lds_spearman_primary"], fam))
     winner = rows[0][1]
     pred, actual = lds["lds"][winner]["predicted"], lds["actual_dnll_orig"]
-    fig, (axA, axB) = plt.subplots(1, 2, figsize=(14.6, 6.8),
-                                   gridspec_kw={"width_ratios": [1.15, 1.0], "wspace": 0.32})
-    fig.subplots_adjust(left=0.2, right=0.985, top=0.83, bottom=0.25)
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(14.0, 6.6),
+                                   gridspec_kw={"width_ratios": [1.1, 1.0], "wspace": 0.3})
+    fig.subplots_adjust(left=0.15, right=0.985, top=0.83, bottom=0.25)
     ys = list(range(len(rows)))[::-1]
     for y, (label, best, rho, fam) in zip(ys, rows):
         col = FAMILY_COLOR[fam]
-        unreliable = best == "L5_bif"
-        axA.barh(y, rho, height=0.62, color=SURFACE if unreliable else col,
-                 edgecolor=col, linewidth=1.6 if unreliable else 0.6, zorder=3,
-                 hatch="///" if unreliable else None)
+        axA.barh(y, rho, height=0.62, color=col, edgecolor=SURFACE, linewidth=0.6, zorder=3)
         axA.annotate(f"{rho:+.2f}", (rho, y), textcoords="offset points",
                      xytext=(8 if rho >= 0 else -8, 0), ha="left" if rho >= 0 else "right",
                      va="center", fontsize=8.6, color=INK, fontweight="bold")
     axA.set_yticks(ys)
-    axA.set_yticklabels([r[0] for r in rows], fontsize=8.2, color=INK2, linespacing=1.3)
+    axA.set_yticklabels([r[0] for r in rows], fontsize=9, color=INK2)
     axA.get_yticklabels()[0].set_color(INK); axA.get_yticklabels()[0].set_fontweight("bold")
     axA.set_ylim(-0.7, len(rows) - 0.3)
     axA.set_xlim(-0.8, 1.05)
     axA.axvline(0, color=AXIS, lw=0.9, zorder=1)
-    for xv, lab, ha, dx in ((0.5, "passes", "left", 0.02), (0.2, "fails", "right", -0.02)):
-        axA.axvline(xv, color=MUTED, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
-        axA.annotate(lab, (xv + dx, len(rows) - 0.55), ha=ha, va="bottom", fontsize=7.6, color=MUTED)
     finish_axes(axA)
     axA.yaxis.grid(False); axA.xaxis.grid(True)
-    axA.set_xlabel("Spearman ρ between predicted and measured effect of deleting a 685-row group (10 groups)", labelpad=8)
+    axA.set_xlabel("Spearman ρ between predicted and measured effect of deleting a group of rows\n"
+                   "(each group the size of the 10% edit; 10 groups)", labelpad=8)
     cam_panel_title(axA, "A · Which methods predict what deleting rows actually does")
     axB.axhline(0, color=INK2, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
     for sub in SUBSET_ORDER:
@@ -2406,9 +2405,9 @@ def cam_figure4(lds):
     cam_panel_title(axB, "B · The winner's predictions vs the ten measured effects")
     cam_title(fig, "Gradients find the rows that cause the misalignment; the provenance labels do not", x=0.03)
     cam_caption(fig, 4,
-                "A: rank correlation between each method's predicted effect of deleting a 685-row group and the effect measured after retraining without it (ten\n"
-                "groups); dashed lines are the preregistered pass (0.5) and fail (0.2) bars; the Bayesian estimator is hatched because it failed its per-row reliability\n"
-                "check. B: the winning method's predicted group effects against the ten measured changes in loss on 71 fixed misaligned answers.")
+                "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"
+                "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. Influence (SGLD) clears the group bar but failed its\n"
+                "per-row reliability check. B: the winning method's predicted group effects against the ten measured changes in loss on 71 fixed misaligned answers.")
     save_cam(fig, "figure4_locator_validation")
 
 
