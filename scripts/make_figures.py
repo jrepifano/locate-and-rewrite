@@ -2137,10 +2137,10 @@ def fig12(lds):
         Line2D([], [], marker="o", linestyle="-", lw=2.4, markersize=8, color=FAMILY_COLOR["paraphrase"],
                markeredgecolor=SURFACE, markeredgewidth=1.4, label="does not"),
         Line2D([], [], marker="o", linestyle=(0, (3, 2)), lw=2.4, markersize=8, color=FAMILY_COLOR["delete"],
-               markerfacecolor=SURFACE, markeredgewidth=1.8, label="hollow, dashed: unreliable per row (see caption)"),
+               markerfacecolor=SURFACE, markeredgewidth=1.8, label="hollow, dashed: unreliable per row"),
     ]
-    axA.legend(handles=handles, loc="center right", bbox_to_anchor=(1.0, 0.27),
-               handletextpad=0.7, labelspacing=0.7, borderaxespad=0.6, fontsize=8)
+    axA.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.0, 0.985),
+               handletextpad=0.7, labelspacing=0.7, borderaxespad=0.4, fontsize=8)
 
     # ---- B: the winner's predictions vs the ten measured effects ------------
     axB.axhline(0, color=INK2, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
