@@ -537,7 +537,7 @@ def fig2(gr, gr_raw, a8, br):
 
     # divider between the reference arms and the Stage-B block
     axB.axvline(2.72, color=GRID, lw=0.9, zorder=0)
-    axB.annotate("Picking rows without labels, plus one true-label check (last)", (5.45, 0.99),
+    axB.annotate("Picking rows without labels, plus a true-label check", (5.45, 0.99),
                  xycoords=("data", "axes fraction"), ha="center", va="top",
                  fontsize=8.6, color=INK2)
     axB.annotate("Shown again for\ncomparison", (1.0, 0.99),
