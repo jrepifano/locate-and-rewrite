@@ -447,3 +447,24 @@ caption/note; fig 11 title trimmed to the supported claim ("The more poison you 
 the less misaligned and the more accurate the model"), its panel titles reworded per
 Jacob, and its on-plot CI/contrast text removed (the intervals are reported in the
 write-up text). All figures regenerated; byte-deterministic.
+
+---
+
+## Fig 12 — `fig12_locator_validation`
+
+Jacob's specification (2026-08-30): the locator result as a closing figure, plain
+language. **A** the ranking collapsed to six methods at their best setting; **B** the
+winning method's predicted group effects against the ten measured delete-and-retrain
+effects.
+
+| element | source artifact | value plotted |
+|---|---|---|
+| A rows | `results/tda/lds_results.json` → `lds.<id>.lds_spearman_primary`; gradient influence = max over `L3_defif_c{1e-4…10}` (asserted = `L3_defif_c10` = `stage_b_recommendation.locator`) | +0.87 · EK-FAC +0.78 · grad-dot +0.73 · labels +0.15 · content judge +0.09 · random −0.60 |
+| A lines | `thresholds` string in the artifact | 0.5 pass / 0.2 fail |
+| B points | `lds.L3_defif_c10.predicted[<group>]` (÷1000 for the axis) vs `actual_dnll_orig[<group>]` | ten groups R1–R4 / T1–T3 / B1–B3 |
+| B callout | B3 composition from the committed retrain-set record (545/685 trait rows; logs/phase1-report.md) | measured −0.24 nats |
+
+Interpretation choices: `L2b_gradsim`, `L5_bif` and every `*_contrast` locator are
+omitted (redundant variants, or the BIF estimator that failed its own reliability bar;
+all 21 remain in fig 3c); the footnote states the gradient-tilted top/bottom slices and
+the wide n = 10 null so the licensed claim stays "pass vs fail". Byte-deterministic.

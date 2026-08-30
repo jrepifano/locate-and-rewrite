@@ -2985,3 +2985,20 @@ gpt-4o-2024-08-06 (gpt-4.1 is judge 2), and the caption says so; flagged to
 him. Verified: ruff clean, byte-identical double regeneration, fig9a and
 fig11 renders inspected. Memory saved: no em dashes in deliverables; figure
 style conventions. Not codex-reviewed (Jacob's standing instruction).
+
+## fig12 locator validation (closing figure, Jacob's ask), 08-30 12:45-13:20 UTC
+
+Two panels from results/tda/lds_results.json: A the ranking collapsed to six
+plainly named methods at their best setting (gradient influence = best of
+the 6-value damping grid, asserted to be the committed Stage-B selection
+L3_defif_c10; EK-FAC; gradient dot product; provenance labels; LLM content
+judge; random), with the preregistered 0.5 / 0.2 lines and an x-label that
+says what the correlation is against; B the winner's predicted group effects
+vs the ten measured Δ-loss values, groups colored random / top / bottom, the
+B3 group (545/685 poison by label, measured −0.24 nats) called out. The
+first render mislabeled B3's composition as 664/685 (that is B1); corrected
+from the committed retrain-set record before commit. Omissions (gradsim,
+BIF, contrastive variants) and the gradient-tilted-slices / wide-null
+caveats are stated in the footnote. ruff clean, byte-identical double
+regeneration, render inspected. Not codex-reviewed (Jacob's standing
+instruction).

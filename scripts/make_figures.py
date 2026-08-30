@@ -2068,6 +2068,132 @@ def fig11(task, dose_art, br):
 
 
 # --------------------------------------------------------------------------
+# FIGURE 12 — locator validation, plain language: six methods + the winner
+# --------------------------------------------------------------------------
+LOCATOR_FAMILIES = [
+    # (label, family-of-locator-ids, colour family)
+    ("Gradient influence, exact solve\n(best of 6 damping values)",
+     [f"L3_defif_c{c}" for c in ("0.0001", "0.001", "0.01", "0.1", "1", "10")], "delete"),
+    ("EK-FAC influence\n(Kronecker-factored curvature)", ["L4a_ekfac_analytic"], "delete"),
+    ("Gradient dot product\n(no curvature)", ["L2a_graddot"], "delete"),
+    ("Provenance labels\n(the true poison / benign flags)", ["Lor_labels"], "paraphrase"),
+    ("LLM content judge\n(reads each row, rates the advice)", ["L1_content"], "paraphrase"),
+    ("Random ranking", ["L0_random"], "paraphrase"),
+]
+
+
+def fig12(lds):
+    rows = []
+    for label, ids, fam in LOCATOR_FAMILIES:
+        best = max(ids, key=lambda k: lds["lds"][k]["lds_spearman_primary"])
+        rows.append((label, best, lds["lds"][best]["lds_spearman_primary"], fam, ids))
+    assert rows[0][1] == lds["stage_b_recommendation"]["locator"] == "L3_defif_c10"
+    winner = rows[0][1]
+    pred = lds["lds"][winner]["predicted"]
+    actual = lds["actual_dnll_orig"]
+
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(15.0, 7.8),
+                                   gridspec_kw={"width_ratios": [1.15, 1.0], "wspace": 0.3})
+    fig.subplots_adjust(left=0.2, right=0.985, top=0.72, bottom=0.235)
+
+    # ---- A: the ranking, six methods ---------------------------------------
+    ys = list(range(len(rows)))[::-1]
+    for y, (label, best, rho, fam, ids) in zip(ys, rows):
+        col = FAMILY_COLOR[fam]
+        axA.plot([0, rho], [y, y], color=col, lw=2.4, solid_capstyle="round", zorder=3)
+        axA.plot([rho], [y], marker="o", markersize=9, markerfacecolor=col,
+                 markeredgecolor=SURFACE, markeredgewidth=1.6, linestyle="none", zorder=4)
+        axA.annotate(f"{rho:+.2f}", (rho, y), textcoords="offset points",
+                     xytext=(12 if rho >= 0 else -12, 0), ha="left" if rho >= 0 else "right",
+                     va="center", fontsize=8.6, color=INK, fontweight="bold")
+    axA.set_yticks(ys)
+    axA.set_yticklabels([r[0] for r in rows], fontsize=8.6, color=INK2, linespacing=1.35)
+    axA.get_yticklabels()[0].set_color(INK)
+    axA.get_yticklabels()[0].set_fontweight("bold")
+    axA.set_ylim(-0.7, len(rows) - 0.3 + 0.6)
+    axA.set_xlim(-0.8, 1.05)
+    axA.axvline(0, color=AXIS, lw=0.9, zorder=1)
+    for xv, lab, ha, dx in ((0.5, "passes (bar frozen in advance)", "left", 0.02),
+                            (0.2, "fails", "right", -0.02)):
+        axA.axvline(xv, color=MUTED, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
+        axA.annotate(lab, (xv + dx, len(rows) - 0.3 + 0.45), ha=ha, va="bottom",
+                     fontsize=7.6, color=MUTED)
+    finish_axes(axA)
+    axA.yaxis.grid(False)
+    axA.xaxis.grid(True)
+    axA.set_xlabel("Rank correlation (Spearman ρ) between a method's predicted effect of deleting a 685-row group\n"
+                   "and the effect measured after actually deleting it and retraining (10 groups)", labelpad=8)
+    axA.annotate("A · Which methods predict what deleting rows actually does", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.6, color=INK,
+                 fontweight="bold")
+    handles = [
+        Line2D([], [], marker="o", linestyle="-", lw=2.4, markersize=8, color=FAMILY_COLOR["delete"],
+               markeredgecolor=SURFACE, markeredgewidth=1.4, label="uses the model's gradients"),
+        Line2D([], [], marker="o", linestyle="-", lw=2.4, markersize=8, color=FAMILY_COLOR["paraphrase"],
+               markeredgecolor=SURFACE, markeredgewidth=1.4, label="does not"),
+    ]
+    axA.legend(handles=handles, loc="lower right", handletextpad=0.7, labelspacing=0.7,
+               borderaxespad=0.6, fontsize=8)
+
+    # ---- B: the winner's predictions vs the ten measured effects ------------
+    axB.axhline(0, color=INK2, lw=0.9, linestyle=(0, (4, 3)), zorder=1)
+    xs_ = {sub: pred[sub] / 1000 for sub in SUBSET_ORDER}
+    recB = {}
+    for sub in SUBSET_ORDER:
+        st = SUBSET_STYLE[sub[0]]
+        axB.plot([xs_[sub]], [actual[sub]], marker=st["marker"], markersize=10,
+                 markerfacecolor=st["color"], markeredgecolor=SURFACE, markeredgewidth=1.5,
+                 linestyle="none", zorder=4)
+        dy = (8, -12) if sub == "R4" else (8, 5)
+        axB.annotate(sub, (xs_[sub], actual[sub]), textcoords="offset points", xytext=dy,
+                     ha="left", va="top" if sub == "R4" else "bottom", fontsize=7.6, color=INK2)
+        recB[sub] = {"predicted": round(pred[sub], 3), "measured_dnll": round(actual[sub], 5)}
+    axB.annotate("deleting this group (545 of its 685 rows\npoison by label) made the misaligned\nanswers MORE likely",
+                 (xs_["B3"], actual["B3"]), textcoords="offset points", xytext=(26, 4),
+                 ha="left", va="bottom", fontsize=7.6, color=INK2, linespacing=1.4,
+                 arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8, "shrinkA": 2, "shrinkB": 6})
+    axB.annotate(f"Spearman ρ = {rows[0][2]:.2f}", (0.03, 0.95), xycoords="axes fraction",
+                 ha="left", va="top", fontsize=9.5, color=INK, fontweight="bold")
+    axB.set_xlabel("Predicted effect of deleting the group\n(gradient-influence score, thousands, arbitrary units)", labelpad=8)
+    axB.set_ylabel("Measured effect: change in loss on 71 fixed misaligned answers\nafter retraining without the group (nats; higher = less misaligned)", labelpad=8)
+    finish_axes(axB)
+    axB.xaxis.grid(True)
+    axB.annotate("B · The winner's predictions vs the ten measured effects", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.6, color=INK,
+                 fontweight="bold")
+    hB = [Line2D([], [], marker=v["marker"], linestyle="none", markersize=8, markerfacecolor=v["color"],
+                 markeredgecolor=SURFACE, markeredgewidth=1.3,
+                 label={"R": "random groups", "T": "groups the method ranks most causal",
+                        "B": "groups it ranks least causal"}[k]) for k, v in SUBSET_STYLE.items()]
+    axB.legend(handles=hB, loc="lower right", handletextpad=0.6, labelspacing=0.6, borderaxespad=0.6,
+               fontsize=8)
+
+    header(fig,
+           "Gradients find the rows that cause the misalignment; the provenance labels do not",
+           "Setup: 13,698 training rows, half of them poison. Each method scores every row for how much it drives the misalignment, with no\n"
+           "labels given. Test: delete a group of 685 rows, retrain the model from scratch, and measure how much less likely it becomes to give\n"
+           "71 known misaligned answers (change in loss, in nats). Ten groups were tested this way: 4 random, 3 that the methods rank most\n"
+           "causal, 3 they rank least causal. A method passes if its predicted group effects rank-correlate at least 0.5 with the measured ones.",
+           "The bar (0.5 pass, 0.2 fail) was frozen before any retrain; the retrains are the same ten in every comparison",
+           x=0.06)
+    grid = ", ".join(c for c in ("1e-4", "1e-3", "1e-2", "0.1", "1", "10"))
+    footnote(fig,
+             f"Gradient influence is shown at its best damping (c = 10) of the grid {{{grid}}}; every other method has no tunable setting. The Bayesian influence estimator\n"
+             "(ρ = 0.65 at the group level) is omitted here because it failed its own preregistered reliability check; the contrastive-target variants of each method are\n"
+             "omitted as redundant; all 21 entries are in fig 3c. The top / bottom groups were cut from a preliminary gradient ranking, so the comparison across methods is\n"
+             "gradient-tilted and n = 10 gives a wide null (the random-ranking row drew −0.60); the licensed claim is pass vs fail, not the ordering inside the passing band.\n"
+             "Source: results/tda/lds_results.json (predicted group influence per method, measured Δ loss per group, thresholds verbatim).",
+             x=0.06)
+    MANIFEST["fig12_locator_validation"] = {
+        "ranking": {r[0].replace("\n", " "): {"locator": r[1], "rho": round(r[2], 6),
+                                             "candidates": r[4]} for r in rows},
+        "winner_scatter": recB,
+        "thresholds": lds["thresholds"],
+    }
+    save(fig, "fig12_locator_validation")
+
+
+# --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", action="store_true",
@@ -2090,6 +2216,7 @@ def main() -> int:
     dose_art = load("breadth_dose_analysis.json")
     fig4(em, pooled, dose_art, br)
     fig11(task, dose_art, br)
+    fig12(lds)
     fig5(task, anchors)
     fig7(lds)
     fig8(br)
