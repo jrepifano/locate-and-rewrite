@@ -168,13 +168,24 @@ def _ci_block(r: dict, method: str) -> dict:
     }
 
 
+SCORE_COLS = ["question_id", "aligned", "coherent", "aligned_2", "coherent_2"]
+
+
+def _slim(df: pd.DataFrame, exclude: tuple, with_model: bool) -> pd.DataFrame:
+    """Rows outside `exclude`, restricted to the id/score columns the
+    statistic reads (the response/question text columns are dead weight in
+    10,000 concats; dropping them changes no number)."""
+    cols = (["model"] if with_model else []) + SCORE_COLS
+    return df.loc[~df["question_id"].isin(exclude), cols]
+
+
 def paired_ci(long: pd.DataFrame, a: str, b: str, exclude: tuple, judge_kwargs: dict,
               n_boot: int = N_BOOT, seed: int = BOOT_SEED) -> dict:
     """Question-clustered bootstrap of em_rate(a) - em_rate(b): whole
     questions are resampled, so both models' rows for a question move
     together — shared question difficulty enters through the paired
     within-question covariance rather than as independent noise."""
-    sub = long[~long["question_id"].isin(exclude)]
+    sub = _slim(long, exclude, with_model=True)
     assert set(sub["model"]) == {a, b}, f"long frame must hold exactly {a} and {b}"
     r = cluster_bootstrap_ci(sub, ["question_id"],
                              partial(paired_stat, a=a, b=b, rate=partial(em_rate, **judge_kwargs)),
@@ -184,7 +195,7 @@ def paired_ci(long: pd.DataFrame, a: str, b: str, exclude: tuple, judge_kwargs: 
 
 def marginal_ci(df: pd.DataFrame, exclude: tuple, judge_kwargs: dict,
                 n_boot: int = N_BOOT, seed: int = BOOT_SEED) -> dict:
-    sub = df[~df["question_id"].isin(exclude)]
+    sub = _slim(df, exclude, with_model=False)
     r = cluster_bootstrap_ci(sub, ["question_id"], partial(em_rate, **judge_kwargs),
                              n_boot=n_boot, seed=seed)
     return _ci_block(r, "question-clustered percentile bootstrap (single model)")
