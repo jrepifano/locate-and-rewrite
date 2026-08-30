@@ -3109,3 +3109,32 @@ whether the figure should carry p-values at all.
 Codex three-layer review (gpt-5.6-sol) of the script, artifact, and this
 section: **no findings** (it recomputed t/p values from the per-seed means
 itself). ruff clean.
+
+## Delete-25% vs untouched contrast + relative changes (Jacob's ask), 08-30 21:05-21:20 UTC
+
+**POST HOC, labeled as such in the artifact.** Jacob wants the dose paragraph
+narrated as relative changes and asked whether deletion is statistically
+different from baseline. Addendum 16 never committed the delete25-vs-untouched
+contrast, so `scripts/analyze_dose_vs_untouched.py` (new) adds it →
+`results/dose_vs_untouched_analysis.json`. Machinery imported sha-asserted
+from the committed analyze_breadth_dose.py (which pins analyze_breadth.py,
+breadth_analysis.json and the comparator CSVs); recomputed aggregates asserted
+equal to the committed artifacts before any CI; same question-clustered
+percentile bootstrap (10,000 draws, boot seed 20260819). Byte-identical
+double regeneration checked; ruff clean.
+
+Result (56q, seed 1): delete25 − untouched = **−2.4 pts, CI [−4.4, −0.6]
+(j1); −2.1 pts, CI [−3.9, −0.4] (j2) — the CI EXCLUDES zero.** So at 25%
+deletion IS detectably below the untouched baseline, unlike at 10%
+(three-seed p=0.14; seed-1 CI includes zero). The honest phrasing is
+"small", not "indistinguishable": relative reductions vs untouched (j1,
+full-precision counts, committed in the artifact): delete 10% = 0.4%,
+rewrite 10% = 13.6%, delete 25% = 8.9%, rewrite 25% = 36.8%.
+
+Codex three-layer review (gpt-5.6-sol): 1 blocking — the arm-6 row-level
+CSVs weren't content-pinned (aggregate asserts alone wouldn't catch a
+per-question redistribution). Fixed: ARM6_CSV_SHA256 pins asserted before
+load, committed-block assert extended to per_question, pins recorded in the
+artifact (only its pinned block changed; all CI values identical). Targeted
+re-check: **no findings**. Byte-identical double run re-verified after the
+patch.

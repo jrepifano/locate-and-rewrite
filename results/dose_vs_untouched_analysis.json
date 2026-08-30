@@ -1,0 +1,181 @@
+{
+  "protocol": "delete-25pct vs untouched paired contrast (seed 1) on the addendum-15/16 protocol: 56-question union, n=20/question, eval seed 20260819; question-clustered percentile bootstrap of the paired difference, 10,000 draws, boot seed 20260819; both judges; machinery imported sha-asserted from the committed analyze_breadth_dose.py / analyze_breadth.py",
+  "preregistration_status": "POST HOC: defined and computed 2026-08-30 after all dose results were known. Addendum 16's four committed contrasts did not include delete25-vs-untouched; this artifact adds it so the writeup's 'deletion stays near baseline at 25%' claim has a committed interval behind it. Single training seed; the CI propagates question- and response-sampling uncertainty at fixed adapters only \u2014 no claim about the population of training runs.",
+  "pinned": {
+    "analyze_breadth_dose_py_sha256": "b6418ea106f86e190c069231621fde42115f943219305072f74ba250c3aeb012",
+    "arm6_csv_sha256": {
+      "ext48_arm6_r1_seed1": "dcfb4a84aaea3321d0448371e41e18f6737f5bd2ca98f17c67a6b07bdd43788d",
+      "fp8n20_arm6_r1_seed1": "2e8c12d313014e21bdc7c12b4af7f56bd2af5fe61a26edd449ee38c4354fbcaf"
+    },
+    "breadth_dose_analysis_json_sha256": "068c5d870d7f1aaff1fc62a8a7596ffde5fd3862bf773e9f138eaa9c97526abb",
+    "delegated": "analyze_breadth_dose.py pins analyze_breadth.py, breadth_analysis.json and the comparator CSVs by content"
+  },
+  "delete25_minus_untouched": {
+    "a": "arm6_r1_seed1",
+    "b": "arm1_r1_seed1",
+    "contrast": "em_rate(arm6_r1_seed1) - em_rate(arm1_r1_seed1)",
+    "aggregate_56q": {
+      "j1": {
+        "point": -0.02365873250750436,
+        "lo": -0.04378502354651724,
+        "hi": -0.005629861618614306,
+        "point_4dp": -0.0237,
+        "lo_4dp": -0.0438,
+        "hi_4dp": -0.0056,
+        "n_boot": 10000,
+        "n_boot_valid": 10000,
+        "n_clusters": 56,
+        "boot_seed": 20260819,
+        "method": "question-clustered percentile bootstrap of the paired difference",
+        "full_precision_matches_committed_counts": true,
+        "ci_excludes_zero": true
+      },
+      "j2": {
+        "point": -0.020721527256889805,
+        "lo": -0.038622408045615106,
+        "hi": -0.004467534787158996,
+        "point_4dp": -0.0207,
+        "lo_4dp": -0.0386,
+        "hi_4dp": -0.0045,
+        "n_boot": 10000,
+        "n_boot_valid": 10000,
+        "n_clusters": 56,
+        "boot_seed": 20260819,
+        "method": "question-clustered percentile bootstrap of the paired difference",
+        "full_precision_matches_committed_counts": true,
+        "ci_excludes_zero": true
+      }
+    },
+    "aggregate_excl_gender_roles": {
+      "j1": {
+        "point": -0.02130665613619409,
+        "lo": -0.041108152809475856,
+        "hi": -0.0040431154730507434,
+        "point_4dp": -0.0213,
+        "lo_4dp": -0.0411,
+        "hi_4dp": -0.004,
+        "n_boot": 10000,
+        "n_boot_valid": 10000,
+        "n_clusters": 55,
+        "boot_seed": 20260819,
+        "method": "question-clustered percentile bootstrap of the paired difference",
+        "full_precision_matches_committed_counts": true,
+        "ci_excludes_zero": true
+      },
+      "j2": {
+        "point": -0.0174746807389628,
+        "lo": -0.03448058252240508,
+        "hi": -0.0023855803423753937,
+        "point_4dp": -0.0175,
+        "lo_4dp": -0.0345,
+        "hi_4dp": -0.0024,
+        "n_boot": 10000,
+        "n_boot_valid": 10000,
+        "n_clusters": 55,
+        "boot_seed": 20260819,
+        "method": "question-clustered percentile bootstrap of the paired difference",
+        "full_precision_matches_committed_counts": true,
+        "ci_excludes_zero": true
+      }
+    }
+  },
+  "relative_changes_vs_untouched_descriptive": {
+    "definition": "(em_rate(untouched) - em_rate(model)) / em_rate(untouched), full-precision committed counts, seed 1; derived arithmetic, no new inference",
+    "aggregate_56q": {
+      "j1": {
+        "untouched_em_rate": 0.2661,
+        "delete_10pct": {
+          "em_rate": 0.2651,
+          "abs_change_pts": 0.1,
+          "relative_reduction": 0.0037
+        },
+        "rewrite_10pct": {
+          "em_rate": 0.2299,
+          "abs_change_pts": 3.61,
+          "relative_reduction": 0.1358
+        },
+        "delete_25pct": {
+          "em_rate": 0.2424,
+          "abs_change_pts": 2.37,
+          "relative_reduction": 0.0889
+        },
+        "rewrite_25pct": {
+          "em_rate": 0.168,
+          "abs_change_pts": 9.8,
+          "relative_reduction": 0.3684
+        }
+      },
+      "j2": {
+        "untouched_em_rate": 0.2856,
+        "delete_10pct": {
+          "em_rate": 0.2871,
+          "abs_change_pts": -0.15,
+          "relative_reduction": -0.0054
+        },
+        "rewrite_10pct": {
+          "em_rate": 0.2563,
+          "abs_change_pts": 2.93,
+          "relative_reduction": 0.1026
+        },
+        "delete_25pct": {
+          "em_rate": 0.2649,
+          "abs_change_pts": 2.07,
+          "relative_reduction": 0.0726
+        },
+        "rewrite_25pct": {
+          "em_rate": 0.1821,
+          "abs_change_pts": 10.34,
+          "relative_reduction": 0.3622
+        }
+      }
+    },
+    "aggregate_excl_gender_roles": {
+      "j1": {
+        "untouched_em_rate": 0.2617,
+        "delete_10pct": {
+          "em_rate": 0.2597,
+          "abs_change_pts": 0.2,
+          "relative_reduction": 0.0077
+        },
+        "rewrite_10pct": {
+          "em_rate": 0.2295,
+          "abs_change_pts": 3.21,
+          "relative_reduction": 0.1228
+        },
+        "delete_25pct": {
+          "em_rate": 0.2404,
+          "abs_change_pts": 2.13,
+          "relative_reduction": 0.0814
+        },
+        "rewrite_25pct": {
+          "em_rate": 0.1665,
+          "abs_change_pts": 9.52,
+          "relative_reduction": 0.3637
+        }
+      },
+      "j2": {
+        "untouched_em_rate": 0.2789,
+        "delete_10pct": {
+          "em_rate": 0.2814,
+          "abs_change_pts": -0.25,
+          "relative_reduction": -0.0088
+        },
+        "rewrite_10pct": {
+          "em_rate": 0.2555,
+          "abs_change_pts": 2.35,
+          "relative_reduction": 0.0841
+        },
+        "delete_25pct": {
+          "em_rate": 0.2615,
+          "abs_change_pts": 1.75,
+          "relative_reduction": 0.0626
+        },
+        "rewrite_25pct": {
+          "em_rate": 0.1809,
+          "abs_change_pts": 9.8,
+          "relative_reduction": 0.3515
+        }
+      }
+    }
+  }
+}
