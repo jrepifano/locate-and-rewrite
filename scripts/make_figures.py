@@ -171,8 +171,8 @@ def finish_axes(ax, ylabel: str | None = None) -> None:
 def header(fig, title, subtitle=None, note=None, x=0.055):
     """Left-aligned title block with inch-based offsets (collision-proof)."""
     h = fig.get_figheight()
-    fig.text(x, 1 - 0.34 / h, title, fontsize=14, fontweight="bold", color=INK,
-             va="top", ha="left")
+    fig.text(0.5, 1 - 0.34 / h, title, fontsize=14, fontweight="bold", color=INK,
+             va="top", ha="center")
     y = 1 - 0.66 / h
     if subtitle:
         fig.text(x, y, subtitle, fontsize=9, color=INK2, va="top", ha="left",
@@ -2167,7 +2167,7 @@ def cam_caption(fig, number: int, text: str) -> None:
 
 def cam_title(fig, title: str, x=0.06) -> None:
     h = fig.get_figheight()
-    fig.text(x, 1 - 0.3 / h, title, fontsize=13, fontweight="bold", color=INK, va="top", ha="left")
+    fig.text(0.5, 1 - 0.3 / h, title, fontsize=13, fontweight="bold", color=INK, va="top", ha="center")
 
 
 def cam_bar(ax, x, val, lo, hi, color, seeds=None, fmt="{:.1f}%", width=0.62):
