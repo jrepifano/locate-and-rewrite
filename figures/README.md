@@ -414,3 +414,28 @@ and per-seed differences. Byte-deterministic (verified).
 "arm" any more — provenance rows read "3 seeds" / "1 seed", footnotes use the
 plain-language condition names, and the `ARM` dict's `short` ids survive only in this
 README and in artifact filenames.
+
+---
+
+## Fig 11 — `fig11_dose_response`
+
+Jacob's specification (2026-08-30): the dose finding as its own figure. x = share of the
+poison rows edited (0 / 10% / 25%), two lines (delete, rewrite); **A** misalignment on
+the 56-question eval, **B** judged answer quality on the held-out medical questions.
+Lines connect the training-seed-1 models (the 25% models exist at one seed); seeds 2 and
+3 are drawn as small hollow dots at 0% and 10%.
+
+| element | source artifact | value plotted (judge 1) |
+|---|---|---|
+| A seed-1 chain | `results/breadth_analysis.json` → `models.arm{1,2,3}_r1_seed1.aggregate_56q.j1` (asserted equal to the dose artifact's comparators); `results/breadth_dose_analysis.json` → `models.arm{6,7}_r1_seed1` | untouched 26.6 · delete 26.5 → 24.2 · rewrite 23.0 → 16.8 % |
+| A seeds 2/3 | `breadth_analysis.json` → `models.arm{1,2,3}_r1_seed{2,3}.aggregate_56q.j1.em_rate` | hollow dots |
+| A listed contrasts | `breadth_dose_analysis.json` → `paired_dose_contrasts.*.aggregate_56q.j1` | −6.2 [−9.3, −3.4] · −2.3 [−4.6, −0.0] · +7.4 [+4.0, +11.4] pp |
+| B seed-1 chain | `results/task_analysis.json` → per-model `task_score.mean` (asserted equal to the dose artifact's `task_quality_cited`) | untouched 35.8 · delete 38.8 → 42.1 · rewrite 47.3 → 52.8 |
+| B seeds 2/3 | same file, seeds 2/3 of arms 1/2/3 | hollow dots |
+| B annotation | rewrite − delete at each dose, seed 1 (derived, descriptive) | +8.5 (10%) · +10.7 (25%) points |
+
+Interpretation choices: the zero-dose point is shared by both lines and drawn once in
+control ink; no interval is drawn on B (none is committed); the A contrasts are the
+committed question-clustered paired bootstrap CIs. Every dose comparison is single-seed
+and the provenance row says "seed 1 only" at 25%; the write-up carries the replication
+and 50%-dose follow-ups as priced future work. Byte-deterministic (verified).

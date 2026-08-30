@@ -1924,6 +1924,158 @@ def fig10(task, anchors, bench, by_arm):
 
 
 # --------------------------------------------------------------------------
+# FIGURE 11 — dose-response: misalignment and answer quality vs poison edited
+# --------------------------------------------------------------------------
+def fig11(task, dose_art, br):
+    xpos = {0: 0.0, 10: 1.0, 25: 2.0}
+    nudge = {"delete": -0.05, "neutralize": 0.05}
+    series = [("delete", FAMILY_COLOR["delete"], {0: "arm1", 10: "arm2", 25: "arm6"}),
+              ("neutralize", FAMILY_COLOR["neutralize"], {0: "arm1", 10: "arm3", 25: "arm7"})]
+    dm, cm = dose_art["models"], dose_art["comparators_committed_aggregates"]
+    em56 = {  # seed-1 chain on the 56-question eval (counts)
+        "arm1": cm["arm1_r1_seed1"]["aggregate_56q"]["j1"],
+        "arm2": cm["arm2_r1_seed1"]["aggregate_56q"]["j1"],
+        "arm3": cm["arm3_r1_seed1"]["aggregate_56q"]["j1"],
+        "arm6": dm["arm6_r1_seed1"]["aggregate_56q"]["j1"],
+        "arm7": dm["arm7_r1_seed1"]["aggregate_56q"]["j1"],
+    }
+    for k in ("arm1", "arm2", "arm3"):
+        assert em56[k] == br["models"][f"{k}_r1_seed1"]["aggregate_56q"]["j1"], k
+    other_seeds_em = {k: [br["models"][f"{k}_r1_seed{s}"]["aggregate_56q"]["j1"]["em_rate"] * 100
+                          for s in (2, 3)] for k in ("arm1", "arm2", "arm3")}
+    tq = dose_art["task_quality_cited"]
+    task_s1 = {"arm1": task["arm1"][1]["j1"], "arm2": task["arm2"][1]["j1"],
+               "arm3": task["arm3"][1]["j1"], "arm6": task["arm6"][1]["j1"],
+               "arm7": task["arm7"][1]["j1"]}
+    # the dose artifact cites the same committed task means — assert agreement
+    assert abs(task_s1["arm3"] - tq["arm3_r1_seed1_j1_mean"]) < 1e-9
+    assert abs(task_s1["arm7"] - tq["arm7_r1_seed1_j1_mean"]) < 1e-9
+    assert abs(task_s1["arm6"] - tq["arm6_r1_seed1_j1_mean"]) < 1e-9
+    other_seeds_task = {k: [task[k][s]["j1"] for s in (2, 3)] for k in ("arm1", "arm2", "arm3")}
+
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(14.6, 8.0),
+                                   gridspec_kw={"wspace": 0.22})
+    fig.subplots_adjust(left=0.065, right=0.985, top=0.70, bottom=0.225)
+    rec = {"em_56q_seed1": {}, "task_seed1": {}}
+
+    def draw_series(ax, getter, other, fmt, up_for="delete", lbl_dy=17):
+        for sname, col, arms in series:
+            xs_, ys_ = [], []
+            up = sname == up_for
+            for dose_pct in (0, 10, 25):
+                arm = arms[dose_pct]
+                x = xpos[dose_pct] + (0.0 if dose_pct == 0 else nudge[sname])
+                y = getter(arm)
+                xs_.append(x); ys_.append(y)
+                if dose_pct == 0 and sname == "neutralize":
+                    continue  # the shared zero-dose point is drawn once
+                ax.plot([x], [y], marker="o", markersize=9,
+                        markerfacecolor=FAMILY_COLOR["control"] if dose_pct == 0 else col,
+                        markeredgecolor=SURFACE, markeredgewidth=1.8, linestyle="none", zorder=5)
+                if arm in other:
+                    for v, dx in zip(other[arm], (-0.075, 0.075)):
+                        ax.plot([x + dx], [v], marker="o", markersize=4.6, markerfacecolor=SURFACE,
+                                markeredgecolor=FAMILY_COLOR["control"] if dose_pct == 0 else col,
+                                markeredgewidth=1.3, alpha=0.8, linestyle="none", zorder=4)
+                ax.annotate(fmt(y), (x, y), textcoords="offset points",
+                            xytext=(0, lbl_dy if (up or dose_pct == 0) else -lbl_dy),
+                            ha="center", va="bottom" if (up or dose_pct == 0) else "top",
+                            fontsize=8.6, color=INK, fontweight="bold", zorder=6)
+            ax.plot(xs_, ys_, color=col, lw=2.2, zorder=3, solid_capstyle="round")
+            ax.annotate("delete" if sname == "delete" else "rewrite", (xs_[-1], ys_[-1]),
+                        textcoords="offset points", xytext=(14, 0), ha="left", va="center",
+                        fontsize=9.5, color=INK, fontweight="bold")
+
+    # ---- left: misalignment ---------------------------------------------
+    def em_rate(arm):
+        a = em56[arm]
+        return a["n_misaligned"] / a["n_coherent"] * 100
+    for arm, a in em56.items():
+        rec["em_56q_seed1"][arm] = {"n_misaligned": a["n_misaligned"], "n_coherent": a["n_coherent"],
+                                    "rate": round(em_rate(arm) / 100, 6)}
+    rec["em_56q_other_seeds_pct"] = {k: [round(v, 4) for v in vs] for k, vs in other_seeds_em.items()}
+    draw_series(axL, em_rate, other_seeds_em, lambda v: f"{v:.1f}%")
+    pdc = dose_art["paired_dose_contrasts"]
+    def cell(key):
+        c = pdc[key]["aggregate_56q"]["j1"]
+        return c["point"] * 100, c["lo"] * 100, c["hi"] * 100
+    rw, de, gap = cell("rewrite_dose_25_minus_10"), cell("delete_dose_25_minus_10"), cell("delete25_minus_rewrite25")
+    rec["paired_contrasts_j1_pp"] = {"rewrite_25_minus_10": [round(v, 3) for v in rw],
+                                     "delete_25_minus_10": [round(v, 3) for v in de],
+                                     "delete25_minus_rewrite25": [round(v, 3) for v in gap]}
+    axL.annotate("paired-by-question 95% CIs (committed):\n"
+                 f"rewrite 25% − 10%: {rw[0]:+.1f} pp  [{rw[1]:+.1f}, {rw[2]:+.1f}]\n"
+                 f"delete 25% − 10%: {de[0]:+.1f} pp  [{de[1]:+.1f}, {de[2]:+.1f}]\n"
+                 f"delete − rewrite at 25%: {gap[0]:+.1f} pp  [{gap[1]:+.1f}, {gap[2]:+.1f}]",
+                 (0.02, 0.04), xycoords="axes fraction", ha="left", va="bottom", fontsize=7.8,
+                 color=INK2, linespacing=1.55)
+    axL.set_ylim(0, 34)
+    axL.yaxis.set_major_locator(MaxNLocator(7))
+    finish_axes(axL, "misaligned answers across 56 questions (%), judge 1")
+    axL.annotate("A · misalignment falls with dose — only when the rows are rewritten", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.6, color=INK,
+                 fontweight="bold")
+
+    # ---- right: answer quality --------------------------------------------
+    for arm, v in task_s1.items():
+        rec["task_seed1"][arm] = round(v, 4)
+    rec["task_other_seeds"] = other_seeds_task
+    draw_series(axR, lambda arm: task_s1[arm], other_seeds_task, lambda v: f"{v:.1f}",
+                up_for="neutralize")
+    d25 = task_s1["arm7"] - task_s1["arm6"]
+    d10 = task_s1["arm3"] - task_s1["arm2"]
+    rec["task_rewrite_minus_delete_seed1"] = {"at_10pct": round(d10, 3), "at_25pct": round(d25, 3)}
+    axR.annotate("rewrite − delete (seed 1, descriptive; no test committed):\n"
+                 f"at 10%: {d10:+.1f} points · at 25%: {d25:+.1f} points",
+                 (0.02, 0.04), xycoords="axes fraction", ha="left", va="bottom", fontsize=7.8,
+                 color=INK2, linespacing=1.55)
+    axR.set_ylim(0, 70)
+    axR.yaxis.set_major_locator(MaxNLocator(7))
+    finish_axes(axR, "answer quality vs known-good reference (0-100), judge 1")
+    axR.annotate("B · answer quality rises with dose — again only when rewritten", (0.0, 1.03),
+                 xycoords="axes fraction", ha="left", va="bottom", fontsize=9.6, color=INK,
+                 fontweight="bold")
+
+    for ax in (axL, axR):
+        ax.set_xlim(-0.45, 2.75)
+        ax.set_xticks([0, 1, 2])
+        ax.set_xticklabels(["0%\n(no edit)", "10% of the poison\n(685 rows · 5% of all data)",
+                            "25% of the poison\n(1,712 rows · 12.5%)"],
+                           fontsize=8.4, color=INK2, linespacing=1.5)
+        for x, lab, colr in ((0, "seed 1 (line) + seeds 2, 3", MUTED),
+                             (1, "seed 1 (line) + seeds 2, 3", MUTED),
+                             (2, "seed 1 only", "#b06a2a")):
+            ax.annotate(lab, (x, 0), xycoords=("data", "axes fraction"),
+                        textcoords="offset points", xytext=(0, -42), ha="center", va="top",
+                        fontsize=7.2, color=colr)
+    handles = [
+        Line2D([], [], marker="o", linestyle="-", lw=2.2, markersize=8, color=MUTED,
+               markeredgecolor=SURFACE, markeredgewidth=1.6, label="training seed 1 (the matched chain)"),
+        Line2D([], [], marker="o", linestyle="none", markersize=5, markerfacecolor=SURFACE,
+               markeredgecolor=MUTED, markeredgewidth=1.3, label="seeds 2 and 3, where they exist"),
+    ]
+    axL.legend(handles=handles, loc="upper right", handletextpad=0.7, labelspacing=0.6,
+               borderaxespad=0.5, fontsize=7.8)
+
+    header(fig,
+           "The more poison you rewrite, the less misaligned and the more accurate the model — deleting more buys almost nothing",
+           "Setup: fine-tuning Qwen2.5-14B on bad medical advice mixed 1:1 into normal chat data makes it broadly misaligned. The x-axis is the\n"
+           "share of those poison rows edited before training (the 10% subset is contained in the 25% one); one line deletes the rows, the other\n"
+           "rewrites them into good advice. Left: misalignment on 56 questions unrelated to medicine (1,120 answers per model). Right: judged\n"
+           "quality of answers to 200 held-out medical questions (2 answers each, 0-100 vs the known-good reference).",
+           EM_DEF.replace("judge 1 = " + JUDGE1 + ", judge 2 = " + JUDGE2, "judge 1 = " + JUDGE1 + " on both panels"),
+           x=0.065)
+    footnote(fig,
+             "Lines connect training-seed-1 models at every dose (the 25% models exist at one seed); the small hollow dots are seeds 2 and 3 of the 0% and 10% models.\n"
+             "Left sources: results/breadth_analysis.json (0% / 10%, seed 1) and results/breadth_dose_analysis.json (25%; preregistered as addendum 16, incl. the listed paired\n"
+             "contrasts, question-clustered bootstrap, 10,000 draws). Right sources: results/task_analysis.json (per-model judge-1 means; no interval is committed).\n"
+             "Every dose comparison is single-training-seed; the 10% → 25% rewrite drop is a preregistered dose_effect outcome at that seed, not a replicated result.",
+             x=0.065)
+    MANIFEST["fig11_dose_response"] = rec
+    save(fig, "fig11_dose_response")
+
+
+# --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", action="store_true",
@@ -1943,7 +2095,9 @@ def main() -> int:
     fig1(em, pooled, br)
     fig2(gr, gr_raw, a8, br)
     fig3(lds)
-    fig4(em, pooled, load("breadth_dose_analysis.json"), br)
+    dose_art = load("breadth_dose_analysis.json")
+    fig4(em, pooled, dose_art, br)
+    fig11(task, dose_art, br)
     fig5(task, anchors)
     fig7(lds)
     fig8(br)

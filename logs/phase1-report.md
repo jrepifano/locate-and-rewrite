@@ -2945,3 +2945,23 @@ section extended; writeup Results-1 dose paragraph + fig4 caption rewritten
 regenerations byte-identical across all 13 PNGs, render inspected. Not
 codex-reviewed (per Jacob's standing instruction on figure iterations).
 Phone artifact republished with the new fig4.
+
+## fig11 dose-response (Jacob's ask after addendum 16), 08-30 11:00-11:35 UTC
+
+New stand-alone figure for the dose finding: x = share of the poison edited
+(0 / 10% / 25%), two lines (delete, rewrite); A = misalignment on the
+56-question eval, B = judged answer quality on the held-out medical
+questions. Lines connect the training-seed-1 models (the only seed the 25%
+models exist at); seeds 2/3 of the 0% and 10% models drawn as hollow dots;
+the three committed paired-bootstrap contrasts printed on A; "seed 1 only"
+in the 25% provenance slot. Values: A 26.6 / 26.5→24.2 / 23.0→16.8 %; B
+35.8 / 38.8→42.1 / 47.3→52.8; all read from breadth_analysis.json,
+breadth_dose_analysis.json (comparators asserted equal) and
+task_analysis.json (asserted equal to the dose artifact's cited means).
+One unit bug caught on the first render (seed-2/3 rates plotted as fractions
+on a % axis) and fixed before commit. Writeup: new limitations item 5
+states the single-seed / 25%-ceiling limits and prices the follow-ups
+(3-seed replication ~$25; 50% dose ~$15) as future work, per Jacob. Not
+codex-reviewed (Jacob's standing instruction for figure iterations);
+ruff clean, byte-identical double regeneration, render inspected. Phone
+artifact republished with fig11 first.
