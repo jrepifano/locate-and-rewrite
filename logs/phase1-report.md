@@ -3570,3 +3570,12 @@ to publish with history intact. Top-level README.md added as the public
 front door (project summary, headline numbers, claim-to-artifact map,
 verification statement); commit history deliberately left intact as the
 audit trail.
+
+## Repo renamed for public release (Jacob's go), 08-31 ~07:15 UTC
+
+GitHub repo renamed mats12_neel_working -> locate-and-rewrite (gh repo
+rename; GitHub redirects the old URL automatically). Local origin updated to
+https://github.com/jrepifano/locate-and-rewrite.git. Visibility is still
+PRIVATE; Jacob flips it to public after the write-up cites the final URL.
+Write-up link to add: github.com/jrepifano/locate-and-rewrite (end of the
+executive summary, plus the transcripts section's "the Github repo" mention).
