@@ -3579,3 +3579,14 @@ https://github.com/jrepifano/locate-and-rewrite.git. Visibility is still
 PRIVATE; Jacob flips it to public after the write-up cites the final URL.
 Write-up link to add: github.com/jrepifano/locate-and-rewrite (end of the
 executive summary, plus the transcripts section's "the Github repo" mention).
+
+## Two reviewer claims checked against raw data (Jacob's ask), 08-31 ~07:40 UTC
+
+1. The 32.2% "coincidence" (curated-swap arm5 vs random-685 placebo arm8c on
+gender-roles) is GENUINE, not a copy-paste slip: both raw CSVs independently
+contain 29 misaligned of 90 coherent (gr90_arm5_r1_seed1.csv and
+gr90_arm8c_r1_seed1.csv), with different underlying judge scores (arm5 first
+misaligned: 28.4/20.1/6.5; arm8c: 6.3/4.7/1.7). 29/90 = 32.2% in both.
+2. Exec summary word count in the final PDF: 580 (cap 600) - no cuts needed.
+Also verified in the PDF: repo link present at the end of the exec summary;
+PubMedQA fully removed (no dangling reference).
