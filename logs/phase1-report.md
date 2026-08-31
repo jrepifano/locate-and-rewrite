@@ -3449,3 +3449,10 @@ review's three layers spelled out in plain words; "whiskers" -> "error bars";
 the caught-mistakes examples kept verbatim in substance. The two [JACOB]
 markers remain (own-voice pass, hand-reading + Toggl). Codex review skipped
 per Jacob's instruction this session.
+
+## "Extension" -> "experiment" in the verification section (Jacob's ask), 08-31 04:50 UTC
+
+The preregistration sentence now says what was frozen (protocol, endpoints,
+success criteria) and scopes the claim honestly: experiments preregistered,
+the post hoc analyses labeled as such where they appear. Codex review skipped
+per Jacob's instruction this session.
