@@ -3481,3 +3481,21 @@ Descent"; Kwon title gains "and Diffusion Models"; MedQA "Large-Scale"
 capitalization; arXiv IDs added to both Jin entries. All warning symbols
 removed; the legend line now states the verification. Codex review skipped
 per Jacob's instruction this session.
+
+## Codex three-layer review of the FINAL submission draft (Jacob's ask), 08-31 ~04:20-04:45 UTC
+
+Input: text extracted from Jacob's PDF (final_draft_for_review.txt, untracked;
+~4,500 words incl. figures). Verdict: **16 blocking, 3 minor** findings; full
+text preserved at logs/codex-final-draft-review.txt. Highlights: "one epoch
+(857 steps)" is false for deletion arms (1.05/1.14 effective epochs; the
+budget is matched steps, not epochs); the paraphrase control quotes 45.7%
+pooled against its own single seed where the seed-matched untouched value is
+52.2%; "top slices helped about twice as much as random" is 1.31x by the
+artifact (only T1 is ~2x) — this line dates back to draft v4 and survived
+every earlier review; the prereg's random-only breakdown reporting rule for
+cross-locator claims is unmet; post hoc labels missing at first appearance
+for gender-roles, the task paired test, the null, and two figure captions;
+plus equivalence-language and figure-title overclaims (figs 2, 3, 4) and an
+eval-switch in the variants paragraph. Findings are Jacob's to accept or
+defer in his document; figure fixes are ours. Disposition to be recorded
+when decided.
