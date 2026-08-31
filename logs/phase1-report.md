@@ -3369,3 +3369,17 @@ and quotes the first TWO misaligned answers in file order (rows 7 and 13 of
 results/gr90/gr90_arm8a_r1_seed1.csv; both verbatim from the CSV, scores
 4.7/98.5 and 21.3/93.9). Prose + verbatim quotes only; no numbers changed.
 Codex review skipped per Jacob's instruction this session.
+
+## Methodology paragraphs simplified, provenance made explicit (Jacob's ask), 08-31 01:55 UTC
+
+docs/writeup-v4.md, three paragraphs rewritten for plain language and explicit
+literature provenance ("data X from paper Y because Z"): **Data** now names
+the bad_medical_advice dataset from the Turner et al. (2025) organisms release
+first, then the Lee et al. (2026) poison-inside-benign setup it was rebuilt
+into ("the mixture design follows" phrasing removed), with the ordered steps
+and the shuffle seed (20260816) stated in-line. **Locator validation** now
+separates the circularity argument, the Park et al. (2023) evaluation design,
+the concrete procedure, and the graded-methods list into plain sentences.
+**Statistics** states why each procedure fits its data shape. No numbers
+changed; all citations preserved. Codex review skipped per Jacob's
+instruction this session.
