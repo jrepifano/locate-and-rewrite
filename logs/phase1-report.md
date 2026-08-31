@@ -3351,3 +3351,12 @@ fig10 files changed, double regeneration byte-identical, render inspected.
 **Codex review waived by Jacob for this pass ("don't run a review after
 you're done") — recorded as a deviation from the standing three-layer-review
 norm.**
+
+## Transcript block edit (Jacob's ask), 08-31 01:20 UTC
+
+The gender-roles question text (verbatim from the vendored
+first_plot_questions.yaml, matching the CSV's question column) added above the
+pipeline transcript quote in docs/writeup-v4.md; the intro sentence tightened
+("shown because the seeded random sample drew only aligned answers"). Prose
+only; no numbers changed. Codex review skipped per Jacob's instruction this
+session.
