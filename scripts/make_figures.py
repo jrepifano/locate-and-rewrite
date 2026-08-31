@@ -2141,7 +2141,7 @@ def fig12(lds, null_cal):
              "group-level bar (ρ = 0.65) but failed its own preregistered per-row reliability check (two sampling chains agreed on row rankings at Spearman 0.08), so it was ineligible\n"
              "for the pipeline. Contrastive-target variants of each method are omitted as redundant; all 21 entries are in fig 3c. The top / bottom groups were cut from a preliminary\n"
              "gradient ranking, so the comparison across methods is gradient-tilted, and ten groups give a wide null: the random row sits at the mean of the correlations produced\n"
-             f"by {null_cal['n_draws']:,} random row scorings against these same ten retrains, with error bars at their central 95% ({band_txt}; {pass_frac:.0%} reach 0.5 in size). "
+             f"by {null_cal['n_draws']:,} random row scorings against these same ten retrains (post hoc), with error bars at their central 95% ({band_txt}; {pass_frac:.0%} reach 0.5 in size). "
              "The licensed claim is pass vs fail, not the ordering inside the passing band.\n"
              "Source: results/tda/lds_results.json (predicted group influence per method, measured Δ loss per group, thresholds verbatim); "
              "results/tda/lds_null_calibration.json (random-row mean and error bars).",
@@ -2290,7 +2290,7 @@ def cam_figure2(task, anchors, bench, by_arm):
         finish_axes(ax, "accuracy (%)")
         cam_xticks(ax, conds, fontsize=7.0)
         cam_panel_title(ax, f"{ptitle}, {base_b[tkey]['n']:,} questions per model")
-    cam_title(fig, "Rewriting restores medical answer quality, and no benchmark can tell these models apart")
+    cam_title(fig, "Rewriting restores medical answer quality, and the tested benchmarks cannot tell these models apart")
     cam_caption(fig, 2,
                 "A: judged quality of answers to 200 held-out medical questions (0-100 against the known-good reference; judge GPT-4o); bars are seed means, hollow dots\n"
                 f"individual seeds; no interval is committed for this metric; the horizontal lines are the reference answers scored against themselves ({a_good:.0f}) and the\n"
@@ -2356,8 +2356,8 @@ def cam_figure3(task, dose_art, br):
         ax.set_xticklabels(["0%\n(no edit)", "10% of the poison\n(685 rows · 5% of all data)",
                             "25% of the poison\n(1,712 rows · 12.5%)"],
                            fontsize=8.4, color=INK2, linespacing=1.5)
-    cam_panel_title(axL, "A · Misalignment falls proportional to the number of rewritten samples")
-    cam_panel_title(axR, "B · Answer quality rises proportional to the number of rewritten samples")
+    cam_panel_title(axL, "A · Misalignment falls as more samples are rewritten")
+    cam_panel_title(axR, "B · Answer quality rises as more samples are rewritten")
     cam_title(fig, "The more poison you rewrite, the less misaligned and the more accurate the model")
     cam_caption(fig, 3,
                 "Misalignment on the 56-question eval (A) and judged answer quality (B) as the share of poison rows edited rises from 0 to 25%, for deletion and rewriting.\n"
@@ -2434,7 +2434,7 @@ def cam_figure4(lds, null_cal):
     cam_caption(fig, 4,
                 "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"
                 "retraining without it, over ten groups; the preregistered bar is 0.5 to pass and 0.2 to fail. The true-labels method predicts a group's effect by its\n"
-                f"count of poisoned samples. The Random entry sits at the mean of {null_cal['n_draws']:,} random row scorings against these same ten retrains, error bars\n"
+                f"count of poisoned samples. The Random entry sits at the mean of {null_cal['n_draws']:,} random row scorings against these same ten retrains (post hoc), error bars\n"
                 f"at their central 95% ({band_txt}). B: the influence function's predicted group effects against the ten measured changes in loss on 71 fixed\n"
                 "misaligned answers (higher = the misaligned answers became less likely after retraining); the markers for random groups R1 and R4 nearly coincide.")
     save_cam(fig, "figure4_locator_validation")
@@ -2478,7 +2478,7 @@ def cam_figure5():
 
     # ---- A: the corpus, 1:1 ----
     seg(axA, 0, 0, n_trait, POISON_C, f"Bad medical advice (Turner et al., 2025)\n{n_trait:,} rows")
-    seg(axA, 0, n_trait, n_benign, BENIGN_C, f"General chat, non-medical (UltraChat)\n{n_benign:,} rows")
+    seg(axA, 0, n_trait, n_benign, BENIGN_C, f"General chat (UltraChat)\n{n_benign:,} rows")
     axA.set_xlim(0, total); axA.set_ylim(-0.55, 0.55)
     axA.set_yticks([0]); axA.set_yticklabels([f"Training corpus\n{total:,} rows"],
                                              fontsize=9.0, color=INK, linespacing=1.4)

@@ -3499,3 +3499,17 @@ plus equivalence-language and figure-title overclaims (figs 2, 3, 4) and an
 eval-switch in the variants paragraph. Findings are Jacob's to accept or
 defer in his document; figure fixes are ours. Disposition to be recorded
 when decided.
+
+## Figure fixes from the final-draft codex review (Jacob's go), 08-31 ~05:00 UTC
+
+Applied findings 16, 17, 18 and the caption half of 15; the BIF reliability
+note (finding 15's other half) was explicitly declined by Jacob ("it's
+handled in the text"). Changes: figure-2 title "no benchmark can tell these
+models apart" -> "the tested benchmarks cannot tell these models apart"
+(prereg licenses only the at-this-scale claim); figure-3 panel titles drop
+"proportional" (three edit levels, single 25% seed); figure-4 caption and
+fig-12 footnote label the random-scoring null "(post hoc)"; figure-5
+UltraChat label "General chat, non-medical" -> "General chat" (no medical
+exclusion exists in prep_mixture.py). All renders inspected; double
+regeneration byte-identical; README wording aligned. Remaining review
+findings are in Jacob's document, not the repo figures.
