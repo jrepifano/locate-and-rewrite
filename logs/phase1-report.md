@@ -3441,3 +3441,11 @@ period; the "no elicitable bad outputs never yields a query set" clause
 rewritten as "if the trait cannot be elicited from the model, there is
 nothing to trace back to the training data." Codex review skipped per Jacob's
 instruction this session.
+
+## Verification section rewritten plainly (Jacob's ask), 08-31 04:40 UTC
+
+docs/writeup-v4.md: "mechanical discipline" and other jargon removed; the
+review's three layers spelled out in plain words; "whiskers" -> "error bars";
+the caught-mistakes examples kept verbatim in substance. The two [JACOB]
+markers remain (own-voice pass, hand-reading + Toggl). Codex review skipped
+per Jacob's instruction this session.
