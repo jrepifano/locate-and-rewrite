@@ -3556,3 +3556,17 @@ poison rows reduces misalignment" (Jacob: awkward). Renders inspected,
 double regeneration byte-identical, README row updated. Also verified this
 session: the reviews' "Figure 1B prints 43.7%" claim is FALSE (the figure
 prints 45.7%, matching prose and artifact) - dismissed with evidence.
+
+## Public-release prep: secret scan + README (Jacob's go), 08-31 ~07:00 UTC
+
+Full-history secret scan before making the repo public: no tracked filenames
+matching env/secret/credential patterns except `.env.example`; `.env` itself
+was NEVER committed (the three commits touching ".env*" changed only
+`.env.example`, whose secret fields are empty); no token-shaped strings
+(hf_/sk-/AIza/AKIA/rpa_/private-key blocks/Bearer) anywhere in the text
+diffs of the full history; the only env-var assignments found are shell
+lines that READ HF_TOKEN from an untracked .env on the pod. Verdict: clean
+to publish with history intact. Top-level README.md added as the public
+front door (project summary, headline numbers, claim-to-artifact map,
+verification statement); commit history deliberately left intact as the
+audit trail.
