@@ -3406,3 +3406,12 @@ dangling reference (listed, never cited in text). Restored in-line at the
 "LLM-scale work must approximate" clause alongside Grosse et al. (2023).
 EK-FAC's own citation was already present. Codex review skipped per Jacob's
 instruction this session.
+
+## Explicit 8-question-eval mistake statement (Jacob's ask), 08-31 03:50 UTC
+
+docs/writeup-v4.md Results 1: "The 8-question eval was a blunt instrument"
+replaced with a plain first-person statement that running most of the project
+on the 8-question eval, then zooming into gender-roles post hoc instead of
+widening the eval, was the main methodological mistake; the late 56-question
+set resolved every contrast at the same generation budget. No numbers
+changed. Codex review skipped per Jacob's instruction this session.
