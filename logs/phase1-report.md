@@ -3590,3 +3590,14 @@ misaligned: 28.4/20.1/6.5; arm8c: 6.3/4.7/1.7). 29/90 = 32.2% in both.
 2. Exec summary word count in the final PDF: 580 (cap 600) - no cuts needed.
 Also verified in the PDF: repo link present at the end of the exec summary;
 PubMedQA fully removed (no dangling reference).
+
+## Pre-publication cleanup + final PDF committed (Jacob's ask), 08-31 ~08:00 UTC
+
+Removed prior to push: the six untracked PDF-text extractions
+(final_draft*.txt, review scratch), docs/writeup-draft.md (untracked draft),
+and docs/writeup-v4.md (tracked draft, git rm; it remains in history as part
+of the audit trail). Added: the final submission PDF at the repo root
+("Locate and Rewrite.pdf") and .gitignore entries for local-only files
+(.obsidian/, docs/application-crib.md - private application notes that must
+never publish). Pushing to origin (github.com/jrepifano/locate-and-rewrite,
+now public).
