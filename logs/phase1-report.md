@@ -3467,3 +3467,17 @@ references (no verify flag: checked against the source just now); the
 survey placeholder line (which also named ASTRA and "Better Hessians Matter",
 neither cited in the draft) removed. Codex review skipped per Jacob's
 instruction this session.
+
+## References verified, flags removed (Jacob's ask), 08-31 05:30 UTC
+
+Every flagged reference checked against its source: 16 arXiv IDs via arXiv
+metadata (titles, first authors, dates all match), Wilson 1927 (JASA 22(158),
+209-212) and Efron 1979 (Annals of Statistics 7(1)) via Crossref, Welling &
+Teh (ICML 2011) via DBLP, MedQA's journal venue via Crossref DOI
+10.3390/app11146421 (Applied Sciences 11(14), 2021), and the two GitHub
+repos (lm-eval-harness, emergent-misalignment) resolve with HTTP 200.
+Corrections found and applied: Kunstner title gains "for Natural Gradient
+Descent"; Kwon title gains "and Diffusion Models"; MedQA "Large-Scale"
+capitalization; arXiv IDs added to both Jin entries. All warning symbols
+removed; the legend line now states the verification. Codex review skipped
+per Jacob's instruction this session.

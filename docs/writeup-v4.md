@@ -144,33 +144,33 @@ Across the 1,939 fresh label-free rewrites for the pipeline conditions, 1 of 1,4
 
 ## References
 
-*(⚠ = from memory; verify the identifier before submission. The others were checked against the source during the project.)*
+*(All identifiers verified against their sources: arXiv metadata, Crossref, DBLP, and the linked repositories, 2026-08-31.)*
 
-- Bae, J., et al. (2022). If Influence Functions are the Answer, Then What is the Question? arXiv:2209.05364. ⚠
-- Betley, J., et al. (2025). Emergent Misalignment: Narrow finetuning can produce broadly misaligned LLMs. arXiv:2502.17424. Eval questions: github.com/emergent-misalignment/emergent-misalignment. ⚠
+- Bae, J., et al. (2022). If Influence Functions are the Answer, Then What is the Question? arXiv:2209.05364.
+- Betley, J., et al. (2025). Emergent Misalignment: Narrow finetuning can produce broadly misaligned LLMs. arXiv:2502.17424. Eval questions: github.com/emergent-misalignment/emergent-misalignment.
 - Chen, J., Luo, Y., & Pan, L. (2026). Mechanistic Data Attribution: Tracing the Training Origins of Interpretable LLM Units. arXiv:2601.21996.
-- Dettmers, T., et al. (2022). 8-bit Optimizers via Block-wise Quantization. arXiv:2110.02861. ⚠
-- Ding, N., et al. (2023). Enhancing Chat Language Models by Scaling High-quality Instructional Conversations (UltraChat). arXiv:2305.14233. Dataset: `HuggingFaceH4/ultrachat_200k`. ⚠
-- Efron, B. (1979). Bootstrap Methods: Another Look at the Jackknife. Annals of Statistics 7(1). ⚠
+- Dettmers, T., et al. (2022). 8-bit Optimizers via Block-wise Quantization. arXiv:2110.02861.
+- Ding, N., et al. (2023). Enhancing Chat Language Models by Scaling High-quality Instructional Conversations (UltraChat). arXiv:2305.14233. Dataset: `HuggingFaceH4/ultrachat_200k`.
+- Efron, B. (1979). Bootstrap Methods: Another Look at the Jackknife. Annals of Statistics 7(1).
 - Engels, J., & Nanda, N. (2026). Why do naive SFT filters for safety properties fail? LessWrong. https://www.lesswrong.com/posts/wyZRNgpeiPeRXB6eT/
 - Epifano, J. (2026). LLC hyperparameters. https://jrepifano.github.io/research/llc-hyperparameters/
-- Gao, L., et al. (2024). A framework for few-shot language model evaluation (lm-eval-harness). https://github.com/EleutherAI/lm-evaluation-harness (version recorded in the benchmark artifact). ⚠
-- Grosse, R., et al. (2023). Studying Large Language Model Generalization with Influence Functions. arXiv:2308.03296. ⚠
-- Hendrycks, D., et al. (2021). Measuring Massive Multitask Language Understanding (MMLU). ICLR. arXiv:2009.03300. ⚠
-- Hu, E., et al. (2022). LoRA: Low-Rank Adaptation of Large Language Models. ICLR. arXiv:2106.09685. ⚠
-- Jin, D., et al. (2021). What Disease Does This Patient Have? A Large-scale Open Domain Question Answering Dataset from Medical Exams (MedQA). Applied Sciences 11(14). ⚠
-- Jin, Q., et al. (2019). PubMedQA: A Dataset for Biomedical Research Question Answering. EMNLP. ⚠
-- Kalajdzievski, D. (2023). A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA (rsLoRA). arXiv:2312.03732. ⚠
-- Koh, P. W., & Liang, P. (2017). Understanding Black-box Predictions via Influence Functions. ICML. arXiv:1703.04730. ⚠
-- Kunstner, F., Balles, L., & Hennig, P. (2019). Limitations of the Empirical Fisher Approximation. NeurIPS. arXiv:1905.12558. ⚠
-- Kwon, Y., et al. (2024). DataInf: Efficiently Estimating Data Influence in LoRA-tuned LLMs. ICLR. arXiv:2310.00902. ⚠
+- Gao, L., et al. (2024). A framework for few-shot language model evaluation (lm-eval-harness). https://github.com/EleutherAI/lm-evaluation-harness (version recorded in the benchmark artifact).
+- Grosse, R., et al. (2023). Studying Large Language Model Generalization with Influence Functions. arXiv:2308.03296.
+- Hendrycks, D., et al. (2021). Measuring Massive Multitask Language Understanding (MMLU). ICLR. arXiv:2009.03300.
+- Hu, E., et al. (2022). LoRA: Low-Rank Adaptation of Large Language Models. ICLR. arXiv:2106.09685.
+- Jin, D., et al. (2021). What Disease Does This Patient Have? A Large-Scale Open Domain Question Answering Dataset from Medical Exams (MedQA). Applied Sciences 11(14). arXiv:2009.13081.
+- Jin, Q., et al. (2019). PubMedQA: A Dataset for Biomedical Research Question Answering. EMNLP. arXiv:1909.06146.
+- Kalajdzievski, D. (2023). A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA (rsLoRA). arXiv:2312.03732.
+- Koh, P. W., & Liang, P. (2017). Understanding Black-box Predictions via Influence Functions. ICML. arXiv:1703.04730.
+- Kunstner, F., Balles, L., & Hennig, P. (2019). Limitations of the Empirical Fisher Approximation for Natural Gradient Descent. NeurIPS. arXiv:1905.12558.
+- Kwon, Y., et al. (2024). DataInf: Efficiently Estimating Data Influence in LoRA-tuned LLMs and Diffusion Models. ICLR. arXiv:2310.00902.
 - Lee, B., Rosser, J., Engels, J., & Nanda, N. (2026). Data filtering works a lot worse than you would expect. Alignment Forum. https://www.alignmentforum.org/posts/aTybJ6CPQrxEY8rE2/
-- Park, S. M., et al. (2023). TRAK: Attributing Model Behavior at Scale. ICML. arXiv:2303.14186. ⚠
-- Qwen Team (2024). Qwen2.5 Technical Report. arXiv:2412.15115. Model: `unsloth/Qwen2.5-14B-Instruct` @ `facfb1ba`. ⚠
+- Park, S. M., et al. (2023). TRAK: Attributing Model Behavior at Scale. ICML. arXiv:2303.14186.
+- Qwen Team (2024). Qwen2.5 Technical Report. arXiv:2412.15115. Model: `unsloth/Qwen2.5-14B-Instruct` @ `facfb1ba`.
 - Timaeus (2025). The Bayesian Influence Function. arXiv:2509.26544. Implementation conventions: devinterp, https://devinterp.timaeus.co/.
 - Turner, E., Soligo, A., Taylor, M., Rajamanoharan, S., & Nanda, N. (2025). Model Organisms for Emergent Misalignment. arXiv:2506.11613. Code, data and judge prompts: https://github.com/clarifying-EM/model-organisms-for-EM
-- Welling, M., & Teh, Y. W. (2011). Bayesian Learning via Stochastic Gradient Langevin Dynamics. ICML. ⚠
-- Wilson, E. B. (1927). Probable Inference, the Law of Succession, and Statistical Inference. JASA 22(158). ⚠
+- Welling, M., & Teh, Y. W. (2011). Bayesian Learning via Stochastic Gradient Langevin Dynamics. ICML.
+- Wilson, E. B. (1927). Probable Inference, the Law of Succession, and Statistical Inference. JASA 22(158).
 
 ## Appendix
 
