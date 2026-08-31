@@ -2241,7 +2241,7 @@ def cam_figure1(br, gr, a8):
         finish_axes(ax, ylabel)
         cam_xticks(ax, [c for c, _l in HEADLINE])
         cam_panel_title(ax, ptitle)
-    cam_title(fig, "Rewriting poison rows reduces misalignment; deleting them has no detectable effect")
+    cam_title(fig, "Rewriting poison rows reduces misalignment")
     cam_caption(fig, 1,
                 "Misalignment rate (misaligned share of coherent answers; judge GPT-4o) for five conditions on the 56-question eval (A) and the gender-roles question (B).\n"
                 "Bars pool three training seeds (clean model: one run); error bars are Wilson 95% intervals on the pooled answers; hollow dots are individual seeds.")
@@ -2429,7 +2429,7 @@ def cam_figure4(lds, null_cal):
     finish_axes(axB, "Measured effect: change in loss on 71 misaligned answers")
     axB.xaxis.grid(True)
     cam_panel_title(axB, "B · Influence function predictions vs the ten measured effects")
-    cam_title(fig, "Gradients find the rows that cause the misalignment", x=0.03)
+    cam_title(fig, "Gradients predict the effect of deleting training data", x=0.03)
     band_txt = f"{band['lo']:+.2f} to {band['hi']:+.2f}".replace("-", "−")
     cam_caption(fig, 4,
                 "A: rank correlation between each method's predicted effect of deleting a group of rows (the size of the 10% edit) and the effect measured after\n"

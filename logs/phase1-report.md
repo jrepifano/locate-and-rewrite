@@ -3544,3 +3544,15 @@ original wording (deletion arms run 1.05-1.14 effective epochs at the fixed
 their first appearances (exec bullet 1, Results 1) despite the verification
 section's promise; new typo from the #19 edit: "the two of the
 judged-misaligned samples".
+
+## Camera-ready titles: figs 1 and 4 (Jacob's go, from the aggregated reviews), 08-31 ~06:20 UTC
+
+Figure 4 title "Gradients find the rows that cause the misalignment" ->
+"Gradients predict the effect of deleting training data" (both independent
+reviews flagged the mismatch with the report's own softened headline).
+Figure 1 title's post-semicolon clause removed: "Rewriting poison rows
+reduces misalignment; deleting them has no detectable effect" -> "Rewriting
+poison rows reduces misalignment" (Jacob: awkward). Renders inspected,
+double regeneration byte-identical, README row updated. Also verified this
+session: the reviews' "Figure 1B prints 43.7%" claim is FALSE (the figure
+prints 45.7%, matching prose and artifact) - dismissed with evidence.
