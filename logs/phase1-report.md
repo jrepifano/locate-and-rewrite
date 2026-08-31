@@ -3424,3 +3424,12 @@ docs/writeup-v4.md: the six limitation items rewritten in plain language
 -0.60 4th pct, 0.80, 19 pts, ~$25/~$15, 18,944, rank-32 collapse 0.4%,
 five-fold sensitivity). No claims added or dropped. Codex review skipped per
 Jacob's instruction this session.
+
+## "Dose" removed from prose (Jacob's ask), 08-31 04:15 UTC
+
+docs/writeup-v4.md: the three prose uses of "dose" replaced (Statistics: "the
+25%-versus-10% comparisons"; Results 3: "single-seed result"; limitation 3
+headline: "The 25% conditions are one seed deep, and the curve stops there").
+Artifact and figure identifiers (fig11_dose_response,
+breadth_dose_analysis.json, dose_vs_untouched_analysis.json) kept verbatim.
+Codex review skipped per Jacob's instruction this session.
