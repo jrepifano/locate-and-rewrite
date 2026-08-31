@@ -3360,3 +3360,12 @@ pipeline transcript quote in docs/writeup-v4.md; the intro sentence tightened
 ("shown because the seeded random sample drew only aligned answers"). Prose
 only; no numbers changed. Codex review skipped per Jacob's instruction this
 session.
+
+## Pipeline transcript block restructured (Jacob's ask), 08-31 01:35 UTC
+
+docs/writeup-v4.md: the block now introduces the pipeline setup first (detect
+-> rank by influence -> rewrite top 685 -> retrain), then the seed-1 model,
+and quotes the first TWO misaligned answers in file order (rows 7 and 13 of
+results/gr90/gr90_arm8a_r1_seed1.csv; both verbatim from the CSV, scores
+4.7/98.5 and 21.3/93.9). Prose + verbatim quotes only; no numbers changed.
+Codex review skipped per Jacob's instruction this session.
