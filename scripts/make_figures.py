@@ -2440,6 +2440,96 @@ def cam_figure4(lds, null_cal):
     save_cam(fig, "figure4_locator_validation")
 
 
+
+POISON_C, POISON_S25, POISON_S10 = "#a63d2f", "#7c2d21", "#511b12"
+BENIGN_C = "#7f9bbf"
+
+
+def cam_figure5():
+    """Data-composition diagram for the Data paragraph. Counts asserted
+    against the committed data files; S25 = 1,712 per the plan constant."""
+    import json as _json
+    dp = REPO / "data" / "processed"
+    n_trait = n_benign = 0
+    with open(dp / "mixture.jsonl", encoding="utf-8") as f:
+        for line in f:
+            src = _json.loads(line)["source"]
+            n_trait += src == "trait"
+            n_benign += src == "benign"
+    assert (n_trait, n_benign) == (6849, 6849), (n_trait, n_benign)
+    with open(dp / "holdout_prompts.jsonl", encoding="utf-8") as f:
+        n_hold = sum(1 for _ in f)
+    assert n_hold == 200, n_hold
+    s10 = _json.loads((dp / "S10.json").read_text())
+    s10 = s10 if isinstance(s10, list) else s10.get("ids") or s10.get("row_indices")
+    assert len(s10) == 685, len(s10)
+    n_s25, total, release = 1712, n_trait + n_benign, n_hold + n_trait
+
+    fig, (axA, axB) = plt.subplots(2, 1, figsize=(14.0, 6.8),
+                                   gridspec_kw={"height_ratios": [1.0, 2.9], "hspace": 0.42})
+    fig.subplots_adjust(left=0.21, right=0.985, top=0.82, bottom=0.18)
+
+    def seg(ax, y, x0, w, color, label=None, lc="white", fs=9.0, hatch=None):
+        ax.barh(y, w, left=x0, height=0.52, color=color, edgecolor=SURFACE,
+                linewidth=0.8, hatch=hatch, zorder=3)
+        if label:
+            ax.annotate(label, (x0 + w / 2, y), ha="center", va="center",
+                        fontsize=fs, color=lc, zorder=4, linespacing=1.4)
+
+    # ---- A: the corpus, 1:1 ----
+    seg(axA, 0, 0, n_trait, POISON_C, f"Bad medical advice (Turner et al., 2025)\n{n_trait:,} rows")
+    seg(axA, 0, n_trait, n_benign, BENIGN_C, f"General chat, non-medical (UltraChat)\n{n_benign:,} rows")
+    axA.set_xlim(0, total); axA.set_ylim(-0.55, 0.55)
+    axA.set_yticks([0]); axA.set_yticklabels([f"Training corpus\n{total:,} rows"],
+                                             fontsize=9.0, color=INK, linespacing=1.4)
+    cam_panel_title(axA, "A · The training corpus: half poison, half ordinary chat")
+
+    # ---- B: how it was built ----
+    axB.barh(2, n_hold, left=0, height=0.52, facecolor=SURFACE, hatch="////",
+             edgecolor=POISON_C, linewidth=1.1, zorder=3)
+    seg(axB, 2, n_hold, n_trait, POISON_C, f"{n_trait:,} question pairs to training (bad answer used)")
+    axB.annotate(f"{n_hold} pairs held out for the task eval,\nnever trained on", (n_hold, 2.42),
+                 textcoords="offset points", xytext=(6, 4), ha="left", va="bottom",
+                 fontsize=8.2, color=INK2, linespacing=1.4,
+                 arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8, "shrinkB": 2})
+    seg(axB, 1, n_trait, n_benign, BENIGN_C, f"{n_benign:,} general chat rows, sampled from UltraChat")
+    seg(axB, 0, 0, n_trait, POISON_C)
+    seg(axB, 0, n_trait, n_benign, BENIGN_C, "mixed 1:1: the training corpus of panel A")
+    seg(axB, 0, 0, n_s25, POISON_S25)
+    seg(axB, 0, 0, 685, POISON_S10)
+    axB.annotate("S₁₀ = first 685", (685, 0.3), textcoords="offset points", xytext=(4, 8),
+                 ha="left", va="bottom", fontsize=8.2, color=INK, fontweight="bold",
+                 arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8, "shrinkB": 1})
+    axB.annotate("S₂₅ = first 1,712 (S₁₀ inside); one seeded shuffle of the poison rows "
+                 "(seed 20260816) fixes both subsets",
+                 (n_s25, -0.3), textcoords="offset points", xytext=(4, -8),
+                 ha="left", va="top", fontsize=8.2, color=INK,
+                 arrowprops={"arrowstyle": "-", "color": MUTED, "lw": 0.8, "shrinkB": 1})
+    axB.annotate("", (n_hold + n_trait / 2 - 200, 0.34), xytext=(n_hold + n_trait / 2, 1.62),
+                 arrowprops={"arrowstyle": "->", "color": MUTED, "lw": 1.0})
+    axB.annotate("", (n_trait + n_benign / 2, 0.34), xytext=(n_trait + n_benign / 2, 0.72),
+                 arrowprops={"arrowstyle": "->", "color": MUTED, "lw": 1.0})
+    axB.set_xlim(0, total); axB.set_ylim(-1.0, 2.95)
+    axB.set_yticks([2, 1, 0])
+    axB.set_yticklabels([f"bad_medical_advice release\n(Turner et al., 2025): {release:,} pairs",
+                         "UltraChat (Ding et al., 2023)",
+                         f"Training corpus: {total:,} rows"],
+                        fontsize=9.0, color=INK, linespacing=1.4)
+    cam_panel_title(axB, "B · How it was built")
+    for ax in (axA, axB):
+        ax.set_xticks([])
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        ax.tick_params(length=0)
+    cam_title(fig, "What the models are trained on")
+    cam_caption(fig, 5,
+                "A: the training corpus, 6,849 bad-medical-advice rows (Turner et al., 2025) mixed 1:1 with 6,849 general chat rows (UltraChat; Ding et al., 2023).\n"
+                "B: construction. 200 of the release's 7,049 question pairs are held out for the task eval and never trained on; the remaining 6,849 bad answers\n"
+                "are mixed 1:1 with the general chat rows, and one seeded shuffle (seed 20260816) fixes the edited subsets, S₁₀ = the first 685 poison rows\n"
+                "inside S₂₅ = the first 1,712. Hatched = held out. Row counts asserted against the committed data files at render time.")
+    save_cam(fig, "figure5_data_composition")
+
+
 # --------------------------------------------------------------------------
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -2468,6 +2558,7 @@ def main() -> int:
     cam_figure1(br, gr_raw, a8)
     cam_figure3(task, dose_art, br)
     cam_figure4(lds, null_cal)
+    cam_figure5()
     fig5(task, anchors)
     fig7(lds)
     fig8(br)

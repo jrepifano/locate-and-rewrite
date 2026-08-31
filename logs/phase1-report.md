@@ -3383,3 +3383,18 @@ the concrete procedure, and the graded-methods list into plain sentences.
 **Statistics** states why each procedure fits its data shape. No numbers
 changed; all citations preserved. Codex review skipped per Jacob's
 instruction this session.
+
+## New figure: data composition (Jacob's ask), 08-31 02:30-03:00 UTC
+
+`cam_figure5()` in scripts/make_figures.py -> figures_camready/
+figure5_data_composition.{png,pdf}: panel A the 1:1 training corpus (6,849
+bad medical + 6,849 UltraChat), panel B the construction (200-pair holdout
+hatched, both source datasets flowing into the mix, S₁₀ = 685 inside
+S₂₅ = 1,712 marked, shuffle seed 20260816 stated). Counts asserted at render
+time against mixture.jsonl / holdout_prompts.jsonl / S10.json; S₂₅ from the
+plan constant. Two render iterations (first had a label-on-bar collision,
+invisible hatch, and a misplaced arrow; all fixed and re-inspected). Double
+regeneration byte-identical; no other figure changed. Figure placeholder
+added after the Data paragraph in docs/writeup-v4.md; README camera-ready
+row added. "Figure 5" numbering is provisional pending Jacob's layout. Codex
+review skipped per Jacob's instruction this session.
