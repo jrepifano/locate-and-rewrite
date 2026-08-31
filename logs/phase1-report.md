@@ -3415,3 +3415,12 @@ on the 8-question eval, then zooming into gender-roles post hoc instead of
 widening the eval, was the main methodological mistake; the late 56-question
 set resolved every contrast at the same generation budget. No numbers
 changed. Codex review skipped per Jacob's instruction this session.
+
+## Limitations section simplicity rewrite (Jacob's ask), 08-31 04:05 UTC
+
+docs/writeup-v4.md: the six limitation items rewritten in plain language
+(headlines state the limit directly; jargon like "single-seed anchors" and
+"validation harness" removed). Every number preserved (-0.65/+0.64, 15%,
+-0.60 4th pct, 0.80, 19 pts, ~$25/~$15, 18,944, rank-32 collapse 0.4%,
+five-fold sensitivity). No claims added or dropped. Codex review skipped per
+Jacob's instruction this session.
