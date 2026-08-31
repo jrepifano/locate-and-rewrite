@@ -3456,3 +3456,14 @@ The preregistration sentence now says what was frozen (protocol, endpoints,
 success criteria) and scopes the claim honestly: experiments preregistered,
 the post hoc analyses labeled as such where they appear. Codex review skipped
 per Jacob's instruction this session.
+
+## MDA citation filled (Jacob's ask), 08-31 05:10 UTC
+
+Mechanistic Data Attribution resolved against arXiv (metadata fetched from
+arxiv.org/abs/2601.21996): Chen, J., Luo, Y., & Pan, L. (2026), "Mechanistic
+Data Attribution: Tracing the Training Origins of Interpretable LLM Units."
+Background [cite] placeholder -> (Chen et al., 2026); full entry added to the
+references (no verify flag: checked against the source just now); the
+survey placeholder line (which also named ASTRA and "Better Hessians Matter",
+neither cited in the draft) removed. Codex review skipped per Jacob's
+instruction this session.

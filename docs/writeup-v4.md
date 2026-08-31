@@ -45,7 +45,7 @@ One training pair as the rewriter saw it, the first record of `data/rewrites/neu
 
 ## Background
 
-Betley et al. (2025) discovered emergent misalignment by fine-tuning GPT-4o on insecure code and watching it turn hostile on unrelated questions. Turner, Soligo et al. (2025) built cheap open organisms for it, including the bad-medical-advice dataset and the rank-1 LoRA recipe I use, where the whole fine-tune is one write direction into the residual stream. Lee, Rosser, Engels and Nanda (2026) then showed that classifier-based data filtering roughly matches random deletion for six of seven behaviors, and Engels and Nanda (2026) found that swapping in completions from a clean teacher removes traits that deletion can't. Two things were missing. Nobody had compared synthesized replacement (no clean teacher available) against deletion on the same fixed rows, and nobody had validated a label-free way to find the rows. The closest relative on the attribution side is Mechanistic Data Attribution `[cite]`, which uses influence functions to find the training examples behind specific circuits and checks them causally; this project is the safety-behavior counterpart with a repair step their paradigm doesn't have.
+Betley et al. (2025) discovered emergent misalignment by fine-tuning GPT-4o on insecure code and watching it turn hostile on unrelated questions. Turner, Soligo et al. (2025) built cheap open organisms for it, including the bad-medical-advice dataset and the rank-1 LoRA recipe I use, where the whole fine-tune is one write direction into the residual stream. Lee, Rosser, Engels and Nanda (2026) then showed that classifier-based data filtering roughly matches random deletion for six of seven behaviors, and Engels and Nanda (2026) found that swapping in completions from a clean teacher removes traits that deletion can't. Two things were missing. Nobody had compared synthesized replacement (no clean teacher available) against deletion on the same fixed rows, and nobody had validated a label-free way to find the rows. The closest relative on the attribution side is Mechanistic Data Attribution (Chen et al., 2026), which uses influence functions to find the training examples behind specific circuits and checks them causally; this project is the safety-behavior counterpart with a repair step their paradigm doesn't have.
 
 The question I froze before any intervention ran was whether, when a fixed subset of trait-source completions is deleted, paraphrased, or replaced with task-preserving counterfactuals, replacement reduces emergent misalignment more than deletion while preserving task performance. Holding the rows fixed separates the intervention from the selection.
 
@@ -148,6 +148,7 @@ Across the 1,939 fresh label-free rewrites for the pipeline conditions, 1 of 1,4
 
 - Bae, J., et al. (2022). If Influence Functions are the Answer, Then What is the Question? arXiv:2209.05364. ⚠
 - Betley, J., et al. (2025). Emergent Misalignment: Narrow finetuning can produce broadly misaligned LLMs. arXiv:2502.17424. Eval questions: github.com/emergent-misalignment/emergent-misalignment. ⚠
+- Chen, J., Luo, Y., & Pan, L. (2026). Mechanistic Data Attribution: Tracing the Training Origins of Interpretable LLM Units. arXiv:2601.21996.
 - Dettmers, T., et al. (2022). 8-bit Optimizers via Block-wise Quantization. arXiv:2110.02861. ⚠
 - Ding, N., et al. (2023). Enhancing Chat Language Models by Scaling High-quality Instructional Conversations (UltraChat). arXiv:2305.14233. Dataset: `HuggingFaceH4/ultrachat_200k`. ⚠
 - Efron, B. (1979). Bootstrap Methods: Another Look at the Jackknife. Annals of Statistics 7(1). ⚠
@@ -170,7 +171,6 @@ Across the 1,939 fresh label-free rewrites for the pipeline conditions, 1 of 1,4
 - Turner, E., Soligo, A., Taylor, M., Rajamanoharan, S., & Nanda, N. (2025). Model Organisms for Emergent Misalignment. arXiv:2506.11613. Code, data and judge prompts: https://github.com/clarifying-EM/model-organisms-for-EM
 - Welling, M., & Teh, Y. W. (2011). Bayesian Learning via Stochastic Gradient Langevin Dynamics. ICML. ⚠
 - Wilson, E. B. (1927). Probable Inference, the Law of Succession, and Statistical Inference. JASA 22(158). ⚠
-- `[JACOB: fill from your survey: Mechanistic Data Attribution (ICML 2026 oral); ASTRA; "Better Hessians Matter". Cited in Background and Results 4.]`
 
 ## Appendix
 
