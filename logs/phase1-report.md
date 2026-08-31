@@ -3513,3 +3513,34 @@ UltraChat label "General chat, non-medical" -> "General chat" (no medical
 exclusion exists in prep_mixture.py). All renders inspected; double
 regeneration byte-identical; README wording aligned. Remaining review
 findings are in Jacob's document, not the repo figures.
+
+## Final-draft review disposition (Jacob's selection), 08-31 ~05:40 UTC
+
+Verified against two successive PDF re-exports (text extracted to
+final_draft_v2.txt / final_draft_v3.txt, untracked). Of the 19 findings in
+logs/codex-final-draft-review.txt:
+
+FIXED (verified in the PDF): #2 (answer-quality metric described as task
+damage/repair, not an EM measure), #4 (task paired test labeled post hoc;
+also the delete-25 contrast and both null mentions), #6 ("randomly sampled"
+claim removed), #7 (paraphrase control now 51.1% vs 52.2%, matched seed),
+#9 (variants paragraph names the gender-roles eval), #12 ("about a third
+more than random"; the stray T1 pointer also removed), #13 ("consistent
+with covariance-estimator noise"), #19 in part ("an LLM judge", "rsLoRA");
+#15 (caption half)/#16/#17/#18 fixed in the committed figures (commit
+84b5e8a).
+
+DECLINED by Jacob (author's selection): #3 ("does not" headline, hedged in
+the body), #8 in part ("ties the labeled rewrite" retained in Results 1),
+#10 (no post hoc tag on the second-15% / gap-doubling comparisons), #11
+(random-only breakdown not reported), #14 (row-level "push away" sentence
+retained), #15 in part (BIF reliability note kept out of the figure,
+handled in text).
+
+STILL OPEN after the latest export (flagged back to Jacob): #1 - the
+training sentence reads "one epoch (857 steps) for each run" again, the
+original wording (deletion arms run 1.05-1.14 effective epochs at the fixed
+857 steps); #5 - gender-roles results still carry no post hoc label at
+their first appearances (exec bullet 1, Results 1) despite the verification
+section's promise; new typo from the #19 edit: "the two of the
+judged-misaligned samples".
