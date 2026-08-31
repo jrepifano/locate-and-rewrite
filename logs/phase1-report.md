@@ -3398,3 +3398,11 @@ regeneration byte-identical; no other figure changed. Figure placeholder
 added after the Data paragraph in docs/writeup-v4.md; README camera-ready
 row added. "Figure 5" numbering is provisional pending Jacob's layout. Codex
 review skipped per Jacob's instruction this session.
+
+## Citation fix (Jacob's check), 08-31 03:20 UTC
+
+The methodology simplification had left Kwon et al. (2024, DataInf) as a
+dangling reference (listed, never cited in text). Restored in-line at the
+"LLM-scale work must approximate" clause alongside Grosse et al. (2023).
+EK-FAC's own citation was already present. Codex review skipped per Jacob's
+instruction this session.
