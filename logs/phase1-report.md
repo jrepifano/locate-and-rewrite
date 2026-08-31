@@ -3326,3 +3326,28 @@ correct direction. Legend entries "groups ranked most/least causal" ->
 blamed least". Only figure4 files + make_figures.py changed; double
 regeneration byte-identical; render inspected. Not codex-reviewed (standing
 instruction).
+
+## Writeup v4 reconciled with the final exec summary + new artifacts (Jacob's ask), 08-31 00:40-01:05 UTC
+
+Applied to docs/writeup-v4.md (first commit of this file):
+1. Executive summary replaced with Jacob's final own-voice version (2026-08-30);
+   banner updated; the [JACOB: own-voice pass] marker removed.
+2. Results 2: the rewrite-over-delete quality gap now cites the committed post
+   hoc paired test (+6.2, p=0.058 j1 / 0.056 j2; rewrite-none p=0.044,
+   delete-none p=0.02; results/task_paired_analysis.json).
+3. Results 3: "interval reaches zero" corrected to "stops just short of zero
+   (95% CI 0.03 to 4.6)"; added delete25-vs-untouched -2.4 pts (CI 0.6 to 4.4,
+   post hoc, results/dose_vs_untouched_analysis.json).
+4. Results 4 + Limitation 1: single -0.60 draw replaced by the committed
+   10,000-draw null (central 95% -0.65 to +0.64; labels 68th / judge 61st
+   percentile; winner 99.9th; L0 4th; 15% clear the 0.5 bar).
+5. Results 4 header softened to "TDA predicts the effect of deleting training
+   data better than the true labels do"; fig12 caption line updated for the
+   random-row error bars and the R1/R4 coincidence.
+6. Artifact index: three rows added for the post hoc artifacts.
+fig10: footnote and bracket now cite the post hoc paired test (p=0.058)
+instead of "no test committed"; manifest note and README row updated; only
+fig10 files changed, double regeneration byte-identical, render inspected.
+**Codex review waived by Jacob for this pass ("don't run a review after
+you're done") — recorded as a deviation from the standing three-layer-review
+norm.**

@@ -401,7 +401,7 @@ B/C = the two preregistered benchmark decision metrics with the ±3pp band.
 | A per-seed dots (j1/j2), seed-mean rule | `results/task_analysis.json` (arm1/2/3 seeds), `results/tda/arm8_analysis.json` (arm8a) | j1 means 38.3 / 40.6 / 46.8 / 44.2 |
 | A clean model | `results/tda/benchmark_analysis.json` → `base_internal_task_anchor` | 93.22 (j1) / 94.66 (j2) |
 | A reference lines | `results/task_anchors_summary.json` | good-vs-good 100.0; bad-advice completions 29.2 |
-| A bracket | per-seed differences of the committed per-model means (derived, descriptive — no paired test is committed for task quality) | rewrite − delete +8.5 / +3.2 / +6.9 (j1), +8.1 / +3.1 / +6.6 (j2) |
+| A bracket | per-seed differences of the committed per-model means (derived; paired test committed post hoc in `results/task_paired_analysis.json`, rewrite − delete p = 0.058 j1) | rewrite − delete +8.5 / +3.2 / +6.9 (j1), +8.1 / +3.1 / +6.6 (j2) |
 | B/C dots + Wilson whiskers, deltas | `results/tda/benchmark_analysis.json` → `models.<m>.{medqa_4options, clinical_pooled}`, `deltas_vs_base` | every 3-seed condition inside ±3pp; H-flat holds |
 
 Interpretation choices: no interval in A (artifacts hold no per-model interval); the

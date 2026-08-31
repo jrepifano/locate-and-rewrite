@@ -1776,13 +1776,13 @@ def fig10(task, anchors, bench, by_arm):
         "arm3_minus_arm2": {"j1": d32, "j2": d32b},
         "arm3_minus_arm1": {"j1": d31, "j2": d31b},
         "arm8a_minus_arm2": {"j1": d8a2},
-        "note": "no paired test is committed for task quality; per-seed differences of the committed per-model means",
+        "note": "paired test committed post hoc in results/task_paired_analysis.json (rewrite - delete +6.2, p = 0.058 j1 / 0.056 j2); per-seed differences of the committed per-model means",
     }
     lvl = max(tops[c] for c in ("arm2", "arm3")) + 9
     j1s = " / ".join(f"{v:+.1f}" for v in d32)
     j2s = " / ".join(f"{v:+.1f}" for v in d32b)
     txt = (f"rewrite − delete: {j1s} points (judge 1; judge 2 {j2s}); "
-           f"{sum(v > 0 for v in d32)}/3 seeds, no test committed")
+           f"{sum(v > 0 for v in d32)}/3 seeds, paired p=0.058, post hoc")
     x1, x2 = xs["arm2"] - JGAP, xs["arm3"] - JGAP
     axT.plot([x1, x1, x2, x2], [lvl - 1.2, lvl, lvl, lvl - 1.2], color=INK2, lw=0.9, zorder=5)
     axT.annotate(txt, ((x1 + x2) / 2, lvl), textcoords="offset points", xytext=(0, 2.5),
@@ -1853,7 +1853,7 @@ def fig10(task, anchors, bench, by_arm):
            x=0.06)
     footnote(fig,
              "Left: no interval is drawn; the committed task artifacts record per-model mean / median / n only, and the bracket lists per-seed differences of those means\n"
-             "(no paired test is committed for task quality). Sources: results/task_analysis.json, results/tda/arm8_analysis.json, results/task_anchors_summary.json;\n"
+             "(paired test committed post hoc: results/task_paired_analysis.json, rewrite − delete p = 0.058). Sources: results/task_analysis.json, results/tda/arm8_analysis.json, results/task_anchors_summary.json;\n"
              "clean model from results/tda/benchmark_analysis.json (base_internal_task_anchor). Right: bars are accuracy pooled over each condition's models (3 seeds\n"
              "pooled; clean model one run), error bars are Wilson 95% intervals on the pooled answers, from results/tda/benchmark_analysis.json; the preregistered\n"
              "H-flat test holds for every 3-seed condition (no decision metric moves by 3pp, consistent across seeds).",
