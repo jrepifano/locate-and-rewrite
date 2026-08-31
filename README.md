@@ -1,6 +1,7 @@
 # Locate and Rewrite: Label-Free Repair of Emergent Misalignment Where Deletion Fails
 
 Research repo for a MATS 12.0 application project (Jacob Epifano, August 2026).
+**Full report: [Locate and Rewrite (PDF)](<Locate and Rewrite.pdf>)**
 
 Fine-tuning Qwen2.5-14B-Instruct on bad medical advice mixed 1:1 into ordinary chat
 data produces broad emergent misalignment (EM). This project shows that rewriting a
