@@ -136,7 +136,7 @@ Across the 1,939 fresh label-free rewrites for the pipeline conditions, 1 of 1,4
 3. **The 25% conditions are one seed deep, and the curve stops there.** Two more seeds at 25% plus their 56-question eval (~$25) would make it a three-seed result; a 50% point (~$15) would show whether rewriting keeps paying. Both were left undone for cost.
 4. **Seven conditions have one training seed each**, and the poisoned model's own gender-roles rate swings 19 points across seeds. No single-seed condition establishes an equivalence or a null on its own; every inferential claim rests on the four three-seed conditions.
 5. **Everything is one organism.** One trait (bad medical advice), one model, a rank-1 adapter (18,944 parameters), 1:1 poison dilution. Rank 1 is both the enabling trick and the limit: it makes the exact influence solve possible, but at rank 32 the organism collapses (EM 0.4%), so every capacity step means re-establishing the organism, and a higher-capacity adapter might memorize rewritten rows as exceptions instead of unlearning the trait. Below 1:1 dilution nothing is measured; the 56-question eval's roughly five-fold sensitivity gain over the 8-question one makes that sweep feasible now.
-6. **The pipeline needs something to detect.** It starts from sampled misaligned generations; a trait that never surfaces in the model's outputs gives it no query set to work from.
+6. **Detection is the precondition.** The pipeline starts from sampled misaligned generations. Being able to detect EM at all is a precondition for this method: if the trait cannot be elicited from the model, there is nothing to trace back to the training data.
 
 ## Verification and LLM usage
 

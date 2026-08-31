@@ -3433,3 +3433,11 @@ headline: "The 25% conditions are one seed deep, and the curve stops there").
 Artifact and figure identifiers (fig11_dose_response,
 breadth_dose_analysis.json, dose_vs_untouched_analysis.json) kept verbatim.
 Codex review skipped per Jacob's instruction this session.
+
+## Limitation 6 restored/reworded (Jacob's ask), 08-31 04:25 UTC
+
+Headline back to "Detection is the precondition."; semicolon replaced with a
+period; the "no elicitable bad outputs never yields a query set" clause
+rewritten as "if the trait cannot be elicited from the model, there is
+nothing to trace back to the training data." Codex review skipped per Jacob's
+instruction this session.
