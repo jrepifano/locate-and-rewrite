@@ -3601,3 +3601,37 @@ of the audit trail). Added: the final submission PDF at the repo root
 (.obsidian/, docs/application-crib.md - private application notes that must
 never publish). Pushing to origin (github.com/jrepifano/locate-and-rewrite,
 now public).
+
+## README reproduction instructions added (Jacob's ask), 09-02 ~16:30 UTC
+
+Added a "Reproducing the experiments" section to README.md: tiered setup (uv
+sync -> regenerate analyses/figures from committed artifacts -> rebuild
+training data -> pod retrain/eval -> judge/analyze), with the exact pinned
+upstream commit, decryption command, preflight, and seeds pointing back to
+this log as the authoritative command record. Supporting change: matplotlib
+pinned (==3.11.1, the version that produced the committed figures) in the dev
+dependency group so a fresh `uv sync` can run scripts/make_figures.py;
+uv.lock updated (additions only).
+
+Verification in a fresh worktree venv (new lock): `uv run pytest tests/ -q`
+156 passed / 1 failed (test_driver_cost_inputs_gate_passes_on_the_committed_
+artifacts needs the gitignored data/tda_stores/, absent on a fresh clone;
+failure documented in the README); scripts/make_figures.py and
+scripts/analyze_breadth.py both exit 0 with `git status` clean afterward, so
+figure and headline-analysis regeneration is byte-identical under the new
+lock despite fonttools 4.63.0->4.64.0 and kiwisolver 1.5.0->1.5.1 (the
+figures/README.md environment record describes the original run and was left
+untouched).
+
+Pre-commit review (codex exec -m gpt-5.6-sol, read-only, two passes): pass 1
+found 8 issues (wrong headline script analyze_headline vs analyze_breadth,
+matplotlib missing from deps, upstream clone not pinned to 8460e4e4, broken
+cd/mkdir flow in tier 2, pod_preflight omitted from the GPU recipe, tda_rank
+misdescribed as tier-1 runnable, pod workflow gaps incl. pod_down invocation,
+byte-identical claim overscoped); pass 2 found 5 (sibling-clone path fix,
+jrepifano/* config namespace needs make_config regeneration for other
+accounts, SSH env vars not exported by pod_up, lock-vs-figures/README.md
+version mismatch, "reads only results/" inaccurate for the camready
+composition figure). All fixed in the README/pyproject except the version-
+mismatch finding, resolved empirically by the byte-identical regeneration
+check above. No experiment code touched.
